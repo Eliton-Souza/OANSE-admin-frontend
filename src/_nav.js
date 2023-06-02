@@ -6,42 +6,102 @@ import {
   cilChartPie,
   cilCursor,
   cilDescription,
-  cilDrop,
   cilNotes,
-  cilPencil,
   cilPuzzle,
   cilSpeedometer,
   cilStar,
+
+  //Meus alunos
+  cilUserPlus,
+  cilWc,
+ 
+  //Clube
+  cilClipboard,
+  cilGroup,
+
+  //Transacoes
+  cilQrCode,
+  cilGraph,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
 const _nav = [
+
+  //Painel Geral - Titulo do NAV
   {
     component: CNavItem,
-    name: 'Dashboard',
-    to: '/dashboard',
+    name: 'Painel Geral',
+    to: '#',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     badge: {
       color: 'info',
       text: 'NEW',
     },
   },
+
+
+  //ALUNOS
   {
     component: CNavTitle,
-    name: 'Theme',
+    name: 'Alunos',
   },
   {
     component: CNavItem,
-    name: 'Colors',
+    name: 'Cadastrar Aluno',
     to: '/theme/colors',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilUserPlus} customClassName="nav-icon" />,
+  },
+
+  {
+    component: CNavItem,
+    name: 'Meus Alunos',
+    to: '/theme/typography',
+    icon: <CIcon icon={cilWc} customClassName="nav-icon" />,
+  },
+
+
+  //CLUBE
+  {
+    component: CNavTitle,
+    name: 'CLUBE',
   },
   {
     component: CNavItem,
-    name: 'Typography',
-    to: '/theme/typography',
-    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+    name: 'Meu Clube',
+    to: '/theme/colors',
+    icon: <CIcon icon={cilGroup} customClassName="nav-icon" />,
   },
+
+  {
+    component: CNavItem,
+    name: 'Seções',
+    to: '#',
+    icon: <CIcon icon={cilClipboard} customClassName="nav-icon" />,
+  },
+
+
+   //TRANSACOES
+   {
+    component: CNavTitle,
+    name: 'TRANSAÇÕES',
+  },
+  {
+    component: CNavItem,
+    name: 'Ler QR Code',
+    to: '#',
+    icon: <CIcon icon={cilQrCode} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Histórico',
+    to: '#',
+    icon: <CIcon icon={cilGraph} customClassName="nav-icon" />,
+  },
+
+
+
+
+
   {
     component: CNavTitle,
     name: 'Components',
