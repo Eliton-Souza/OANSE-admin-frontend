@@ -6,12 +6,22 @@ import {
   cilChartPie,
   cilCursor,
   cilDescription,
-  cilUserPlus,
   cilNotes,
-  cilPencil,
   cilPuzzle,
   cilSpeedometer,
   cilStar,
+
+  //Meus alunos
+  cilUserPlus,
+  cilWc,
+ 
+  //Clube
+  cilClipboard,
+  cilGroup,
+
+  //Transacoes
+  cilQrCode,
+  cilGraph,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -21,7 +31,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Painel Geral',
-    to: '/dashboard',
+    to: '#',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     badge: {
       color: 'info',
@@ -30,8 +40,9 @@ const _nav = [
   },
 
 
+  //ALUNOS
   {
-    component: CNavTitle, //padrao para adicionar titulo 
+    component: CNavTitle,
     name: 'Alunos',
   },
   {
@@ -43,10 +54,51 @@ const _nav = [
 
   {
     component: CNavItem,
-    name: 'Typography',
+    name: 'Meus Alunos',
     to: '/theme/typography',
-    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilWc} customClassName="nav-icon" />,
   },
+
+
+  //CLUBE
+  {
+    component: CNavTitle,
+    name: 'CLUBE',
+  },
+  {
+    component: CNavItem,
+    name: 'Meu Clube',
+    to: '/theme/colors',
+    icon: <CIcon icon={cilGroup} customClassName="nav-icon" />,
+  },
+
+  {
+    component: CNavItem,
+    name: 'Seções',
+    to: '#',
+    icon: <CIcon icon={cilClipboard} customClassName="nav-icon" />,
+  },
+
+
+   //TRANSACOES
+   {
+    component: CNavTitle,
+    name: 'TRANSAÇÕES',
+  },
+  {
+    component: CNavItem,
+    name: 'Ler QR Code',
+    to: '#',
+    icon: <CIcon icon={cilQrCode} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Histórico',
+    to: '#',
+    icon: <CIcon icon={cilGraph} customClassName="nav-icon" />,
+  },
+
+
 
 
 
