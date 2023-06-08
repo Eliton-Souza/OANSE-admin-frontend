@@ -1,4 +1,4 @@
-import React, { Component, Suspense } from 'react'
+import React, { Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'
 
@@ -12,7 +12,7 @@ const loading = (
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
 // Pages
-const Login = React.lazy(() => import('./views/pages/login/Login'))
+const Login = React.lazy(() => import('./views/Login'))
 
 const App = () => {
   return (
