@@ -1,16 +1,30 @@
-import http, { saveToken } from "./axiosConfig";
+import http from "./axiosConfig";
+
+export const saveToken = (token) => {
+  localStorage.setItem('token', token);
+};
+
+export const getToken = () => {
+  return localStorage.getItem('token');
+};
 
 export const api = {
 
+  validaToken: async () =>{
+
+    const response = await http.get('/rotaProtegida');
+    return response.data;
+  },
+
   fazerLogin: async (login, senha) => {
   
-      let response = await http.post('/login', {
-          login, senha,
-      });
+    const response = await http.post('/login', {
+        login, senha,
+    });
 
-      saveToken(response.data.token);
+    saveToken(response.data.token);
 
-      return response.data;
+    return response.data;
   },
 
 

@@ -1,22 +1,30 @@
 import React, {useState, useEffect} from 'react'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
-import http from 'src/services/axiosConfig';
+import { api, getToken } from 'src/services/api';
+import { useNavigate } from 'react-router-dom';
 
 const DefaultLayout = () => {
 
   const [loading, setLoading] = useState(true);
+  const Navigate= useNavigate();
 
   useEffect(() => {
     const checkToken = async () => {
-      try {
-        // Fazer uma solicitação para uma rota protegida
-        await http.get('/rotaProtegida');
-        // Se a solicitação for bem-sucedida, o token é válido
-        setLoading(false);
-      } catch (error) {
-        // Se a solicitação falhar, o token é inválido
+     
+      if(getToken()!== null){
+        const result = api.validaToken();
+
+        if(result.error){
+          alert(result.error);
+          Navigate('/login');   // token invalido
+        }
+        else{
+          setLoading(false);  //token valido
+        }
+      }else{
         setLoading(true);
-      }
+        Navigate('/login')
+      }     
     };
 
     checkToken();

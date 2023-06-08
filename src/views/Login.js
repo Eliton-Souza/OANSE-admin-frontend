@@ -37,8 +37,6 @@ const Login = () => {
       const result= await api.fazerLogin(phone, password);
       setLoading(false);
 
-      console.log(result.status);
-
       if(result.status == true){
         navigate('/')
       }

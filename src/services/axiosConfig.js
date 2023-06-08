@@ -1,15 +1,5 @@
 import axios from 'axios';
-
-// Função para salvar o token no localStorage
-export const saveToken = (token) => {
-    localStorage.setItem('token', token);
-  };
-
-  // Função para obter o token do localStorage
-  const getToken = () => {
-    return localStorage.getItem('token');
-  };
-
+import { getToken } from './api';
 
 const http = axios.create({
     baseURL: 'http://localhost:4000',
@@ -42,12 +32,3 @@ const http = axios.create({
   
 
 export default http;
-
-
-
-
-  
-  
-  
- 
-  
