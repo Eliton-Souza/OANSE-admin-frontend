@@ -1,19 +1,16 @@
-import http from "./axiosConfig";
+import http, { saveToken } from "./axiosConfig";
 
 export const api = {
 
   fazerLogin: async (login, senha) => {
-    try {
-        let response = await http.post('/login', {
-            login, senha,
-        });
+  
+      let response = await http.post('/login', {
+          login, senha,
+      });
 
-        saveToken(response.token);
+      saveToken(response.data.token);
 
       return response.data;
-    } catch (error) {
-      throw new Error('Falha no login');
-    }
   },
 
 

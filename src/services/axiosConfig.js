@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Função para salvar o token no localStorage
-const saveToken = (token) => {
+export const saveToken = (token) => {
     localStorage.setItem('token', token);
   };
 
