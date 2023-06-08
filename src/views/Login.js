@@ -37,11 +37,11 @@ const Login = () => {
       const result= await api.fazerLogin(phone, password);
       setLoading(false);
 
-      if(result.status == true){
-        navigate('/')
+      if(result.error){
+        setErro(result.error)
       }
       else{
-        setErro(result.error);
+        navigate('/');
       }
 
     }else{
