@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { api } from 'src/services/api'
+import { api, saveToken } from 'src/services/api'
 import {
   CAlert,
   CButton,
@@ -28,19 +28,20 @@ const Login = () => {
   const [erro, setErro] = useState('');
   const [loading, setLoading] = useState(false);
 
-
+  
   const handleLoginButton = async () => {
 
     if(phone && password){
 
       setLoading(true);
-      const result= await api.fazerLogin(phone, password);
+      const result = await api.fazerLogin(phone, password);
       setLoading(false);
 
       if(result.error){
-        setErro(result.error)
+        setErro(result.error);     
       }
       else{
+        saveToken(result.token);
         navigate('/');
       }
 

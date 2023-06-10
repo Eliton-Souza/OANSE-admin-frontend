@@ -9,24 +9,24 @@ export const getToken = () => {
 };
 
 export const removeToken = () => {
-  return localStorage.removeItem('token');
+  localStorage.removeItem('token');
 };
 
 export const api = {
 
-  validaToken: async () =>{
-
-    const response = await http.get('/rotaProtegida');
+  validaToken: async () => {
+   
+    const response = await http.get('/rotaProtegida', {});
     return response.data;
   },
+  
 
   fazerLogin: async (login, senha) => {
-  
+    
     const response = await http.post('/login', {
-        login, senha,
+      login,
+      senha,
     });
-
-    saveToken(response.data.token);
 
     return response.data;
   },

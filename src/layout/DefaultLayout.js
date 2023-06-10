@@ -5,25 +5,28 @@ import { useNavigate } from 'react-router-dom';
 
 const DefaultLayout = () => {
 
-  const [loading, setLoading] = useState(true);
+  const [block, setBlock] = useState(true);
   const Navigate= useNavigate();
 
   useEffect(() => {
     const checkToken = async () => {
+      const token= getToken();
      
-      if(getToken()!== null){
-        const result = api.validaToken();
+      if( token ){
+        
+        const result= await api.validaToken();
 
         if(result.error){
-          alert(result.error);
           Navigate('/login');   // token invalido
+          setBlock(true);
         }
         else{
-          setLoading(false);  //token valido
+          setBlock(false);  //token valido
         }
+
       }else{
-        setLoading(true);
-        Navigate('/login')
+        setBlock(true);
+        Navigate('/login');
       }     
     };
 
@@ -33,7 +36,7 @@ const DefaultLayout = () => {
 
   return (
     <div>
-      {!loading &&
+      {!block &&
         <>
           <AppSidebar />
           <div className="wrapper d-flex flex-column min-vh-100 bg-light">
