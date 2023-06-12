@@ -31,6 +31,12 @@ export const api = {
     return response.data;
   },
 
+  pegarAlunos: async () => {
+   
+    const response = await http.get('/alunos', {});
+    return response.data;
+  },
+
 
   criarAluno: async (nome, sobrenome, genero, nascimento, id_manual, id_responsavel) => {
 
