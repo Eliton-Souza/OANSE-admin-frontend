@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken } from './api';
 
 const http = axios.create({
-  baseURL: 'https://2dfa-2804-14d-1488-8a62-d85f-480-47fd-92f.ngrok-free.app',
+  baseURL: 'https://6c9c-2804-14d-1488-8a62-6123-b5d6-f4b4-d8d4.ngrok-free.app',
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'ngrok-skip-browser-warning': 'true'
