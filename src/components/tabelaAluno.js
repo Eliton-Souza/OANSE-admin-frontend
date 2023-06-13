@@ -5,6 +5,7 @@ import { differenceInYears } from 'date-fns';
 import Paginacao from './paginacao';
 import { NomeField } from './formulario/nome';
 import { SobrenomeField } from './formulario/sobrenome';
+import { NascimentoField } from './formulario/nascimento';
 
 const TabelaAluno = () => {
   const [loading, setLoading] = useState(true);
@@ -16,7 +17,8 @@ const TabelaAluno = () => {
   //formulario
   const [editar, setEditar] = useState(false);
   const [nome, setNome] = useState('');
-  const [Sobrenome, setSobrenome] = useState('');
+  const [sobrenome, setSobrenome] = useState('');
+  const [nascimento, setNascimento] = useState('');
 
   const getAlunos = async () => {
     setLoading(true);
@@ -124,17 +126,17 @@ const TabelaAluno = () => {
                 </CRow>
 
                 <CRow className="row g-3">
-                  <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
-                    <NomeField
-                      nome={selectedAluno.nome} onChange={setNome} desabilitado={!editar} obrigatorio={false}>
-                    </NomeField>
-                  </CCol>
-
-                  <CCol xs={7} sm={7} md={7} lg={7} xl={7}>
+                  <CCol xs={5} sm={7} md={7} lg={7} xl={7}>
                     <SobrenomeField
                       sobrenome={selectedAluno.sobrenome} onChange={setSobrenome} desabilitado={!editar} obrigatorio={false}>
                     </SobrenomeField>
                   </CCol>
+
+                  <CCol xs={7} sm={5} md={5} lg={5} xl={5}>
+                    <NascimentoField
+                      nascimento={selectedAluno.nascimento} onChange={setNascimento} desabilitado={!editar} obrigatorio={false}>
+                    </NascimentoField>
+                  </CCol>                 
                 </CRow>
    
                

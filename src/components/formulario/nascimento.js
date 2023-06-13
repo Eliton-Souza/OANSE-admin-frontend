@@ -1,15 +1,18 @@
 import { CFormInput } from '@coreui/react';
 import { useState } from 'react';
-import { regexLastName } from './helper';
+import moment from 'moment-timezone';
 
-export const SobrenomeField = ({ sobrenome, onChange, desabilitado, obrigatorio }) => {
+export const NascimentoField = ({ nascimento, onChange, desabilitado, obrigatorio }) => {
   const [valido, setValido] = useState(false);
   const [invalido, setInvalido] = useState(false);
 
-  const handleSobrenomeChange = (event) => {
-    const novoSobrenome = event.target.value;
+  const currentDate = moment().tz('America/Manaus').format('YYYY-MM-DD');
+  const selectedDate = moment(nascimento).format('DD-MM-YYYY');
 
-    if (regexLastName.test(novoSobrenome)) {
+  const handleNascimentoChange = (event) => {
+    const novoNascimento = moment(event.target.value).format('YYYY-MM-DD');
+
+    if ( novoNascimento <= currentDate) {
       setValido(true);
       setInvalido(false);
     } else {
@@ -17,22 +20,22 @@ export const SobrenomeField = ({ sobrenome, onChange, desabilitado, obrigatorio 
       setInvalido(true);
     }
 
-    onChange(novoSobrenome); // Atualiza a variável sobrenome no componente pai
+    onChange(moment(novoNascimento).format('DD-MM-YYYY')); // Atualiza a variável nascimento no componente pai
   };
 
   return (
     <>
       <CFormInput
-        type="text"
-        id="sobrenome"
-        label="Sobrenome"
-        defaultValue={sobrenome}
-        onChange={handleSobrenomeChange}
+        type="date"
+        id="nascimento"
+        label="Nascimento"
+        defaultValue={selectedDate}
+        onChange={handleNascimentoChange}
         disabled={desabilitado}
         required={obrigatorio}
         valid={valido}
         invalid={invalido}
-        feedbackInvalid="Apenas letras"
+        feedbackInvalid="Mlk nasceu no futur?"
         feedbackValid="OK"
       />
     </>
