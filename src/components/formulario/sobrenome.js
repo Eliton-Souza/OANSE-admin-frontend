@@ -2,7 +2,8 @@ import { CFormInput } from '@coreui/react';
 import { useState } from 'react';
 import { regexLastName } from './helper';
 
-export const SobrenomeField = ({ sobrenome, onChange, desabilitado, obrigatorio }) => {
+export const SobrenomeField = ({ sobrenome, onChange, desabilitado, obrigatorio, incorreto }) => {
+
   const [valido, setValido] = useState(false);
   const [invalido, setInvalido] = useState(false);
 
@@ -12,12 +13,13 @@ export const SobrenomeField = ({ sobrenome, onChange, desabilitado, obrigatorio 
     if (regexLastName.test(novoSobrenome)) {
       setValido(true);
       setInvalido(false);
+      incorreto(false);
+      onChange(novoSobrenome); // Atualiza a variável sobrenome no componente pai
     } else {
       setValido(false);
       setInvalido(true);
+      incorreto(true);
     }
-
-    onChange(novoSobrenome); // Atualiza a variável sobrenome no componente pai
   };
 
   return (

@@ -6,6 +6,8 @@ import Paginacao from './paginacao';
 import { NomeField } from './formulario/nome';
 import { SobrenomeField } from './formulario/sobrenome';
 import { NascimentoField } from './formulario/nascimento';
+import { GeneroField } from './formulario/genero';
+import { hasCampoIncorreto } from './formulario/helper';
 
 const TabelaAluno = () => {
   const [loading, setLoading] = useState(true);
@@ -16,9 +18,19 @@ const TabelaAluno = () => {
 
   //formulario
   const [editar, setEditar] = useState(false);
+
+  //dados
   const [nome, setNome] = useState('');
   const [sobrenome, setSobrenome] = useState('');
   const [nascimento, setNascimento] = useState('');
+  const [genero, setGenero] = useState('');
+
+
+  //verificar se os campos estão corretos:
+  const [nomeIncorreto, setNomeIncorreto] = useState(false);
+  const [sobrenomeIncorreto, setSobrenomeIncorreto] = useState(false);
+  const [nascimentoIncorreto, setNascimentoIncorreto] = useState(false);
+
 
   const getAlunos = async () => {
     setLoading(true);
@@ -43,6 +55,12 @@ const TabelaAluno = () => {
   const openModal = (aluno) => {
     setSelectedAluno(aluno);
     setModalOpen(true);
+
+    setNome(aluno.nome);
+    setSobrenome(aluno.sobrenome);
+    setGenero(aluno.genero);
+    setNascimento(aluno.nascimento);
+   
   };
 
   const closeModal = () => {
@@ -60,7 +78,6 @@ const TabelaAluno = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentAlunos = alunos.slice(startIndex, endIndex);
-
 
 
 
@@ -101,9 +118,9 @@ const TabelaAluno = () => {
       "nascimento_responsavel": null
       */}
 
-      <CModal scrollable visible={modalOpen} onClose={closeModal}>
+      <CModal scrollable visible={modalOpen} onClose={closeModal} backdrop="static">
         <CModalHeader>
-        <CModalTitle>{selectedAluno && `${selectedAluno.nome} ${selectedAluno.id_aluno}`}</CModalTitle>
+          <CModalTitle>{selectedAluno && `${selectedAluno.nome} ${selectedAluno.id_aluno}`}</CModalTitle>
         </CModalHeader>
         <CModalBody>
         
@@ -114,29 +131,29 @@ const TabelaAluno = () => {
                 <CRow className="row g-1">
                   <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
                     <NomeField
-                      nome={selectedAluno.nome} onChange={setNome} desabilitado={!editar} obrigatorio={false}>
+                      nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={false} incorreto={setNomeIncorreto}>
                     </NomeField>
                   </CCol>
 
                   <CCol xs={7} sm={7} md={7} lg={7} xl={7}>
                     <SobrenomeField
-                      sobrenome={selectedAluno.sobrenome} onChange={setSobrenome} desabilitado={!editar} obrigatorio={false}>
+                      sobrenome={sobrenome} onChange={setSobrenome} desabilitado={!editar} obrigatorio={false} incorreto={setSobrenomeIncorreto}>
                     </SobrenomeField>
                   </CCol>
                 </CRow>
 
                 <CRow className="row g-3">
-                  <CCol xs={5} sm={7} md={7} lg={7} xl={7}>
-                    <SobrenomeField
-                      sobrenome={selectedAluno.sobrenome} onChange={setSobrenome} desabilitado={!editar} obrigatorio={false}>
-                    </SobrenomeField>
-                  </CCol>
-
-                  <CCol xs={7} sm={5} md={5} lg={5} xl={5}>
+                  <CCol xs={6} sm={5} md={5} lg={5} xl={5}>
                     <NascimentoField
-                      nascimento={selectedAluno.nascimento} onChange={setNascimento} desabilitado={!editar} obrigatorio={false}>
+                      nascimento={nascimento} onChange={setNascimento} desabilitado={!editar} obrigatorio={false} incorreto={setNascimentoIncorreto}>
                     </NascimentoField>
-                  </CCol>                 
+                  </CCol> 
+
+                  <CCol xs={6} sm={7} md={7} lg={7} xl={7}>
+                    <GeneroField
+                      genero={genero} onChange={setGenero} desabilitado={!editar} obrigatorio={false}>
+                    </GeneroField>
+                  </CCol>
                 </CRow>
    
                
@@ -157,8 +174,9 @@ const TabelaAluno = () => {
             </CCol>
 
             <CCol xs={4}>
-              <CButton color="success" type="submit" disabled={!editar}> Salvar </CButton>
+              <CButton color="success" type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto])}>Salvar</CButton>
             </CCol>
+
           </CRow>
         </CModalFooter>
 
