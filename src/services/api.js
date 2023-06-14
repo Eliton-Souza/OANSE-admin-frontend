@@ -55,13 +55,8 @@ export const api = {
 
   listarManuais: async () => {
 
-    try {
-      let response = await http.get('/manuais');
-      
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await http.get('/manuais', {});
+    return response.data;
   },
 
 

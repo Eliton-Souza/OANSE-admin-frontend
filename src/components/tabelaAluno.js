@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage } from '@coreui/react';
 import { api } from 'src/services/api';
 import { differenceInYears } from 'date-fns';
 import Paginacao from './paginacao';
@@ -8,6 +8,9 @@ import { SobrenomeField } from './formulario/sobrenome';
 import { NascimentoField } from './formulario/nascimento';
 import { GeneroField } from './formulario/genero';
 import { hasCampoIncorreto } from './formulario/helper';
+import { ManualField } from './formulario/manual';
+
+import logo from "../assets/images/OanseLogo.png";
 
 const TabelaAluno = () => {
   const [loading, setLoading] = useState(true);
@@ -24,6 +27,7 @@ const TabelaAluno = () => {
   const [sobrenome, setSobrenome] = useState('');
   const [nascimento, setNascimento] = useState('');
   const [genero, setGenero] = useState('');
+  const [manual, setManual] = useState({ id_manual: '', nome: '' });
 
 
   //verificar se os campos estão corretos:
@@ -60,8 +64,9 @@ const TabelaAluno = () => {
     setSobrenome(aluno.sobrenome);
     setGenero(aluno.genero);
     setNascimento(aluno.nascimento);
-   
-  };
+    setManual({ id_manual: aluno.id_manual, nome: aluno.manual });
+    };
+  
 
   const closeModal = () => {
     setSelectedAluno(null);
@@ -79,7 +84,7 @@ const TabelaAluno = () => {
   const endIndex = startIndex + itemsPerPage;
   const currentAlunos = alunos.slice(startIndex, endIndex);
 
-
+  
 
   return (
     <>
@@ -102,27 +107,43 @@ const TabelaAluno = () => {
         </CTableBody>
       </CTable>
 
+
+      <CCard style={{ width: '18rem' }}>
+        <CCardImage orientation="top" src={logo} />
+        <CCardBody>
+          <CCardTitle>Card title</CCardTitle>
+          <CCardText>
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </CCardText>
+          <CButton href="#">Go somewhere</CButton>
+        </CCardBody>
+      </CCard>
+
       {/* 
-      "id_aluno": 101,
+     "id_aluno": 101,
       "id_carteira": 104,
-      "nome": "Eliton Aluno",
+      "saldo": 50,
+      "nome": "Eliton",
+      "sobrenome": "Aluno",
       "genero": "M",
       "nascimento": "1999-03-25",
+      "id_manual": 24,
+      "manual": "Manual Homens e Mulheres de Deus EC4",
       "clube": "VQ7",
       "id_clube": 6,
-      "manual": "Manual Homens e Mulheres de Deus EC4",
       "id_responsavel": null,
-      "nome_responsavel": "null null",
+      "nome_responsavel": null,
+      "sobrenome_responsavel": null,
       "genero_responsavel": null,
       "contato_responsavel": null,
       "nascimento_responsavel": null
       */}
 
-      <CModal scrollable visible={modalOpen} onClose={closeModal} backdrop="static">
+      <CModal fullscreen="md" alignment="center" scrollable className="modal-dialog-scrollable" visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
-          <CModalTitle>{selectedAluno && `${selectedAluno.nome} ${selectedAluno.id_aluno}`}</CModalTitle>
+          <CModalTitle>{selectedAluno && `${selectedAluno.nome} - ${selectedAluno.id_aluno}`}</CModalTitle>
         </CModalHeader>
-        <CModalBody>
+        <CModalBody> {/*style={{ height: `400px` }}>*/}
         
           {selectedAluno && (
             <>
@@ -154,6 +175,30 @@ const TabelaAluno = () => {
                       genero={genero} onChange={setGenero} desabilitado={!editar} obrigatorio={false}>
                     </GeneroField>
                   </CCol>
+                </CRow>
+
+                <CRow className="row g-3">
+                  <CCol xs={6} sm={5} md={5} lg={5} xl={5}>
+                    <ManualField
+                      manual={manual.nome} onChange={setManual} desabilitado={!editar} obrigatorio={false}>
+                    </ManualField>
+                  </CCol> 
+
+                  <CCol xs={6} sm={7} md={7} lg={7} xl={7}>
+                   
+                  </CCol>
+                </CRow>
+
+                
+
+
+                <CRow>
+                  <CCard>
+                    <CCardHeader>Saldo da Conta</CCardHeader>
+                    <CCardBody>
+                      <CCardTitle>{50}</CCardTitle>
+                    </CCardBody>
+                  </CCard>
                 </CRow>
    
                
