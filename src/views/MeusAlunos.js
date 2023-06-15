@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage } from '@coreui/react';
 import { api } from 'src/services/api';
-import { differenceInYears } from 'date-fns';
-import Paginacao from './paginacao';
-import { NomeField } from './formulario/nome';
-import { SobrenomeField } from './formulario/sobrenome';
-import { NascimentoField } from './formulario/nascimento';
-import { GeneroField } from './formulario/genero';
-import { hasCampoIncorreto } from './formulario/helper';
-import { ManualField } from './formulario/manual';
+import Paginacao from '../components/paginacao';
+import { NomeField } from '../components/formulario/nome';
+import { SobrenomeField } from '../components/formulario/sobrenome';
+import { NascimentoField } from '../components/formulario/nascimento';
+import { GeneroField } from '../components/formulario/genero';
+import { hasCampoIncorreto } from '../components/formulario/helper';
+import { ManualField } from '../components/formulario/manual';
 
-import { SaldoField } from './widget/saldo';
-import { ResponsavelField } from './formulario/responsavel';
-import { ClubeField } from './widget/clube';
+import { SaldoField } from '../components/widget/saldo';
+import { ResponsavelField } from '../components/formulario/responsavel';
+import { ClubeField } from '../components/widget/clube';
+import { IdadeField } from 'src/components/widget/idade';
 
-const TabelaAluno = () => {
+const MeusAlunos = () => {
   const [loading, setLoading] = useState(true);
   const [alunos, setAlunos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,7 +41,7 @@ const TabelaAluno = () => {
 
   const getAlunos = async () => {
     setLoading(true);
-    const result = await api.pegarAlunos();
+    const result = await api.listarTodosAlunos();
     setLoading(false);
 
     if (result.error) {
@@ -59,17 +59,25 @@ const TabelaAluno = () => {
     setCurrentPage(page);
   };
 
-  const openModal = (aluno) => {
+  const openModal= async (id) => {
+
+    const aluno = await api.pegarAluno(id);
+
     setSelectedAluno(aluno);
     setModalOpen(true);
 
-    setNome(aluno.nome);
-    setSobrenome(aluno.sobrenome);
-    setGenero(aluno.genero);
-    setNascimento(aluno.nascimento);
-    setManual({ id_manual: aluno.id_manual, nome: aluno.manual, clube: aluno.clube });
-    setResponsavel({ id_responsavel: aluno.id_responsavel, nome: (aluno.nome_responsavel + aluno.sobrenome_responsavel) });
-    };
+    setDados(aluno)
+  }
+
+  const setDados=(dado)=>{
+    setNome(dado.nome);
+    setSobrenome(dado.sobrenome);
+    setGenero(dado.genero);
+    setNascimento(dado.nascimento);
+    setManual({ id_manual: dado.id_manual, nome: dado.manual, clube: dado.clube });
+    setResponsavel({ id_responsavel: dado.id_responsavel? dado.id_responsavel: '', nome: dado.nome_responsavel? `${dado.nome_responsavel} ${dado.sobrenome_responsavel}` : '' });
+  }
+   
   
 
   const closeModal = () => {
@@ -96,16 +104,14 @@ const TabelaAluno = () => {
         <CTableHead>
           <CTableRow>
             <CTableHeaderCell scope="col">Nome</CTableHeaderCell>
-            <CTableHeaderCell scope="col" style={{ width: '75px' }}>Clube</CTableHeaderCell>
-            <CTableHeaderCell scope="col" style={{ width: '1px' }}>Idade</CTableHeaderCell>
+            <CTableHeaderCell scope="col" style={{ width: '175px' }}>Manual</CTableHeaderCell>
           </CTableRow>
         </CTableHead>
         <CTableBody>
           {currentAlunos.map((aluno) => (
-            <CTableRow key={aluno.id_aluno} onClick={() => openModal(aluno)}>
-             <CTableDataCell>{`${aluno.nome} ${aluno.sobrenome}`}</CTableDataCell>
-              <CTableDataCell>{aluno.clube}</CTableDataCell>
-              <CTableDataCell>{differenceInYears(new Date(), new Date(aluno.nascimento))}</CTableDataCell>
+            <CTableRow key={aluno.id_aluno} onClick={() => openModal(aluno.id_aluno)}>
+              <CTableDataCell>{`${aluno.nome} ${aluno.sobrenome}`}</CTableDataCell>
+              <CTableDataCell>{aluno.manual}</CTableDataCell>
             </CTableRow>
           ))}
         </CTableBody>
@@ -186,16 +192,22 @@ const TabelaAluno = () => {
                 </CRow>
 
                 <CRow className="row g-3"> 
-                  <CCol xs={5} sm={7} md={7} lg={7} xl={3}>
+                  <CCol xs={3} sm={7} md={7} lg={7} xl={4}>
                     <SaldoField
                       saldo={selectedAluno.saldo}>
                     </SaldoField>
                   </CCol>
 
-                  <CCol xs={7} sm={7} md={7} lg={7} xl={3}>
+                  <CCol xs={5} sm={7} md={7} lg={7} xl={4}>
                     <ClubeField
                       clube={manual.clube}>
                     </ClubeField>
+                  </CCol>
+
+                  <CCol xs={4} sm={7} md={7} lg={7} xl={4}>
+                    <IdadeField
+                      nascimento={nascimento}>
+                    </IdadeField>
                   </CCol>
                 </CRow>
 
@@ -237,4 +249,4 @@ const TabelaAluno = () => {
   );
 };
 
-export default TabelaAluno;
+export default MeusAlunos;
