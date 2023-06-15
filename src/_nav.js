@@ -31,7 +31,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Painel Geral',
-    to: '#',
+    to: '/',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     badge: {
       color: 'info',

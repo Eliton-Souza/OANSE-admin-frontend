@@ -10,7 +10,9 @@ import { GeneroField } from './formulario/genero';
 import { hasCampoIncorreto } from './formulario/helper';
 import { ManualField } from './formulario/manual';
 
-import logo from "../assets/images/OanseLogo.png";
+import { SaldoField } from './widget/saldo';
+import { ResponsavelField } from './formulario/responsavel';
+import { ClubeField } from './widget/clube';
 
 const TabelaAluno = () => {
   const [loading, setLoading] = useState(true);
@@ -27,7 +29,8 @@ const TabelaAluno = () => {
   const [sobrenome, setSobrenome] = useState('');
   const [nascimento, setNascimento] = useState('');
   const [genero, setGenero] = useState('');
-  const [manual, setManual] = useState({ id_manual: '', nome: '' });
+  const [manual, setManual] = useState({ id_manual: '', nome: '', clube: '' });
+  const [responsavel, setResponsavel] = useState({ id_responsavel: '', nome: '' });
 
 
   //verificar se os campos estão corretos:
@@ -64,7 +67,8 @@ const TabelaAluno = () => {
     setSobrenome(aluno.sobrenome);
     setGenero(aluno.genero);
     setNascimento(aluno.nascimento);
-    setManual({ id_manual: aluno.id_manual, nome: aluno.manual });
+    setManual({ id_manual: aluno.id_manual, nome: aluno.manual, clube: aluno.clube });
+    setResponsavel({ id_responsavel: aluno.id_responsavel, nome: (aluno.nome_responsavel + aluno.sobrenome_responsavel) });
     };
   
 
@@ -108,16 +112,6 @@ const TabelaAluno = () => {
       </CTable>
 
 
-      <CCard style={{ width: '18rem' }}>
-        <CCardImage orientation="top" src={logo} />
-        <CCardBody>
-          <CCardTitle>Card title</CCardTitle>
-          <CCardText>
-            Some quick example text to build on the card title and make up the bulk of the card's content.
-          </CCardText>
-          <CButton href="#">Go somewhere</CButton>
-        </CCardBody>
-      </CCard>
 
       {/* 
      "id_aluno": 101,
@@ -139,7 +133,7 @@ const TabelaAluno = () => {
       "nascimento_responsavel": null
       */}
 
-      <CModal fullscreen="md" alignment="center" scrollable className="modal-dialog-scrollable" visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" >
+      <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" > {/*fullscreen="md"*/}
         <CModalHeader>
           <CModalTitle>{selectedAluno && `${selectedAluno.nome} - ${selectedAluno.id_aluno}`}</CModalTitle>
         </CModalHeader>
@@ -178,28 +172,34 @@ const TabelaAluno = () => {
                 </CRow>
 
                 <CRow className="row g-3">
-                  <CCol xs={6} sm={5} md={5} lg={5} xl={5}>
+                  <CCol xs={12} sm={6} md={6} lg={6} xl={6}>
                     <ManualField
                       manual={manual.nome} onChange={setManual} desabilitado={!editar} obrigatorio={false}>
                     </ManualField>
-                  </CCol> 
-
-                  <CCol xs={6} sm={7} md={7} lg={7} xl={7}>
-                   
+                  </CCol>
+             
+                  <CCol xs={12} sm={5} md={5} lg={5} xl={6}>
+                    <ResponsavelField
+                      responsavel={responsavel.nome} onChange={setResponsavel} desabilitado={!editar} obrigatorio={false}>
+                    </ResponsavelField>
                   </CCol>
                 </CRow>
 
-                
+                <CRow className="row g-3"> 
+                  <CCol xs={5} sm={7} md={7} lg={7} xl={3}>
+                    <SaldoField
+                      saldo={selectedAluno.saldo}>
+                    </SaldoField>
+                  </CCol>
 
-
-                <CRow>
-                  <CCard>
-                    <CCardHeader>Saldo da Conta</CCardHeader>
-                    <CCardBody>
-                      <CCardTitle>{50}</CCardTitle>
-                    </CCardBody>
-                  </CCard>
+                  <CCol xs={7} sm={7} md={7} lg={7} xl={3}>
+                    <ClubeField
+                      clube={manual.clube}>
+                    </ClubeField>
+                  </CCol>
                 </CRow>
+
+        
    
                
               </CForm>

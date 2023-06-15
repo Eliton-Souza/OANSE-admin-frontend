@@ -20,7 +20,7 @@ export const ManualField = ({ manual, onChange, desabilitado, obrigatorio }) => 
   }, []);
 
   const handleManualChange = (novoManual) => {
-    onChange({ id_manual: novoManual.id_manual, nome: novoManual.nome });
+    onChange({ id_manual: novoManual.id_manual, nome: novoManual.nome, clube: novoManual.clube });
   };
 
   // Agrupando os manuais por clube

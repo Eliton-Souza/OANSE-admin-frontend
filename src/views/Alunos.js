@@ -20,12 +20,7 @@ export default () => {
 
                 <CCard>
 
-                    <CCardHeader>
-                        <CButton color="primary">
-                            <CIcon icon="cil-check" /> Cadastrar Aluno
-                        </CButton>
-
-                    </CCardHeader>
+                 
                     
                     <CCardBody>
 

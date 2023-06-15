@@ -59,17 +59,11 @@ export const api = {
     return response.data;
   },
 
-
   listarResponsaveis: async () => {
 
-    try {
-      let response = await http.get('/responsaveis');
-      
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
+    const response = await http.get('/responsaveis', {});
+    return response.data;
+  },
 
 
 };
