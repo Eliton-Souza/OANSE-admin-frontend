@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage, CAlert, CSpinner } from '@coreui/react';
 import { api } from 'src/services/api';
 import Paginacao from '../components/paginacao';
 import { NomeField } from '../components/formulario/nome';
@@ -13,6 +13,8 @@ import { SaldoField } from '../components/widget/saldo';
 import { ResponsavelField } from '../components/formulario/responsavel';
 import { ClubeField } from '../components/widget/clube';
 import { IdadeField } from 'src/components/widget/idade';
+import CIcon from '@coreui/icons-react';
+import { cilCheckCircle } from '@coreui/icons';
 
 const MeusAlunos = () => {
   const [loading, setLoading] = useState(true);
@@ -20,6 +22,7 @@ const MeusAlunos = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAluno, setSelectedAluno] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [sucesso, setSucesso] = useState();
 
   //formulario
   const [editar, setEditar] = useState(false);
@@ -27,10 +30,10 @@ const MeusAlunos = () => {
   //dados
   const [nome, setNome] = useState('');
   const [sobrenome, setSobrenome] = useState('');
-  const [nascimento, setNascimento] = useState('');
+  const [nascimento, setNascimento] = useState(null);
   const [genero, setGenero] = useState('');
-  const [manual, setManual] = useState({ id_manual: '', nome: '', clube: '' });
-  const [responsavel, setResponsavel] = useState({ id_responsavel: '', nome: '' });
+  const [manual, setManual] = useState({ id_manual: null, nome: '', clube: '' });
+  const [responsavel, setResponsavel] = useState({ id_responsavel: null, nome: '' });
 
 
   //verificar se os campos estão corretos:
@@ -60,8 +63,9 @@ const MeusAlunos = () => {
   };
 
   const openModal= async (id) => {
-
+    setLoading(true);
     const aluno = await api.pegarAluno(id);
+    setLoading(false);
 
     setSelectedAluno(aluno);
     setModalOpen(true);
@@ -75,7 +79,7 @@ const MeusAlunos = () => {
     setGenero(dado.genero);
     setNascimento(dado.nascimento);
     setManual({ id_manual: dado.id_manual, nome: dado.manual, clube: dado.clube });
-    setResponsavel({ id_responsavel: dado.id_responsavel? dado.id_responsavel: '', nome: dado.nome_responsavel? `${dado.nome_responsavel} ${dado.sobrenome_responsavel}` : '' });
+    setResponsavel({ id_responsavel: dado.id_responsavel? dado.id_responsavel: null, nome: dado.nome_responsavel? `${dado.nome_responsavel} ${dado.sobrenome_responsavel}` : '' });
   }
    
   
@@ -84,6 +88,26 @@ const MeusAlunos = () => {
     setSelectedAluno(null);
     setModalOpen(false);
     setEditar(false);
+  };
+
+  const salvarAlteracoes= async () => {
+    setLoading(true);
+    const result = await api.atualizarAluno(selectedAluno.id_aluno, nome, sobrenome, genero, nascimento, responsavel.id_responsavel, manual.id_manual );
+    setLoading(false);
+
+    if (result.error) {
+      setSucesso(false);
+    } else {
+      setSucesso(true);
+    }
+
+    getAlunos();
+    setEditar(false);
+
+    setTimeout(() => {
+      setSucesso();
+    }, 4000); // 4 segundos
+
   };
 
   // Configurações da paginação
@@ -100,7 +124,13 @@ const MeusAlunos = () => {
 
   return (
     <>
-      <CTable loading={loading.toString()} striped hover bordered>
+     <h1 style={{ fontSize: '24px' }}>Meus Alunos
+        {loading && (
+          <CSpinner color="success" size="xl" style={{ marginLeft: '15px' }}/>
+        )}
+     </h1>
+
+      <CTable striped hover bordered>
         <CTableHead>
           <CTableRow>
             <CTableHeaderCell scope="col">Nome</CTableHeaderCell>
@@ -109,13 +139,17 @@ const MeusAlunos = () => {
         </CTableHead>
         <CTableBody>
           {currentAlunos.map((aluno) => (
-            <CTableRow key={aluno.id_aluno} onClick={() => openModal(aluno.id_aluno)}>
-              <CTableDataCell>{`${aluno.nome} ${aluno.sobrenome}`}</CTableDataCell>
+            <CTableRow key={aluno.id_aluno} onClick={() => openModal(aluno.id_aluno)}>      
+              <CTableDataCell>{`${aluno.nome} ${aluno.sobrenome}`}            
+              </CTableDataCell>
               <CTableDataCell>{aluno.manual}</CTableDataCell>
             </CTableRow>
           ))}
         </CTableBody>
       </CTable>
+
+   
+        
 
 
 
@@ -141,9 +175,17 @@ const MeusAlunos = () => {
 
       <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" > {/*fullscreen="md"*/}
         <CModalHeader>
-          <CModalTitle>{selectedAluno && `${selectedAluno.nome} - ${selectedAluno.id_aluno}`}</CModalTitle>
+          <CModalTitle>{selectedAluno && `${selectedAluno.nome} - ${selectedAluno.id_aluno}`}
+          
+          {sucesso && (
+            <CAlert color="success" className="d-flex align-items-center">
+              <CIcon icon={cilCheckCircle} className="flex-shrink-0 me-2" width={24} height={24} />
+              <div>Aluno Atualizado com sucesso</div>
+            </CAlert>
+          )}
+          </CModalTitle>
         </CModalHeader>
-        <CModalBody> {/*style={{ height: `400px` }}>*/}
+        <CModalBody>
         
           {selectedAluno && (
             <>
@@ -231,7 +273,7 @@ const MeusAlunos = () => {
             </CCol>
 
             <CCol xs={4}>
-              <CButton color="success" type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto])}>Salvar</CButton>
+              <CButton color="success" onClick={salvarAlteracoes} type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto])}>Salvar</CButton>
             </CCol>
 
           </CRow>

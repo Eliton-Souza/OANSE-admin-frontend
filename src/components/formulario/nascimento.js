@@ -9,37 +9,34 @@ export const NascimentoField = ({ nascimento, onChange, desabilitado, obrigatori
   const currentDate = moment().tz('America/Manaus').format('YYYY-MM-DD');
  
   const handleNascimentoChange = (event) => {
-    const novoNascimento = event.target.value
+    let novoNascimento;
+    event.target.value== ''? novoNascimento= null : novoNascimento = event.target.value;
 
-    if ( novoNascimento <= currentDate) {
+    if (novoNascimento <= currentDate || novoNascimento== null) {
       setValido(true);
       setInvalido(false);
-      onChange(novoNascimento); // Atualiza a variável nascimento no componente pai
       incorreto(false);
+      onChange(novoNascimento); // Atualiza a variável nascimento no componente pai
     } else {
       setValido(false);
       setInvalido(true);
       incorreto(true);
-      onChange(null);
     }
-
   };
 
   return (
-    <>
-      <CFormInput
-        type="date"
-        id="nascimento"
-        label="Nascimento"
-        defaultValue={nascimento}
-        onChange={handleNascimentoChange}
-        disabled={desabilitado}
-        required={obrigatorio}
-        valid={valido}
-        invalid={invalido}
-        feedbackInvalid="Data inválida"
-        feedbackValid="OK"
-      />
-    </>
+    <CFormInput
+      type="date"
+      id="nascimento"
+      label="Nascimento"
+      defaultValue={nascimento}
+      onChange={handleNascimentoChange}
+      disabled={desabilitado}
+      required={obrigatorio}
+      valid={valido}
+      invalid={invalido}
+      feedbackInvalid="Data inválida"
+      feedbackValid="OK"
+    />
   );
 };
