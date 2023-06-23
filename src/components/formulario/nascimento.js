@@ -1,12 +1,19 @@
 import { CFormInput } from '@coreui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import moment from 'moment-timezone';
 
-export const NascimentoField = ({ nascimento, onChange, desabilitado, obrigatorio, incorreto }) => {
+export const NascimentoField = ({ nascimento, onChange, desabilitado, obrigatorio, incorreto, limpar }) => {
   const [valido, setValido] = useState();
   const [invalido, setInvalido] = useState();
 
   const currentDate = moment().tz('America/Manaus').format('YYYY-MM-DD');
+
+  useEffect(() => {
+    if (limpar) {
+      setValido();
+      setInvalido();
+    }
+  }, [limpar]);
  
   const handleNascimentoChange = (event) => {
     let novoNascimento;
@@ -40,4 +47,9 @@ export const NascimentoField = ({ nascimento, onChange, desabilitado, obrigatori
       feedbackValid="OK"
     />
   );
+};
+
+//prop opcional
+NascimentoField.defaultProps = {
+  limpar: undefined
 };

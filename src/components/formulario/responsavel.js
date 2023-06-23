@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle, CFormLabel } from '@coreui/react';
+import { CFormSelect, CFormLabel } from '@coreui/react';
 import { api } from 'src/services/api';
 
 export const ResponsavelField = ({ responsavel, onChange, desabilitado, obrigatorio }) => {
@@ -11,38 +11,40 @@ export const ResponsavelField = ({ responsavel, onChange, desabilitado, obrigato
         const response = await api.listarResponsaveis();
         setResponsaveis(response.responsaveis);
       } catch (error) {
-        console.log(error);
+        alert(error);
       }
     };
 
     fetchResponsaveis();
   }, []);
 
-  const handleResponsavelChange = (novoResponsavel) => {
-    onChange({ id_responsavel: novoResponsavel.id_responsavel, nome: `${novoResponsavel.nome} ${novoResponsavel.sobrenome}` });
+  const handleResponsavelChange = (novoResponsavelId) => {
+    const novoResponsavel = responsaveis.find((responsavel) => responsavel.id_responsavel == novoResponsavelId);
+    onChange({ id_responsavel: novoResponsavel?.id_responsavel, nome: `${novoResponsavel?.nome} ${novoResponsavel?.sobrenome}` });
   };
 
   return (
     <>
       <CFormLabel>Responsável</CFormLabel>
       <br />
-      <CDropdown variant="btn-group">
-        <CDropdownToggle color="light" disabled={desabilitado}>
-          {responsavel ? responsavel : 'Selecione um responsável'}
-        </CDropdownToggle>
-        <CDropdownMenu>
-          {responsaveis.map((responsavelItem) => (
-            <CDropdownItem
-              key={responsavelItem.id_responsavel}
-              value={responsavelItem.id_responsavel}
-              onClick={() => handleResponsavelChange(responsavelItem)}
-              required={obrigatorio}
-            >
-              {`${responsavelItem.nome} ${responsavelItem.sobrenome}`}
-            </CDropdownItem>
-          ))}
-        </CDropdownMenu>
-      </CDropdown>
+      <CFormSelect
+        onChange={(event) => {
+          handleResponsavelChange(event.target.value);
+        }}
+        disabled={desabilitado}
+        required={obrigatorio}
+        value={responsaveis.some((responsavelItem) => responsavelItem.id_responsavel === responsavel?.id_responsavel) ? responsavel.id_responsavel : ''}>
+        
+        <option value='' disabled>Selecione um responsável</option>
+        {responsaveis.map((responsavelItem) => (
+          <option
+            key={responsavelItem.id_responsavel}
+            value={responsavelItem.id_responsavel}
+          >
+            {`${responsavelItem.nome} ${responsavelItem.sobrenome}`}
+          </option>
+        ))}
+      </CFormSelect>
     </>
   );
 };

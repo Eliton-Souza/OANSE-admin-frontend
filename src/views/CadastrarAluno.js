@@ -36,6 +36,8 @@ const CadastrarAluno = () => {
   const [nomeIncorreto, setNomeIncorreto] = useState(false);
   const [sobrenomeIncorreto, setSobrenomeIncorreto] = useState(false);
   const [nascimentoIncorreto, setNascimentoIncorreto] = useState(false);
+
+  const [limparValidacao, setLimparValidacao] = useState(false);
  
 
   const Limpar = () => {  //ver logica
@@ -48,6 +50,11 @@ const CadastrarAluno = () => {
     setNascimento(null);
     setManual({ id_manual: null, nome: '', clube: ''});
     setResponsavel({ id_responsavel: null, nome: '' });
+
+    setLimparValidacao(true);
+    setTimeout(() => {
+      setLimparValidacao(false);
+    }, 1000); // 1 segundos
   };
 
   //corrigir alteraçãos no banco, nao ta salvando
@@ -92,13 +99,13 @@ const CadastrarAluno = () => {
         <CRow className="row g-4">
           <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
             <NomeField
-              nome={nome} onChange={setNome} desabilitado={loading} obrigatorio={true} incorreto={setNomeIncorreto}>
+              nome={nome} onChange={setNome} desabilitado={loading} obrigatorio={true} incorreto={setNomeIncorreto} limpar={limparValidacao}>
             </NomeField>
           </CCol>
 
           <CCol xs={7} sm={7} md={7} lg={7} xl={7}>
             <SobrenomeField
-              sobrenome={sobrenome} onChange={setSobrenome} desabilitado={loading} obrigatorio={true} incorreto={setSobrenomeIncorreto}>
+              sobrenome={sobrenome} onChange={setSobrenome} desabilitado={loading} obrigatorio={true} incorreto={setSobrenomeIncorreto} limpar={limparValidacao}>
             </SobrenomeField>
           </CCol>
         </CRow>
@@ -106,7 +113,7 @@ const CadastrarAluno = () => {
         <CRow className="row g-3">
           <CCol xs={6} sm={5} md={5} lg={5} xl={5}>
             <NascimentoField
-              nascimento={nascimento} onChange={setNascimento} desabilitado={loading} obrigatorio={false} incorreto={setNascimentoIncorreto}>
+              nascimento={nascimento} onChange={setNascimento} desabilitado={loading} obrigatorio={false} incorreto={setNascimentoIncorreto} limpar={limparValidacao}>
             </NascimentoField>
           </CCol> 
 
@@ -126,7 +133,7 @@ const CadastrarAluno = () => {
       
           <CCol xs={12} sm={5} md={5} lg={5} xl={6}>
             <ResponsavelField
-              responsavel={responsavel.nome} onChange={setResponsavel} desabilitado={loading} obrigatorio={false}>
+              responsavel={responsavel} onChange={setResponsavel} desabilitado={loading} obrigatorio={false}>
             </ResponsavelField>
           </CCol>
         </CRow>

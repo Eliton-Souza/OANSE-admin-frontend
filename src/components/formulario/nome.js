@@ -1,11 +1,18 @@
 import { CFormInput } from '@coreui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { regexName } from './helper';
 
-export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto }) => {
+export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto, limpar }) => {
 
   const [valido, setValido] = useState();
   const [invalido, setInvalido] = useState();
+
+  useEffect(() => {
+    if (limpar) {
+      setValido();
+      setInvalido();
+    }
+  }, [limpar]);
 
   const handleNomeChange = (event) => {
     const novoNome = event.target.value;
@@ -40,4 +47,9 @@ export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto
       />
     </>
   );
+};
+
+//prop opcional
+NomeField.defaultProps = {
+  limpar: undefined
 };

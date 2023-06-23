@@ -11,7 +11,7 @@ export const ManualField = ({ manual, onChange, desabilitado, obrigatorio }) => 
         const response = await api.listarManuais();
         setManuais(response.manuais);
       } catch (error) {
-        console.log(error);
+        alert(error);
       }
     };
 
@@ -21,7 +21,7 @@ export const ManualField = ({ manual, onChange, desabilitado, obrigatorio }) => 
 
   const handleManualChange = (novoManualId) => {
     const novoManual = manuais.find((manual) => manual.id_manual == novoManualId);
-    onChange({ id_manual: novoManual.id_manual, nome: novoManual.nome, clube: novoManual.clube });
+    onChange({ id_manual: novoManual?.id_manual, nome: novoManual?.nome, clube: novoManual?.clube });
   };
 
   // Agrupando os manuais por clube

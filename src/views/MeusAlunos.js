@@ -41,6 +41,8 @@ const MeusAlunos = () => {
   const [sobrenomeIncorreto, setSobrenomeIncorreto] = useState(false);
   const [nascimentoIncorreto, setNascimentoIncorreto] = useState(false);
 
+  const [limparValidacao, setLimparValidacao] = useState(false);
+
 
   const getAlunos = async () => {
     setLoading(true);
@@ -103,6 +105,11 @@ const MeusAlunos = () => {
 
     getAlunos();
     setEditar(false);
+
+    setLimparValidacao(true);
+    setTimeout(() => {
+      setLimparValidacao(false);
+    }, 1000); // 1 segundos
 
     setTimeout(() => {
       setSucesso();
@@ -169,13 +176,13 @@ const MeusAlunos = () => {
                 <CRow className="row g-1">
                   <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
                     <NomeField
-                      nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={false} incorreto={setNomeIncorreto}>
+                      nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={false} incorreto={setNomeIncorreto} limpar={limparValidacao}>
                     </NomeField>
                   </CCol>
 
                   <CCol xs={7} sm={7} md={7} lg={7} xl={7}>
                     <SobrenomeField
-                      sobrenome={sobrenome} onChange={setSobrenome} desabilitado={!editar} obrigatorio={false} incorreto={setSobrenomeIncorreto}>
+                      sobrenome={sobrenome} onChange={setSobrenome} desabilitado={!editar} obrigatorio={false} incorreto={setSobrenomeIncorreto} limpar={limparValidacao}>
                     </SobrenomeField>
                   </CCol>
                 </CRow>
@@ -183,7 +190,7 @@ const MeusAlunos = () => {
                 <CRow className="row g-3">
                   <CCol xs={6} sm={5} md={5} lg={5} xl={5}>
                     <NascimentoField
-                      nascimento={nascimento} onChange={setNascimento} desabilitado={!editar} obrigatorio={false} incorreto={setNascimentoIncorreto}>
+                      nascimento={nascimento} onChange={setNascimento} desabilitado={!editar} obrigatorio={false} incorreto={setNascimentoIncorreto} limpar={limparValidacao}>
                     </NascimentoField>
                   </CCol> 
 
