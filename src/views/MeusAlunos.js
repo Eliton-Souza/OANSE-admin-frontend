@@ -17,7 +17,7 @@ import CIcon from '@coreui/icons-react';
 import { cilCheckCircle } from '@coreui/icons';
 
 const MeusAlunos = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState();
   const [alunos, setAlunos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAluno, setSelectedAluno] = useState(null);
@@ -106,11 +106,11 @@ const MeusAlunos = () => {
 
     setTimeout(() => {
       setSucesso();
-    }, 4000); // 4 segundos
+    }, 2000); // 2 segundos
 
   };
 
-  // Configurações da paginação
+  /*// Configurações da paginação
   const itemsPerPage = 5;
   const totalItems = alunos.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -118,7 +118,7 @@ const MeusAlunos = () => {
   // Lógica para obter a lista de alunos a ser exibida na página atual
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentAlunos = alunos.slice(startIndex, endIndex);
+  const currentAlunos = alunos.slice(startIndex, endIndex);*/
 
   
 
@@ -126,7 +126,7 @@ const MeusAlunos = () => {
     <>
      <h1 style={{ fontSize: '24px' }}>Meus Alunos
         {loading && (
-          <CSpinner color="success" size="xl" style={{ marginLeft: '15px' }}/>
+          <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
      </h1>
 
@@ -138,7 +138,7 @@ const MeusAlunos = () => {
           </CTableRow>
         </CTableHead>
         <CTableBody>
-          {currentAlunos.map((aluno) => (
+          {alunos.map((aluno) => (
             <CTableRow key={aluno.id_aluno} onClick={() => openModal(aluno.id_aluno)}>      
               <CTableDataCell>{`${aluno.nome} ${aluno.sobrenome}`}            
               </CTableDataCell>
@@ -147,31 +147,6 @@ const MeusAlunos = () => {
           ))}
         </CTableBody>
       </CTable>
-
-   
-        
-
-
-
-      {/* 
-     "id_aluno": 101,
-      "id_carteira": 104,
-      "saldo": 50,
-      "nome": "Eliton",
-      "sobrenome": "Aluno",
-      "genero": "M",
-      "nascimento": "1999-03-25",
-      "id_manual": 24,
-      "manual": "Manual Homens e Mulheres de Deus EC4",
-      "clube": "VQ7",
-      "id_clube": 6,
-      "id_responsavel": null,
-      "nome_responsavel": null,
-      "sobrenome_responsavel": null,
-      "genero_responsavel": null,
-      "contato_responsavel": null,
-      "nascimento_responsavel": null
-      */}
 
       <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" > {/*fullscreen="md"*/}
         <CModalHeader>
@@ -222,7 +197,7 @@ const MeusAlunos = () => {
                 <CRow className="row g-3">
                   <CCol xs={12} sm={6} md={6} lg={6} xl={6}>
                     <ManualField
-                      manual={manual.nome} onChange={setManual} desabilitado={!editar} obrigatorio={false}>
+                      manual={manual} onChange={setManual} desabilitado={!editar} obrigatorio={false}>
                     </ManualField>
                   </CCol>
              
@@ -281,11 +256,11 @@ const MeusAlunos = () => {
 
       </CModal>
       
-      <Paginacao
+     {/* <Paginacao
         currentPage={currentPage}
         totalPages={totalPages}
         handlePageChange={handlePageChange}
-      />
+          />*/}
 
     </>
   );

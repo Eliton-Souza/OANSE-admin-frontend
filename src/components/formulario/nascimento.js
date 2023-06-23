@@ -26,6 +26,7 @@ export const NascimentoField = ({ nascimento, onChange, desabilitado, obrigatori
 
   return (
     <CFormInput
+      placeholder="dd/mm/aaaa"
       type="date"
       id="nascimento"
       label="Nascimento"

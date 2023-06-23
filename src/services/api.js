@@ -49,22 +49,16 @@ export const api = {
 
     return response.data;
   },
-  
 
-  criarAluno: async (nome, sobrenome, genero, nascimento, id_manual, id_responsavel) => {
 
-    try {
-      let carteira= true;
-      let response = await http.post('/aluno', {
-        nome, sobrenome, nascimento, genero, carteira, id_manual, id_responsavel,
-      });
+  criarAluno: async (nome, sobrenome, genero, nascimento, id_responsavel, id_manual) => {
+    const response = await http.post('/aluno', {
+      nome, sobrenome, genero, nascimento, id_responsavel, id_manual,
+    });
       
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    return response.data;
   },
-
+  
 
   listarManuais: async () => {
     const response = await http.get('/manuais', {});

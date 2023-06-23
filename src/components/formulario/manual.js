@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle, CDropdownHeader, CFormLabel } from '@coreui/react';
+import { CFormSelect, CFormLabel } from '@coreui/react';
 import { api } from 'src/services/api';
 
 export const ManualField = ({ manual, onChange, desabilitado, obrigatorio }) => {
@@ -10,7 +10,6 @@ export const ManualField = ({ manual, onChange, desabilitado, obrigatorio }) => 
       try {
         const response = await api.listarManuais();
         setManuais(response.manuais);
-
       } catch (error) {
         console.log(error);
       }
@@ -19,7 +18,9 @@ export const ManualField = ({ manual, onChange, desabilitado, obrigatorio }) => 
     fetchManuais();
   }, []);
 
-  const handleManualChange = (novoManual) => {
+
+  const handleManualChange = (novoManualId) => {
+    const novoManual = manuais.find((manual) => manual.id_manual == novoManualId);
     onChange({ id_manual: novoManual.id_manual, nome: novoManual.nome, clube: novoManual.clube });
   };
 
@@ -34,31 +35,29 @@ export const ManualField = ({ manual, onChange, desabilitado, obrigatorio }) => 
 
   return (
     <>
-      <CFormLabel>Manual</CFormLabel>
+      <CFormLabel> {obrigatorio? "Manual *" : "Manual"}</CFormLabel>
       <br />
-      <CDropdown variant="btn-group">
-        <CDropdownToggle color="light" disabled={desabilitado}>
-          {manual ? manual : 'Selecione o Manual'}
-        </CDropdownToggle>
-        <CDropdownMenu>
-          {Object.entries(manuaisPorClube).map(([clube, manuaisDoClube]) => (
-            <React.Fragment key={clube}>
-              <CDropdownHeader className="bg-light fw-semibold py-2">{clube}</CDropdownHeader>
-              {manuaisDoClube.map((manualItem) => (
-                <CDropdownItem
-                  key={manualItem.id_manual}
-                  value={manualItem.id_manual}
-                  onClick={() => handleManualChange(manualItem)}
-                  
-                  required={obrigatorio}
-                >
-                  {manualItem.nome}
-                </CDropdownItem>
-              ))}
-            </React.Fragment>
-          ))}
-        </CDropdownMenu>
-      </CDropdown>
+      <CFormSelect
+        onChange={(event) => {
+          handleManualChange(event.target.value);
+        }}
+        disabled={desabilitado}
+        required={obrigatorio}
+        value={manuais.some((manualItem) => manualItem.id_manual === manual?.id_manual) ? manual.id_manual : ''}>
+         
+        <option value='' disabled>Selecione um manual</option>
+        {Object.entries(manuaisPorClube).map(([clube, manuaisDoClube]) => (
+          <React.Fragment key={clube}>
+            <option disabled>───────────</option>
+            <option disabled>{clube}</option>
+            {manuaisDoClube.map((manualItem) => (
+              <option key={manualItem.id_manual} value={manualItem.id_manual}>
+                {manualItem.nome}
+              </option>
+            ))}
+          </React.Fragment>
+        ))}
+      </CFormSelect>
     </>
   );
 };

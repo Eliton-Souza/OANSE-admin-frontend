@@ -25,9 +25,10 @@ export const SobrenomeField = ({ sobrenome, onChange, desabilitado, obrigatorio,
   return (
     <>
       <CFormInput
+        placeholder="Sobrenome"
         type="text"
         id="sobrenome"
-        label="Sobrenome"
+        label={obrigatorio? "Sobrenome *" : "Sobrenome"}
         defaultValue={sobrenome}
         onChange={handleSobrenomeChange}
         disabled={desabilitado}

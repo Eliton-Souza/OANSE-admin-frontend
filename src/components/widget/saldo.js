@@ -9,7 +9,7 @@ export const SaldoField = ({ saldo }) => {
       className="mb-3"
       icon={<CIcon icon={cilCash} height={35} />}
       title="Saldo"
-      value={saldo}
+      value={saldo? saldo : "0" }
     />
   );
 };

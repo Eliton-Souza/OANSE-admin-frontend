@@ -43,7 +43,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Cadastrar Aluno',
-    to: '/theme/colors',
+    to: '/aluno',
     icon: <CIcon icon={cilUserPlus} customClassName="nav-icon" />,
   },
 

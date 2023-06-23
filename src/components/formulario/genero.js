@@ -10,7 +10,7 @@ export const GeneroField = ({ genero, onChange, desabilitado, obrigatorio }) => 
 
   return (
     <div>
-      <CFormLabel>Gênero</CFormLabel>
+      <CFormLabel>{obrigatorio? "Gênero *" : "Gênero"}</CFormLabel>
       <br />
       <CFormCheck
         inline

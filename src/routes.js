@@ -3,12 +3,14 @@ import React from 'react'
 const Dashboard = React.lazy(() => import('./views/Dashboard'))
 const Logout = React.lazy(() => import('./views/logout'));
 const MeusAlunos = React.lazy(() => import('./views/MeusAlunos'));
+const CadastrarAluno= React.lazy(() => import('./views/CadastrarAluno'));
 
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/alunos', name: 'Alunos', element: MeusAlunos },
+  { path: '/aluno', name: 'Aluno', element: CadastrarAluno },
 
 
   { path: '/logout', name: 'Logout', element: Logout },
