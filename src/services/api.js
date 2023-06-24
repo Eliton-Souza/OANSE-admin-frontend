@@ -15,14 +15,12 @@ export const removeToken = () => {
 export const api = {
 
   validaToken: async () => {
-   
     const response = await http.get('/rotaProtegida', {});
     return response.data;
   },
   
 
   fazerLogin: async (login, senha) => {
-    
     const response = await http.post('/login', {
       login,
       senha,
@@ -32,43 +30,45 @@ export const api = {
   },
 
 
-  criarAluno: async (nome, sobrenome, genero, nascimento, id_manual, id_responsavel) => {
-
-    try {
-      let carteira= true;
-      let response = await http.post('/aluno', {
-        nome, sobrenome, nascimento, genero, carteira, id_manual, id_responsavel,
-      });
-      
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+  listarTodosAlunos: async () => {
+    const response = await http.get('/alunos', {});
+    return response.data;
   },
 
+
+  pegarAluno: async (id) => {
+    const response = await http.get(`/aluno/${id}`, {});
+    return response.data.aluno;
+  },
+
+
+  atualizarAluno: async ( id, nome, sobrenome, genero, nascimento, id_responsavel, id_manual) => {
+    const response = await http.put(`/aluno/${id}`, {
+      nome, sobrenome, genero, nascimento, id_responsavel, id_manual
+    });
+
+    return response.data;
+  },
+
+
+  criarAluno: async (nome, sobrenome, genero, nascimento, id_responsavel, id_manual) => {
+    const response = await http.post('/aluno', {
+      nome, sobrenome, genero, nascimento, id_responsavel, id_manual,
+    });
+      
+    return response.data;
+  },
+  
 
   listarManuais: async () => {
-
-    try {
-      let response = await http.get('/manuais');
-      
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await http.get('/manuais', {});
+    return response.data;
   },
 
-
   listarResponsaveis: async () => {
-
-    try {
-      let response = await http.get('/responsaveis');
-      
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
+    const response = await http.get('/responsaveis', {});
+    return response.data;
+  },
 
 
 };

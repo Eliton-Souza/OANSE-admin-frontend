@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { getToken } from './api';
 
+const linkAPI = 'https://oanse-japiim-api.cyclic.app/';
+const localhost= 'http://localhost:4000/';
+
 const http = axios.create({
-  baseURL: 'https://058a-2804-14d-1488-8a62-f413-d600-d4a0-ee9d.ngrok-free.app/',
+  baseURL: linkAPI,
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'ngrok-skip-browser-warning': 'true'
   }
 });
 
