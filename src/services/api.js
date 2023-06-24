@@ -58,6 +58,16 @@ export const api = {
       
     return response.data;
   },
+
+
+  alterarSaldo: async ( id, valor, tipo, id_aluno, descricao ) => {
+    const response = await http.put(`/carteira/${id}`, {
+      valor, tipo, id_aluno, descricao
+    });
+
+    return response.data;
+  },
+
   
 
   listarManuais: async () => {

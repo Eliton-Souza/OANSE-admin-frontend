@@ -5,7 +5,7 @@ const linkAPI = 'https://oanse-japiim-api.cyclic.app/';
 const localhost= 'http://localhost:4000/';
 
 const http = axios.create({
-  baseURL: linkAPI,
+  baseURL: localhost,
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
   }

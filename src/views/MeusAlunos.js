@@ -217,7 +217,7 @@ const MeusAlunos = () => {
                 <CRow className="row g-3"> 
                   <CCol xs={3} sm={7} md={7} lg={7} xl={4}>
                     <SaldoField
-                      saldo={selectedAluno.saldo}>
+                      saldo={selectedAluno.saldo} id_carteira={selectedAluno.id_carteira} id_aluno={selectedAluno.id_aluno}>
                     </SaldoField>
                   </CCol>
 
