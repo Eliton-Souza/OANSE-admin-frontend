@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage, CAlert, CSpinner } from '@coreui/react';
 import { api } from 'src/services/api';
-import Paginacao from '../components/paginacao';
 import { NomeField } from '../components/formulario/nome';
 import { SobrenomeField } from '../components/formulario/sobrenome';
 import { NascimentoField } from '../components/formulario/nascimento';
@@ -19,7 +18,6 @@ import { cilCheckCircle } from '@coreui/icons';
 const MeusAlunos = () => {
   const [loading, setLoading] = useState();
   const [alunos, setAlunos] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [selectedAluno, setSelectedAluno] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [sucesso, setSucesso] = useState();
@@ -59,10 +57,6 @@ const MeusAlunos = () => {
   useEffect(() => {
     getAlunos();
   }, []);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
 
   const openModal= async (id) => {
     setLoading(true);
@@ -118,6 +112,12 @@ const MeusAlunos = () => {
   };
 
   /*// Configurações da paginação
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   const itemsPerPage = 5;
   const totalItems = alunos.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -172,7 +172,6 @@ const MeusAlunos = () => {
           {selectedAluno && (
             <>
               <CForm className="row g-3">
-
                 <CRow className="row g-1">
                   <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
                     <NomeField
@@ -210,7 +209,7 @@ const MeusAlunos = () => {
              
                   <CCol xs={12} sm={5} md={5} lg={5} xl={6}>
                     <ResponsavelField
-                      responsavel={responsavel.nome} onChange={setResponsavel} desabilitado={!editar} obrigatorio={false}>
+                      responsavel={responsavel} onChange={setResponsavel} desabilitado={!editar} obrigatorio={false}>
                     </ResponsavelField>
                   </CCol>
                 </CRow>
@@ -233,13 +232,8 @@ const MeusAlunos = () => {
                       nascimento={nascimento}>
                     </IdadeField>
                   </CCol>
-                </CRow>
-
-        
-   
-               
+                </CRow>  
               </CForm>
-
             </>
           )}
         </CModalBody>
@@ -263,11 +257,13 @@ const MeusAlunos = () => {
 
       </CModal>
       
-     {/* <Paginacao
+     {/*
+        <Paginacao
         currentPage={currentPage}
         totalPages={totalPages}
         handlePageChange={handlePageChange}
-          />*/}
+        />
+      */}
 
     </>
   );
