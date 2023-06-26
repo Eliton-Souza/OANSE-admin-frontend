@@ -3,8 +3,8 @@ import CIcon from "@coreui/icons-react";
 import { CAlert, CButton, CCol, CForm, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow, CSpinner, CWidgetStatsC } from "@coreui/react";
 import { useState } from "react";
 import { api } from "src/services/api";
-import { ValorField } from "../formulario/valor";
-import { TipoField } from "../formulario/tipoTransacao";
+import { ValorField } from "./formulario/valor";
+import { TipoField } from "./formulario/tipoTransacao";
 import numeral from "numeral";
 
 
@@ -113,24 +113,35 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
         </CModalBody>
 
         <CModalFooter>
-
-          {tipo ? `Novo Saldo: ${handleSaldo()}` : ''}
-
-          <CRow className="d-grid gap-2 d-md-flex">
-
-            <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
-              <CButton color="secondary" onClick={closeModal} shape="rounded-pill">Fechar</CButton>
+          {tipo && (
+            <div className="d-flex align-items-center me-auto">
+              Novo Saldo: {handleSaldo()}
+            </div>
+          )}
+          <CRow className="d-flex align-items-center justify-content-end">
+            <CCol xs={5} sm={5} md={5} lg={5} xl={5} className="me-3"> 
+              <CButton
+              color="secondary"
+              onClick={closeModal}
+              shape="rounded-pill"
+              >
+                Fechar
+              </CButton>
             </CCol>
-
             <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
-              <CButton disabled={valorIncorreto || !valor || block} color="success" onClick={salvarAlteracoes} type="submit" shape="rounded-pill">{loading? 'Carregando' : 'Salvar'}</CButton>
+              <CButton
+                disabled={valorIncorreto || !valor || block}
+                color="success"
+                onClick={salvarAlteracoes}
+                type="submit"
+                shape="rounded-pill"
+              >
+                {loading ? 'Carregando' : 'Salvar'}
+              </CButton>
             </CCol>
-
           </CRow>
-
-         
-        
         </CModalFooter>
+
       </CModal>
     </>
   );

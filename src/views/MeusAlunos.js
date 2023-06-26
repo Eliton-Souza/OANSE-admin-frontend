@@ -14,7 +14,7 @@ import { ClubeField } from '../components/widget/clube';
 import { IdadeField } from 'src/components/widget/idade';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle } from '@coreui/icons';
-import { ModalSaldoField } from 'src/components/widget/modalSaldo';
+import { ModalSaldoField } from 'src/components/modalSaldo';
 
 const MeusAlunos = () => {
   const [loading, setLoading] = useState();
