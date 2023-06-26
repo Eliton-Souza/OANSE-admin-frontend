@@ -258,7 +258,7 @@ const MeusAlunos = () => {
             </CCol>
 
             <CCol xs={4}>
-              <CButton color="success" onClick={salvarAlteracoes} type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto])}>Salvar</CButton>
+              <CButton color="success" onClick={salvarAlteracoes} type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto])}>{loading ? 'Carregando' : 'Salvar'}</CButton>
             </CCol>
 
           </CRow>

@@ -6,6 +6,7 @@ import { api } from "src/services/api";
 import { ValorField } from "./formulario/valor";
 import { TipoField } from "./formulario/tipoTransacao";
 import numeral from "numeral";
+import { DescricaoField } from "./formulario/descricao";
 
 
 export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, saldo, modalPai}) => {
@@ -18,7 +19,7 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
 
   const [valor, setValor]= useState(0);
   const [tipo, setTipo]= useState('entrada');
-  const [descricao, setDescricao]= useState('');
+  const [descricao, setDescricao]= useState(' ');
 
 
   const closeModal = () => {
@@ -29,7 +30,7 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
   const salvarAlteracoes= async () => {
 
     setLoading(true);
-    const result = await api.alterarSaldo(id_carteira, valor, tipo, id_aluno, "testando alteracao"  );
+    const result = await api.alterarSaldo(id_carteira, valor, tipo, id_aluno, descricao);
     setLoading(false);
 
     if (result.error) {
@@ -48,8 +49,6 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
     }, 3000); // 3 segundos
   };
    
-
-
   const handleSaldo = () => {
     if (tipo) {
       if (tipo === 'entrada') {
@@ -95,17 +94,18 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
                 </ValorField>
               </CCol>
 
-
               <CCol className="col ms-5" xs={5} sm={5} md={5} lg={5} xl={5}>
-                  <TipoField
+                <TipoField
                   onChange={setTipo} tipo={tipo}>
-                  </TipoField>
+                </TipoField>
               </CCol>
             </CRow>
 
-            <CRow className="row g-1">
+            <CRow className="row g-0 mt-4">
               <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
-                descricao
+                <DescricaoField
+                  onChange={setDescricao}>
+                </DescricaoField>
               </CCol>
             </CRow>
 

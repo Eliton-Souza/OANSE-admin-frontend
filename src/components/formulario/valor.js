@@ -28,7 +28,7 @@ export const ValorField = ({ onChange, incorreto }) => {
         placeholder="Valor"
         type="text"
         id="valor"
-        label= "Digite um valor"
+        floatingLabel="Digite um valor"
         onChange={handleValorChange}
         disabled={false}
         required={true}
@@ -40,4 +40,3 @@ export const ValorField = ({ onChange, incorreto }) => {
     </>
   );
 };
-
