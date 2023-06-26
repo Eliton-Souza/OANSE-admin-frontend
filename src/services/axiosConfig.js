@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { getToken } from './api';
-import dotenv from 'dotenv';
 
-dotenv.config();
+const linkAPI = 'https://oanse-japiim-api.cyclic.app/';
+const localhost= 'http://localhost:4000/';
 
 const http = axios.create({
-  baseURL: process.env.LINK_API,
+  baseURL: linkAPI,
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
   }
