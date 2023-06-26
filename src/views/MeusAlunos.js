@@ -13,7 +13,7 @@ import { ResponsavelField } from '../components/formulario/responsavel';
 import { ClubeField } from '../components/widget/clube';
 import { IdadeField } from 'src/components/widget/idade';
 import CIcon from '@coreui/icons-react';
-import { cilCheckCircle } from '@coreui/icons';
+import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { ModalSaldoField } from 'src/components/modalSaldo';
 
 const MeusAlunos = () => {
@@ -22,7 +22,7 @@ const MeusAlunos = () => {
   const [selectedAluno, setSelectedAluno] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalSaldo, setModalSaldo] = useState(false)
-  const [sucesso, setSucesso] = useState();
+  const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
 
   //formulario
   const [editar, setEditar] = useState(false);
@@ -102,12 +102,13 @@ const MeusAlunos = () => {
     setLoading(false);
 
     if (result.error) {
-      setSucesso(false);
+      setSucesso({tipo: 'danger', menssagem: result.error});
     } else {
-      setSucesso(true);
+      setSucesso({tipo: 'success', menssagem: "Aluno atualizado com sucesso"});
     }
 
     setEditar(false);
+    getAlunos();
     setLimparValidacao(true);
     
     setTimeout(() => {
@@ -115,8 +116,8 @@ const MeusAlunos = () => {
     }, 1000); // 1 segundos
 
     setTimeout(() => {
-      setSucesso();
-    }, 2000); // 2 segundos
+      setSucesso({tipo: '', menssagem: ''});
+    }, 3000); // 3 segundos
 
   };
 
@@ -168,10 +169,10 @@ const MeusAlunos = () => {
         <CModalHeader>
           <CModalTitle>{selectedAluno && `${selectedAluno.nome} - ${selectedAluno.id_aluno}`}
           
-          {sucesso && (
-            <CAlert color="success" className="d-flex align-items-center">
-              <CIcon icon={cilCheckCircle} className="flex-shrink-0 me-2" width={24} height={24} />
-              <div>Aluno Atualizado com sucesso</div>
+          {sucesso.tipo != '' && (
+            <CAlert color={sucesso.tipo} className="d-flex align-items-center">
+              <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
+              <div>{sucesso.menssagem}</div>
             </CAlert>
           )}
           </CModalTitle>
