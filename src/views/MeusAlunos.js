@@ -88,12 +88,12 @@ const MeusAlunos = () => {
     setSaldo(dado.saldo);
   }
    
-  
 
   const closeModal = () => {
     setSelectedAluno(null);
     setModalOpen(false);
     setEditar(false);
+    setSucesso({tipo: '', menssagem: ''});
   };
 
   const salvarAlteracoes= async () => {
@@ -105,20 +105,20 @@ const MeusAlunos = () => {
       setSucesso({tipo: 'danger', menssagem: result.error});
     } else {
       setSucesso({tipo: 'success', menssagem: "Aluno atualizado com sucesso"});
+      getAlunos();
+
+      setEditar(false);
+
+      setTimeout(() => {
+        setSucesso({tipo: '', menssagem: ''});
+      }, 3000); // 3 segundos
     }
 
-    setEditar(false);
-    getAlunos();
     setLimparValidacao(true);
     
     setTimeout(() => {
       setLimparValidacao(false);
     }, 1000); // 1 segundos
-
-    setTimeout(() => {
-      setSucesso({tipo: '', menssagem: ''});
-    }, 3000); // 3 segundos
-
   };
 
   /*// Configurações da paginação
