@@ -33,6 +33,7 @@
     "core-js": "^3.29.0",
     "date-fns": "^2.30.0",
     "moment-timezone": "^0.5.43",
+    "numeral": "^2.0.6",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-app-polyfill": "^3.0.0",

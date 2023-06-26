@@ -67,7 +67,7 @@ const CadastrarAluno = () => {
     if(result.error){
       setSucesso({tipo: 'danger', menssagem: result.error});
     }else{
-      setSucesso({tipo: 'success', menssagem: "Aluno criado com sucesso"});
+      setSucesso({tipo: 'success', menssagem: "Aluno cadastrado com sucesso"});
     }
 
     Limpar();

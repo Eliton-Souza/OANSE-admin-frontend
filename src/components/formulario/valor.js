@@ -29,7 +29,6 @@ export const ValorField = ({ onChange, incorreto }) => {
         type="text"
         id="valor"
         label= "Digite um valor"
-        defaultValue={0}
         onChange={handleValorChange}
         disabled={false}
         required={true}

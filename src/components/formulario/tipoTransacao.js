@@ -1,12 +1,9 @@
 import { CCol, CFormCheck, CFormLabel, CRow } from '@coreui/react';
-import { useState } from 'react';
 
-export const TipoField = ({ onChange }) => {
-  const [selectedOption, setSelectedOption] = useState('');
-
+export const TipoField = ({ onChange, tipo }) => {
+  
   const handleTipoChange = (event) => {
     const novoTipo = event.target.value;
-    setSelectedOption(novoTipo);
     onChange(novoTipo);
   };
 
@@ -17,30 +14,29 @@ export const TipoField = ({ onChange }) => {
       <CRow className="row g-3 justify-content-md-end">
         <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
           <CFormCheck
-            button={{ color: 'success', variant: 'outline' }}
+            inline
             type="radio"
             name="options"
             id="success"
             label="Entrada"
             value="entrada"
-            checked={selectedOption === 'entrada'}
+            checked={tipo === 'entrada'}
             onChange={handleTipoChange}
-            className={selectedOption === 'entrada' ? 'selected' : ''}
+            required= {true}
           />
-
         </CCol>
 
         <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
           <CFormCheck
-            button={{ color: 'danger', variant: 'outline' }}
+            inline
             type="radio"
             name="options"
             id="danger"
             label="Saída"
             value="saida"
-            checked={selectedOption === 'saida'}
+            checked={tipo === 'saida'}
             onChange={handleTipoChange}
-            className={selectedOption === 'saida' ? 'selected' : ''}
+            required= {true}
           />
         </CCol>
       </CRow>

@@ -14,12 +14,14 @@ import { ClubeField } from '../components/widget/clube';
 import { IdadeField } from 'src/components/widget/idade';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle } from '@coreui/icons';
+import { ModalSaldoField } from 'src/components/widget/modalSaldo';
 
 const MeusAlunos = () => {
   const [loading, setLoading] = useState();
   const [alunos, setAlunos] = useState([]);
   const [selectedAluno, setSelectedAluno] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalSaldo, setModalSaldo] = useState(false)
   const [sucesso, setSucesso] = useState();
 
   //formulario
@@ -32,6 +34,10 @@ const MeusAlunos = () => {
   const [genero, setGenero] = useState('');
   const [manual, setManual] = useState({ id_manual: null, nome: '', clube: '' });
   const [responsavel, setResponsavel] = useState({ id_responsavel: null, nome: '' });
+
+  const [id_aluno, setId_Aluno] = useState('');
+  const [id_carteira, setId_Carteira] = useState('');
+  const [saldo, setSaldo] = useState('');
 
 
   //verificar se os campos estão corretos:
@@ -76,6 +82,10 @@ const MeusAlunos = () => {
     setNascimento(dado.nascimento);
     setManual({ id_manual: dado.id_manual, nome: dado.manual, clube: dado.clube });
     setResponsavel({ id_responsavel: dado.id_responsavel? dado.id_responsavel: null, nome: dado.nome_responsavel? `${dado.nome_responsavel} ${dado.sobrenome_responsavel}` : '' });
+    
+    setId_Aluno(dado.id_aluno);
+    setId_Carteira(dado.id_carteira);
+    setSaldo(dado.saldo);
   }
    
   
@@ -97,10 +107,9 @@ const MeusAlunos = () => {
       setSucesso(true);
     }
 
-    getAlunos();
     setEditar(false);
-
     setLimparValidacao(true);
+    
     setTimeout(() => {
       setLimparValidacao(false);
     }, 1000); // 1 segundos
@@ -155,7 +164,7 @@ const MeusAlunos = () => {
         </CTableBody>
       </CTable>
 
-      <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" > {/*fullscreen="md"*/}
+      <CModal alignment="center" scrollable visible={modalOpen && !modalSaldo} onClose={closeModal} backdrop="static" size="lg" > {/*fullscreen="md"*/}
         <CModalHeader>
           <CModalTitle>{selectedAluno && `${selectedAluno.nome} - ${selectedAluno.id_aluno}`}
           
@@ -215,19 +224,19 @@ const MeusAlunos = () => {
                 </CRow>
 
                 <CRow className="row g-3"> 
-                  <CCol xs={3} sm={7} md={7} lg={7} xl={4}>
+                  <CCol xs={4} sm={4} md={4} lg={4} xl={4}>
                     <SaldoField
-                      saldo={selectedAluno.saldo} id_carteira={selectedAluno.id_carteira} id_aluno={selectedAluno.id_aluno}>
+                      saldo={selectedAluno.saldo} id_carteira={selectedAluno.id_carteira} modalSaldo={setModalSaldo}>
                     </SaldoField>
                   </CCol>
 
-                  <CCol xs={5} sm={7} md={7} lg={7} xl={4}>
+                  <CCol xs={5} sm={5} md={4} lg={4} xl={4}>
                     <ClubeField
                       clube={manual.clube}>
                     </ClubeField>
                   </CCol>
 
-                  <CCol xs={4} sm={7} md={7} lg={7} xl={4}>
+                  <CCol xs={3} sm={3} md={4} lg={4} xl={4}>
                     <IdadeField
                       nascimento={nascimento}>
                     </IdadeField>
@@ -256,6 +265,12 @@ const MeusAlunos = () => {
         </CModalFooter>
 
       </CModal>
+
+      {modalSaldo && (
+          <ModalSaldoField
+          id_carteira={id_carteira} id_aluno={id_aluno} modalSaldo={modalSaldo} onChange={setModalSaldo} saldo={saldo} modalPai={openModal}>
+          </ModalSaldoField>
+      )}
       
      {/*
         <Paginacao
