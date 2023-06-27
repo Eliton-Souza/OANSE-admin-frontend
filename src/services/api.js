@@ -59,6 +59,14 @@ export const api = {
     return response.data;
   },
 
+  criarResponsavel: async (nome, sobrenome, genero, nascimento, contato) => {
+    const response = await http.post('/responsavel', {
+      nome, sobrenome, genero, nascimento, contato,
+    });
+      
+    return response.data;
+  },
+
 
   alterarSaldo: async ( id, valor, tipo, id_aluno, descricao ) => {
     const response = await http.put(`/carteira/${id}`, {

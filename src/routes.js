@@ -4,6 +4,7 @@ const Dashboard = React.lazy(() => import('./views/Dashboard'))
 const Logout = React.lazy(() => import('./views/logout'));
 const MeusAlunos = React.lazy(() => import('./views/MeusAlunos'));
 const CadastrarAluno= React.lazy(() => import('./views/CadastrarAluno'));
+const CadastrarResponsavel= React.lazy(() => import('./views/CadastrarResponsavel'));
 
 
 const routes = [
@@ -11,6 +12,7 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/alunos', name: 'Alunos', element: MeusAlunos },
   { path: '/aluno', name: 'Aluno', element: CadastrarAluno },
+  { path: '/responsavel', name: 'Responsavel', element: CadastrarResponsavel },
 
 
   { path: '/logout', name: 'Logout', element: Logout },
