@@ -110,7 +110,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Ver Responsáveis',
-    to: '#',
+    to: 'responsaveis',
     icon: <CIcon icon={cilLowVision} customClassName="nav-icon" />,
   },
 

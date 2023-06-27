@@ -130,7 +130,7 @@ const CadastrarResponsavel = () => {
             <CRow className="row g-3">
               <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
                 <ContatoField
-                  nome={contato} onChange={setContato} desabilitado={loading} incorreto={setContatoIncorreto} limpar={limparValidacao}>
+                  contato={contato} onChange={setContato} desabilitado={loading} incorreto={setContatoIncorreto} limpar={limparValidacao}>
                 </ContatoField>
               </CCol>
             </CRow>
