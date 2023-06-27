@@ -16,6 +16,8 @@ import {
   //Transacoes
   cilQrCode,
   cilGraph,
+  cilLowVision,
+  cilAddressBook,
 } from '@coreui/icons'
 
 import { CNavItem, CNavTitle } from '@coreui/react'
@@ -63,7 +65,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Meu Clube',
-    to: '/theme/colors',
+    to: '#',
     icon: <CIcon icon={cilGroup} customClassName="nav-icon" />,
   },
 
@@ -91,6 +93,25 @@ const _nav = [
     name: 'Histórico',
     to: '#',
     icon: <CIcon icon={cilGraph} customClassName="nav-icon" />,
+  },
+
+
+   //Responsaveis
+   {
+    component: CNavTitle,
+    name: 'Responsáveis',
+  },
+  {
+    component: CNavItem,
+    name: 'Cadastrar Responsável',
+    to: '/responsavel',
+    icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Ver Responsáveis',
+    to: 'responsaveis',
+    icon: <CIcon icon={cilLowVision} customClassName="nav-icon" />,
   },
 
 ]

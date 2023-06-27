@@ -59,6 +59,33 @@ export const api = {
     return response.data;
   },
 
+  criarResponsavel: async (nome, sobrenome, genero, nascimento, contato) => {
+    const response = await http.post('/responsavel', {
+      nome, sobrenome, genero, nascimento, contato,
+    });
+      
+    return response.data;
+  },
+
+  listarTodosResponsaveis: async () => {
+    const response = await http.get('/responsaveis', {});
+    return response.data;
+  },
+
+  pegarResponsavel: async (id) => {
+    const response = await http.get(`/responsavel/${id}`, {});
+    return response.data.responsavel;
+  },
+
+
+  atualizarResponsavel: async ( id, nome, sobrenome, genero, nascimento, contato) => {
+    const response = await http.put(`/responsavel/${id}`, {
+      nome, sobrenome, genero, nascimento, contato
+    });
+
+    return response.data;
+  },
+
 
   alterarSaldo: async ( id, valor, tipo, id_aluno, descricao ) => {
     const response = await http.put(`/carteira/${id}`, {
