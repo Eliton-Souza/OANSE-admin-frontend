@@ -36,7 +36,6 @@ const CadastrarResponsavel = () => {
 
   const [limparValidacao, setLimparValidacao] = useState(false);
  
-
   const Limpar = () => {  //ver logica
 
     formRef.current.reset();
@@ -45,6 +44,7 @@ const CadastrarResponsavel = () => {
     setSobrenome('');
     setGenero('');
     setNascimento(null);
+    setContato(null)
   
     setLimparValidacao(true);
     setTimeout(() => {
