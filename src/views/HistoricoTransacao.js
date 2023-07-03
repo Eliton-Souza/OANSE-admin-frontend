@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage, CAlert, CSpinner, CCollapse, CListGroup, CListGroupItem, CCardFooter, CBadge, CFormTextarea } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CSpinner, CCollapse, CListGroup, CListGroupItem, CBadge } from '@coreui/react';
 import { api } from 'src/services/api';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
+import Paginacao from 'src/components/paginacao';
 
 const HistoricoTransacao = () => {
   const [loading, setLoading] = useState();
@@ -49,7 +50,9 @@ const HistoricoTransacao = () => {
 
   const onClickRow= async (id) => {
 
-     if (expandedRow === id) {
+    setSucesso({tipo: '', menssagem: ''});
+
+    if (expandedRow === id) {
       setExpandedRow(null); // Fechar o collapse se a mesma linha for clicada novamente
     } else {
       setLoading(true);
@@ -82,8 +85,6 @@ const HistoricoTransacao = () => {
 
   const salvarDescricao= async () => {
 
-     
-
     setLoadingSalvar(true);
     const result = await api.atualizarDescricao( id_transacao, descricao );
     setLoadingSalvar(false);
@@ -99,21 +100,19 @@ const HistoricoTransacao = () => {
     }
   };
 
-  /*// Configurações da paginação
-
   const [currentPage, setCurrentPage] = useState(1);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const totalItems = transacoes.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   // Lógica para obter a lista de transacoes a ser exibida na página atual
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentAlunos = transacoes.slice(startIndex, endIndex);*/
+  const transacoesCorrentes = transacoes.slice(startIndex, endIndex);
 
   return (
     <>
@@ -133,7 +132,7 @@ const HistoricoTransacao = () => {
         </CTableRow>
       </CTableHead>
       <CTableBody>
-        {transacoes.map((transacao) => (
+        {transacoesCorrentes.map((transacao) => (
           <React.Fragment key={transacao.id_transacao}>
             <CTableRow key={transacao.id_transacao} onClick={() => onClickRow(transacao.id_transacao)}>
               <CTableDataCell>{transacao.nome_aluno}</CTableDataCell>
@@ -179,16 +178,11 @@ const HistoricoTransacao = () => {
       </CTableBody>
     </CTable>
 
-
-
-
-     {/*
-        <Paginacao
-        currentPage={currentPage}
-        totalPages={totalPages}
-        handlePageChange={handlePageChange}
-        />
-      */}
+    <Paginacao
+      currentPage={currentPage}
+      totalPages={totalPages}
+      handlePageChange={handlePageChange}
+    />
 
     </>
   );
