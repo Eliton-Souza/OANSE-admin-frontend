@@ -85,13 +85,13 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Ler QR Code',
-    to: '#',
+    to: '/',
     icon: <CIcon icon={cilQrCode} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Histórico',
-    to: '#',
+    to: '/historico',
     icon: <CIcon icon={cilGraph} customClassName="nav-icon" />,
   },
 

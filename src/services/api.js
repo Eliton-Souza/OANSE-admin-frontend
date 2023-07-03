@@ -108,4 +108,24 @@ export const api = {
   },
 
 
+  listarTransacoes: async () => {
+    const response = await http.get('/transacoes', {});
+    return response.data;
+  },
+
+  pegarTransacao: async (id) => {
+    const response = await http.get(`/transacao/${id}`, {});
+    return response.data.transacao;
+  },
+
+  atualizarDescricao: async ( id, descricao) => {
+    const response = await http.put(`/transacao/${id}`, {
+      descricao
+    });
+
+    return response.data;
+  },
+
+
+
 };

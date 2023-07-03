@@ -19,7 +19,7 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
 
   const [valor, setValor]= useState(0);
   const [tipo, setTipo]= useState('entrada');
-  const [descricao, setDescricao]= useState(' ');
+  const [descricao, setDescricao]= useState(null);
 
 
   const closeModal = () => {
