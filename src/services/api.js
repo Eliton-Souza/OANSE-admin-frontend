@@ -118,6 +118,14 @@ export const api = {
     return response.data.transacao;
   },
 
+  atualizarDescricao: async ( id, descricao) => {
+    const response = await http.put(`/transacao/${id}`, {
+      descricao
+    });
+
+    return response.data;
+  },
+
 
 
 };

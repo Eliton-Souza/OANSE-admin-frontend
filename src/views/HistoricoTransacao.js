@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage, CAlert, CSpinner, CCollapse, CListGroup, CListGroupItem, CCardFooter, CBadge } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage, CAlert, CSpinner, CCollapse, CListGroup, CListGroupItem, CCardFooter, CBadge, CFormTextarea } from '@coreui/react';
 import { api } from 'src/services/api';
+import { DescricaoField } from 'src/components/formulario/descricao';
+import CIcon from '@coreui/icons-react';
+import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 
 const HistoricoTransacao = () => {
   const [loading, setLoading] = useState();
+  const [loadingSalvar, setLoadingSalvar] = useState();
   const [transacoes, setTransacoes] = useState([]);
   const [collapseOpen, setCollapseOpen] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
 
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
 
-  //formulario
-  const [editar, setEditar] = useState(false);
-
-
   //dados
+  const [id_transacao, setIdTransacao] = useState('');
+  
   const [nome_aluno, setNomeAluno] = useState('');
   const [sobrenome_aluno, setSobrenomeAluno] = useState('');
   
@@ -61,6 +63,8 @@ const HistoricoTransacao = () => {
   }
 
   const setDados=(dado)=>{
+    setIdTransacao(dado.id_transacao);
+
     setNomeAluno(dado.nome_aluno);
     setSobrenomeAluno(dado.sobrenome_aluno);
     
@@ -76,36 +80,23 @@ const HistoricoTransacao = () => {
   }
    
 
-  const closeModal = () => {
-    setSelectedTransacao(null);
-    setCollapseOpen(false);
-    setEditar(false);
-    setSucesso({tipo: '', menssagem: ''});
-  };
+  const salvarDescricao= async () => {
 
-  const salvarAlteracoes= async () => {
-    setLoading(true);
-    const result = await api.atualizarAluno(selectedAluno.id_aluno, nome, sobrenome, genero, nascimento, responsavel.id_responsavel, manual.id_manual );
-    setLoading(false);
+     
+
+    setLoadingSalvar(true);
+    const result = await api.atualizarDescricao( id_transacao, descricao );
+    setLoadingSalvar(false);
 
     if (result.error) {
       setSucesso({tipo: 'danger', menssagem: result.error});
     } else {
-      setSucesso({tipo: 'success', menssagem: "Aluno atualizado com sucesso"});
-      getTransacoes();
-
-      setEditar(false);
-
+      setSucesso({tipo: 'success', menssagem: "Anotação atualizada com sucesso"});
+     
       setTimeout(() => {
         setSucesso({tipo: '', menssagem: ''});
       }, 3000); // 3 segundos
     }
-
-    setLimparValidacao(true);
-    
-    setTimeout(() => {
-      setLimparValidacao(false);
-    }, 1000); // 1 segundos
   };
 
   /*// Configurações da paginação
@@ -123,8 +114,6 @@ const HistoricoTransacao = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentAlunos = transacoes.slice(startIndex, endIndex);*/
-
-  
 
   return (
     <>
@@ -163,9 +152,25 @@ const HistoricoTransacao = () => {
                     <CListGroupItem>Saldo Anterior: {tipo === 'entrada' ? parseFloat(novo_saldo) - parseFloat(valor_transacao) : parseFloat(novo_saldo) + parseFloat(valor_transacao)}</CListGroupItem>
                     <CListGroupItem>Valor da {tipo}: {valor_transacao}</CListGroupItem>
                     <CListGroupItem>Novo Saldo: {novo_saldo}</CListGroupItem>
-                    <CListGroupItem>Descrição: {descricao}</CListGroupItem>
+                    <CListGroupItem> 
+
+                      {loadingSalvar && (
+                        <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+                      )}
+
+                      <DescricaoField
+                      onChange={setDescricao} descricao={descricao}
+                      />
+                      <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
+                        
+                      {sucesso.tipo != '' && (
+                        <CAlert color={sucesso.tipo} className="d-flex align-items-center">
+                          <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
+                          <div>{sucesso.menssagem}</div>
+                        </CAlert>
+                      )}
+                    </CListGroupItem>
                   </CListGroup>
-                  <CCardFooter>Footer</CCardFooter>
                 </CCard>
               </CCollapse>
             )}
