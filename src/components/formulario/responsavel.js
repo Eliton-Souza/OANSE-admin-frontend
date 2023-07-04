@@ -35,7 +35,7 @@ export const ResponsavelField = ({ responsavel, onChange, desabilitado, obrigato
         required={obrigatorio}
         value={responsaveis.some((responsavelItem) => responsavelItem.id_responsavel === responsavel?.id_responsavel) ? responsavel.id_responsavel : ''}>
         
-        <option value='' disabled>Selecione um responsável</option>
+        <option value={null}>Selecione um responsável</option>
         {responsaveis.map((responsavelItem) => (
           <option
             key={responsavelItem.id_responsavel}
