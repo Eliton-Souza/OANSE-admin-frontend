@@ -35,6 +35,12 @@ export const api = {
     return response.data;
   },
 
+  rankingAlunos: async () => {
+    const response = await http.get('/ranking', {});
+    return response.data;
+  },
+
+
 
   pegarAluno: async (id) => {
     const response = await http.get(`/aluno/${id}`, {});

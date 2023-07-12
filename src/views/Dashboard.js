@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   CAvatar,
@@ -11,14 +11,16 @@ import {
   CCol,
   CProgress,
   CRow,
+  CSpinner,
   CTable,
   CTableBody,
   CTableDataCell,
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CWidgetStatsD,
 } from '@coreui/react'
-import { CChartLine } from '@coreui/react-chartjs'
+import { CChartDoughnut, CChartLine, CChartPie } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
 import CIcon from '@coreui/icons-react'
 import {
@@ -53,8 +55,12 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 
 import WidgetsBrand from './widgets/WidgetsBrand'
 import WidgetsDropdown from './widgets/WidgetsDropdown'
+import { api } from 'src/services/api'
+import { DadosClube } from 'src/components/widget/dadosClube'
 
 const Dashboard = () => {
+
+  
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
   const progressExample = [
@@ -64,7 +70,7 @@ const Dashboard = () => {
     { title: 'New Users', value: '22.123 Users', percent: 80, color: 'danger' },
     { title: 'Bounce Rate', value: 'Average Rate', percent: 40.15, color: 'primary' },
   ]
-
+/*
   const progressGroupExample1 = [
     { title: 'Monday', value1: 34, value2: 78 },
     { title: 'Tuesday', value1: 56, value2: 94 },
@@ -85,102 +91,127 @@ const Dashboard = () => {
     { title: 'Facebook', icon: cibFacebook, percent: 15, value: '51,223' },
     { title: 'Twitter', icon: cibTwitter, percent: 11, value: '37,564' },
     { title: 'LinkedIn', icon: cibLinkedin, percent: 8, value: '27,319' },
-  ]
+  ]*/
 
-  const tableExample = [
-    {
-      avatar: { src: avatar1, status: 'success' },
-      user: {
-        name: 'Yiorgos Avraamu',
-        new: true,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'USA', flag: cifUs },
-      usage: {
-        value: 50,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'success',
-      },
-      payment: { name: 'Mastercard', icon: cibCcMastercard },
-      activity: '10 sec ago',
-    },
-    {
-      avatar: { src: avatar2, status: 'danger' },
-      user: {
-        name: 'Avram Tarasios',
-        new: false,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'Brazil', flag: cifBr },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'info',
-      },
-      payment: { name: 'Visa', icon: cibCcVisa },
-      activity: '5 minutes ago',
-    },
-    {
-      avatar: { src: avatar3, status: 'warning' },
-      user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'India', flag: cifIn },
-      usage: {
-        value: 74,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'warning',
-      },
-      payment: { name: 'Stripe', icon: cibCcStripe },
-      activity: '1 hour ago',
-    },
-    {
-      avatar: { src: avatar4, status: 'secondary' },
-      user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'France', flag: cifFr },
-      usage: {
-        value: 98,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'danger',
-      },
-      payment: { name: 'PayPal', icon: cibCcPaypal },
-      activity: 'Last month',
-    },
-    {
-      avatar: { src: avatar5, status: 'success' },
-      user: {
-        name: 'Agapetus Tadeáš',
-        new: true,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'Spain', flag: cifEs },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'primary',
-      },
-      payment: { name: 'Google Wallet', icon: cibCcApplePay },
-      activity: 'Last week',
-    },
-    {
-      avatar: { src: avatar6, status: 'danger' },
-      user: {
-        name: 'Friderik Dávid',
-        new: true,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'Poland', flag: cifPl },
-      usage: {
-        value: 43,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'success',
-      },
-      payment: { name: 'Amex', icon: cibCcAmex },
-      activity: 'Last week',
-    },
-  ]
+  const [dadosGraficoRanking, setDadosGraficoRanking]= useState({ labels: [], dados: [] });
+  const [alunos, setAlunos] = useState([]);
+  const [loading, setLoading] = useState();
+
+  const [dadosUrsinho, setDadosUrsinho] = useState({ totalAlunos: 0, totalSaldo: 0, cor: '' });
+  const [dadosFaisca, setDadosFaisca] = useState({ totalAlunos: 0, totalSaldo: 0, cor: '' });
+  const [dadosFlama, setDadosFlama] = useState({ totalAlunos: 0, totalSaldo: 0, cor: '' });
+  const [dadosTocha, setDadosTocha] = useState({ totalAlunos: 0, totalSaldo: 0, cor: '' });
+  const [dadosJV, setDadosJV] = useState({ totalAlunos: 0, totalSaldo: 0, cor: '' });
+  const [dadosVQ7, setDadosVQ7] = useState({ totalAlunos: 0, totalSaldo: 0, cor: '' });
+
+  const getAlunos = async () => {
+    setLoading(true);
+    const result = await api.rankingAlunos();
+    setLoading(false);
+
+    if (result.error) {
+      alert(result.error);
+    } else {
+      setAlunos(result.alunos);      
+    }
+  };
+
+  const coresPorClube = {
+    Ursinho: '#FF0000', // vermelho
+    Faísca: '#FFFF00', // amarelo
+    Flama: '#00AA00', // verde
+    Tocha: '#3b5998', // azul
+    JV: '#191970', // azul marinho
+    VQ7: '#000000', // preto
+  };
+
+  const calcularClube = () => {
+    const saldoPorClube = {
+      Ursinho: 0,
+      Faísca: 0,
+      Flama: 0,
+      Tocha: 0,
+      JV: 0,
+      VQ7: 0
+    };
+    const alunosPorClube = {
+      Ursinho: 0,
+      Faísca: 0,
+      Flama: 0,
+      Tocha: 0,
+      JV: 0,
+      VQ7: 0
+    };
+  
+    // Iterar sobre os alunos e somar o saldo de cada clube
+    alunos.forEach((aluno) => {
+      const clube = aluno.clube;
+      const saldo = aluno.saldo;
+  
+      saldoPorClube[clube] += saldo;
+      alunosPorClube[clube]++;
+    });
+
+    setDadosUrsinho({ totalAlunos: alunosPorClube["Ursinho"], totalSaldo: saldoPorClube["Ursinho"], cor: '#FF0000' });
+    setDadosFaisca({ totalAlunos: alunosPorClube["Faísca"], totalSaldo: saldoPorClube["Faísca"], cor: '#FFFF00' });
+    setDadosFlama({ totalAlunos: alunosPorClube["Flama"], totalSaldo: saldoPorClube["Flama"], cor: '#00AA00' });
+    setDadosTocha({ totalAlunos: alunosPorClube["Tocha"], totalSaldo: saldoPorClube["Tocha"], cor: '#3b5998' });
+    setDadosJV({ totalAlunos: alunosPorClube["JV"], totalSaldo: saldoPorClube["JV"], cor: '#191970' });
+    setDadosVQ7({ totalAlunos: alunosPorClube["VQ7"], totalSaldo: saldoPorClube["VQ7"], cor: '#000000' });
+  };
+  
+
+  const calcularSaldoPorClube = () => {
+    const saldoPorClube = {};
+    const alunosPorClube = {}; // Adicionado para rastrear a contagem de alunos por clube
+  
+    // Iterar sobre os alunos e somar o saldo de cada clube
+    alunos.forEach((aluno) => {
+      const clube = aluno.clube;
+      const saldo = aluno.saldo;
+  
+      if (saldoPorClube[clube]) {
+        saldoPorClube[clube] += saldo;
+      } else {
+        saldoPorClube[clube] = saldo;
+      }
+  
+      // Incrementar a contagem de alunos por clube
+      if (alunosPorClube[clube]) {
+        alunosPorClube[clube]++;
+      } else {
+        alunosPorClube[clube] = 1;
+      }
+    });
+  
+    // Criar os arrays de labels, dados e contagem de alunos para o gráfico
+    const labels = Object.keys(saldoPorClube);
+    const dados = Object.values(saldoPorClube);
+    const contagemAlunos = Object.values(alunosPorClube); // Novo array com a contagem de alunos por clube
+    console.log(contagemAlunos);
+  
+    setDadosGraficoRanking({ labels: labels, dados: dados });
+    // Faça o que desejar com a contagem de alunos por clube (contagemAlunos)
+  };
+  
+  
+
+  
+  useEffect(() => {
+    getAlunos();
+  }, []);
+
+  useEffect(() => {
+    if (alunos.length > 0) {
+      calcularSaldoPorClube();
+      calcularClube();
+    }
+  }, [alunos]);
+
 
   return (
     <>
-      <WidgetsDropdown />
+     {/* <WidgetsDropdown />
       <CCard className="mb-4">
         <CCardBody>
           <CRow>
@@ -395,65 +426,176 @@ const Dashboard = () => {
                     </div>
                   ))}
                 </CCol>
-              </CRow>
+              </CRow>}
 
-              <br />
-
-              <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead color="light">
-                  <CTableRow>
-                    <CTableHeaderCell className="text-center">
-                      <CIcon icon={cilPeople} />
-                    </CTableHeaderCell>
-                    <CTableHeaderCell>User</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Country</CTableHeaderCell>
-                    <CTableHeaderCell>Usage</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Payment Method</CTableHeaderCell>
-                    <CTableHeaderCell>Activity</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {tableExample.map((item, index) => (
-                    <CTableRow v-for="item in tableItems" key={index}>
-                      <CTableDataCell className="text-center">
-                        <CAvatar size="md" src={item.avatar.src} status={item.avatar.status} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div>{item.user.name}</div>
-                        <div className="small text-medium-emphasis">
-                          <span>{item.user.new ? 'New' : 'Recurring'}</span> | Registered:{' '}
-                          {item.user.registered}
-                        </div>
-                      </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        <CIcon size="xl" icon={item.country.flag} title={item.country.name} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div className="clearfix">
-                          <div className="float-start">
-                            <strong>{item.usage.value}%</strong>
-                          </div>
-                          <div className="float-end">
-                            <small className="text-medium-emphasis">{item.usage.period}</small>
-                          </div>
-                        </div>
-                        <CProgress thin color={item.usage.color} value={item.usage.value} />
-                      </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        <CIcon size="xl" icon={item.payment.icon} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div className="small text-medium-emphasis">Last login</div>
-                        <strong>{item.activity}</strong>
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
-                </CTableBody>
-              </CTable>
+               {
             </CCardBody>
           </CCard>
         </CCol>
-      </CRow>
+                  </CRow>*/}
+              
+             
+ 
+
+             
+
+
+              <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
+                <CCard className="mt-2">
+                  <CCardHeader>Ranking 
+                  {loading && (
+                    <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+                  )}
+                  </CCardHeader>
+                  <CCardBody>
+
+                    <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
+                      <CTableHead color="dark">
+                        <CTableRow>
+                          <CTableHeaderCell className="text-center col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">Pos.</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">Foto</CTableHeaderCell>
+                          <CTableHeaderCell className="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">Aluno</CTableHeaderCell>
+                          <CTableHeaderCell className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Clube</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Saldo</CTableHeaderCell>
+                        </CTableRow>
+                      </CTableHead>
+                      <CTableBody>
+                        {alunos.map((aluno, index) => (
+                          <CTableRow v-for="item in tableItems" key={aluno.id_aluno}>
+                            <CTableDataCell className="text-center">{index+1}</CTableDataCell>
+                            <CTableDataCell className="text-center">
+                              <CAvatar size="md" src={'https://w7.pngwing.com/pngs/31/457/png-transparent-computer-icons-user-profile-avatar-user-heroes-business-user.png'} />
+                            </CTableDataCell>
+                            <CTableDataCell>{`${aluno.nome} ${aluno.sobrenome}`}</CTableDataCell>
+                            <CTableDataCell>{aluno.clube}</CTableDataCell>
+                            <CTableDataCell className="text-center">{aluno.saldo}</CTableDataCell>
+                          </CTableRow>
+                        ))}
+                      </CTableBody>
+                    </CTable>
+                   
+                  </CCardBody>
+                </CCard>
+              </CCol>
+
+             
+             
+
+          <CRow className="mt-4">
+            <CCol xs={12} sm={12} md={6} lg={6} xl={6}>
+              <CCard className="mt-4">
+                <CCardHeader>Total de Alunos por Clube</CCardHeader>
+                <CCardBody>
+                <CChartDoughnut
+                    data={{
+                      labels: ['Ursinho', 'Faísca', 'Flama', 'Tocha', 'JV', 'VQ7'],
+                      datasets: [
+                        {
+                          data: [
+                            dadosUrsinho.totalAlunos,
+                            dadosFaisca.totalAlunos,
+                            dadosFlama.totalAlunos,
+                            dadosTocha.totalAlunos,
+                            dadosJV.totalAlunos,
+                            dadosVQ7.totalAlunos,
+                          ],
+                          backgroundColor: [
+                            dadosUrsinho.cor,
+                            dadosFaisca.cor,
+                            dadosFlama.cor,
+                            dadosTocha.cor,
+                            dadosJV.cor,
+                            dadosVQ7.cor,
+                          ],
+                          hoverBackgroundColor: [
+                            dadosUrsinho.cor,
+                            dadosFaisca.cor,
+                            dadosFlama.cor,
+                            dadosTocha.cor,
+                            dadosJV.cor,
+                            dadosVQ7.cor,
+                          ],
+                        },
+                      ],
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+
+            <CCol xs={12} sm={12} md={6} lg={6} xl={6}>
+              <CCard className="mt-4">
+                <CCardHeader>Dinheiro por Clube</CCardHeader>
+                <CCardBody>
+                  <CChartDoughnut
+                    data={{
+                      labels: ['Ursinho', 'Faísca', 'Flama', 'Tocha', 'JV', 'VQ7'],
+                      datasets: [
+                        {
+                          data: [
+                            dadosUrsinho.totalSaldo,
+                            dadosFaisca.totalSaldo,
+                            dadosFlama.totalSaldo,
+                            dadosTocha.totalSaldo,
+                            dadosJV.totalSaldo,
+                            dadosVQ7.totalSaldo,
+                          ],
+                          backgroundColor: [
+                            dadosUrsinho.cor,
+                            dadosFaisca.cor,
+                            dadosFlama.cor,
+                            dadosTocha.cor,
+                            dadosJV.cor,
+                            dadosVQ7.cor,
+                          ],
+                          hoverBackgroundColor: [
+                            dadosUrsinho.cor,
+                            dadosFaisca.cor,
+                            dadosFlama.cor,
+                            dadosTocha.cor,
+                            dadosJV.cor,
+                            dadosVQ7.cor,
+                          ],
+                        },
+                      ],
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+          </CRow>
+
+        
+
+
+
+   
+          <CRow className="mt-4">
+            <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
+              <DadosClube totalAlunos={dadosUrsinho.totalAlunos} totalValor={dadosUrsinho.totalSaldo} cor={dadosUrsinho.cor} icone={' '}></DadosClube>
+            </CCol>
+
+            <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
+              <DadosClube totalAlunos={dadosFaisca.totalAlunos} totalValor={dadosFaisca.totalSaldo} cor={dadosFaisca.cor} icone={' '}></DadosClube>
+            </CCol>
+
+            <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
+              <DadosClube totalAlunos={dadosFlama.totalAlunos} totalValor={dadosFlama.totalSaldo} cor={dadosFlama.cor} icone={' '}></DadosClube>
+            </CCol>
+
+            <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
+              <DadosClube totalAlunos={dadosTocha.totalAlunos} totalValor={dadosTocha.totalSaldo} cor={dadosTocha.cor} icone={' '}></DadosClube>
+            </CCol>
+
+            <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
+              <DadosClube totalAlunos={dadosJV.totalAlunos} totalValor={dadosJV.totalSaldo} cor={dadosJV.cor} icone={' '}></DadosClube>
+            </CCol>
+
+            <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
+              <DadosClube totalAlunos={dadosVQ7.totalAlunos} totalValor={dadosVQ7.totalSaldo} cor={dadosVQ7.cor} icone={' '}></DadosClube>
+            </CCol>
+          </CRow>          
+  
     </>
   )
 }
