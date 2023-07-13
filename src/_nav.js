@@ -85,7 +85,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Ler QR Code',
-    to: '/',
+    to: '/qrcode',
     icon: <CIcon icon={cilQrCode} customClassName="nav-icon" />,
   },
   {
