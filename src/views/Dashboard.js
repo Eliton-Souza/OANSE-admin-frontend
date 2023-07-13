@@ -58,6 +58,13 @@ import WidgetsDropdown from './widgets/WidgetsDropdown'
 import { api } from 'src/services/api'
 import { DadosClube } from 'src/components/widget/dadosClube'
 
+import logoUrsinho from "../assets/images/logosClubes/ursinho.png"
+import logoFaisca from "../assets/images/logosClubes/faiscas.png"
+import logoFlama from "../assets/images/logosClubes/flama.png"
+import logoTocha from "../assets/images/logosClubes/tocha.png"
+import logoJV from "../assets/images/logosClubes/jv.png"
+import logoVQ7 from "../assets/images/logosClubes/vq7.png"
+
 const Dashboard = () => {
 
   
@@ -570,27 +577,27 @@ const Dashboard = () => {
    
           <CRow className="mt-4">
             <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
-              <DadosClube totalAlunos={dadosUrsinho.totalAlunos} totalValor={dadosUrsinho.totalSaldo} cor={dadosUrsinho.cor} icone={' '}></DadosClube>
+              <DadosClube totalAlunos={dadosUrsinho.totalAlunos} totalValor={dadosUrsinho.totalSaldo} cor={dadosUrsinho.cor} logo={logoUrsinho}></DadosClube>
             </CCol>
 
             <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
-              <DadosClube totalAlunos={dadosFaisca.totalAlunos} totalValor={dadosFaisca.totalSaldo} cor={dadosFaisca.cor} icone={' '}></DadosClube>
+              <DadosClube totalAlunos={dadosFaisca.totalAlunos} totalValor={dadosFaisca.totalSaldo} cor={dadosFaisca.cor} logo={logoFaisca}></DadosClube>
             </CCol>
 
             <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
-              <DadosClube totalAlunos={dadosFlama.totalAlunos} totalValor={dadosFlama.totalSaldo} cor={dadosFlama.cor} icone={' '}></DadosClube>
+              <DadosClube totalAlunos={dadosFlama.totalAlunos} totalValor={dadosFlama.totalSaldo} cor={dadosFlama.cor} logo={logoFlama}></DadosClube>
             </CCol>
 
             <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
-              <DadosClube totalAlunos={dadosTocha.totalAlunos} totalValor={dadosTocha.totalSaldo} cor={dadosTocha.cor} icone={' '}></DadosClube>
+              <DadosClube totalAlunos={dadosTocha.totalAlunos} totalValor={dadosTocha.totalSaldo} cor={dadosTocha.cor} logo={logoTocha}></DadosClube>
             </CCol>
 
             <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
-              <DadosClube totalAlunos={dadosJV.totalAlunos} totalValor={dadosJV.totalSaldo} cor={dadosJV.cor} icone={' '}></DadosClube>
+              <DadosClube totalAlunos={dadosJV.totalAlunos} totalValor={dadosJV.totalSaldo} cor={dadosJV.cor} logo={logoJV}></DadosClube>
             </CCol>
 
             <CCol xs={6} sm={6} md={4} lg={4} xl={4}>
-              <DadosClube totalAlunos={dadosVQ7.totalAlunos} totalValor={dadosVQ7.totalSaldo} cor={dadosVQ7.cor} icone={' '}></DadosClube>
+              <DadosClube totalAlunos={dadosVQ7.totalAlunos} totalValor={dadosVQ7.totalSaldo} cor={dadosVQ7.cor} logo={logoVQ7}></DadosClube>
             </CCol>
           </CRow>          
   
