@@ -146,24 +146,28 @@ const MeusAlunos = () => {
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
      </h1>
-
-      <CTable striped hover bordered>
-        <CTableHead>
-          <CTableRow>
-            <CTableHeaderCell scope="col">Nome</CTableHeaderCell>
-            <CTableHeaderCell scope="col" style={{ width: '175px' }}>Manual</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          {alunos.map((aluno) => (
-            <CTableRow key={aluno.id_aluno} onClick={() => openModal(aluno.id_aluno)}>      
-              <CTableDataCell>{`${aluno.nome} ${aluno.sobrenome}`}            
-              </CTableDataCell>
-              <CTableDataCell>{aluno.manual}</CTableDataCell>
-            </CTableRow>
-          ))}
-        </CTableBody>
-      </CTable>
+      <CCol xs={12}>
+        <CCard className="mt-2">
+          <CCardBody>
+            <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
+              <CTableHead color="dark">
+                <CTableRow>
+                  <CTableHeaderCell className="col-xs-7 col-sm-7 col-md-7 col-lg-7 col-xl-7">Nome</CTableHeaderCell>
+                  <CTableHeaderCell className="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">Manual</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {alunos.map((aluno) => (
+                  <CTableRow v-for="item in tableItems" key={aluno.id_aluno} onClick={() => openModal(aluno.id_aluno)}>      
+                    <CTableDataCell>{`${aluno.nome} ${aluno.sobrenome}`}</CTableDataCell>
+                    <CTableDataCell>{aluno.manual}</CTableDataCell>
+                  </CTableRow>
+                ))}
+              </CTableBody>
+            </CTable>
+          </CCardBody>
+        </CCard>
+      </CCol>
 
       <CModal alignment="center" scrollable visible={modalOpen && !modalSaldo} onClose={closeModal} backdrop="static" size="lg" > {/*fullscreen="md"*/}
         <CModalHeader>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CSpinner, CCollapse, CListGroup, CListGroupItem, CBadge } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CCol, CSpinner, CCollapse, CListGroup, CListGroupItem, CBadge, CCardBody, CCardFooter } from '@coreui/react';
 import { api } from 'src/services/api';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import CIcon from '@coreui/icons-react';
@@ -122,68 +122,74 @@ const HistoricoTransacao = () => {
         )}
      </h1>
 
-    <CTable striped hover bordered>
-      <CTableHead>
-        <CTableRow>
-          <CTableHeaderCell scope="col">Aluno</CTableHeaderCell>
-          <CTableHeaderCell scope="col">Lider</CTableHeaderCell>
-          <CTableHeaderCell scope="col">Tipo</CTableHeaderCell>
-          <CTableHeaderCell scope="col">Valor</CTableHeaderCell>
-        </CTableRow>
-      </CTableHead>
-      <CTableBody>
-        {transacoesCorrentes.map((transacao) => (
-          <React.Fragment key={transacao.id_transacao}>
-            <CTableRow key={transacao.id_transacao} onClick={() => onClickRow(transacao.id_transacao)}>
-              <CTableDataCell>{transacao.nome_aluno}</CTableDataCell>
-              <CTableDataCell>{transacao.nome_lider}</CTableDataCell>
-              <CTableDataCell><CBadge color={transacao.tipo == 'entrada'? "success" : "danger"} shape="rounded-pill">{transacao.tipo}</CBadge></CTableDataCell>
-              <CTableDataCell>{transacao.valor}</CTableDataCell>
-            </CTableRow>
-            {expandedRow === transacao.id_transacao && (
-              <CCollapse visible={true}>
-                <CCard className="mt-3" style={{ width: '180%' }}>
-                  <CListGroup>
-                    <CListGroupItem>Aluno: {`${nome_aluno} ${sobrenome_aluno}`}</CListGroupItem>
-                    <CListGroupItem>Lider: {`${nome_lider} ${sobrenome_lider}`}</CListGroupItem>
-                    <CListGroupItem>Data: {data}</CListGroupItem>
-                    <CListGroupItem>Tipo de Transação: <CBadge color={tipo == 'entrada'? "success" : "danger"} shape="rounded-pill">{tipo}</CBadge></CListGroupItem>
-                    <CListGroupItem>Saldo Anterior: {tipo === 'entrada' ? parseFloat(novo_saldo) - parseFloat(valor_transacao) : parseFloat(novo_saldo) + parseFloat(valor_transacao)}</CListGroupItem>
-                    <CListGroupItem>Valor da {tipo}: {valor_transacao}</CListGroupItem>
-                    <CListGroupItem>Novo Saldo: {novo_saldo}</CListGroupItem>
-                    <CListGroupItem> 
+     <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
+        <CCard className="mt-2">
+          <CCardBody>
+            <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
+              <CTableHead color="dark">
+                <CTableRow>
+                  <CTableHeaderCell className="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">Aluno</CTableHeaderCell>
+                  <CTableHeaderCell className="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">Lider</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Tipo</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Valor</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {transacoesCorrentes.map((transacao) => (
+                  <React.Fragment key={transacao.id_transacao}>
+                    <CTableRow key={transacao.id_transacao} onClick={() => onClickRow(transacao.id_transacao)}>
+                      <CTableDataCell>{transacao.nome_aluno}</CTableDataCell>
+                      <CTableDataCell>{transacao.nome_lider}</CTableDataCell>
+                      <CTableDataCell className="text-center"><CBadge color={transacao.tipo == 'entrada'? "success" : "danger"} shape="rounded-pill">{transacao.tipo}</CBadge></CTableDataCell>
+                      <CTableDataCell className="text-center">{transacao.valor}</CTableDataCell>
+                    </CTableRow>
+                    {expandedRow === transacao.id_transacao && (
+                      <CCollapse visible={true}>
+                        <CCard className="mt-3" style={{ width: '180%' }}>
+                          <CListGroup>
+                            <CListGroupItem>Aluno: {`${nome_aluno} ${sobrenome_aluno}`}</CListGroupItem>
+                            <CListGroupItem>Lider: {`${nome_lider} ${sobrenome_lider}`}</CListGroupItem>
+                            <CListGroupItem>Data: {data}</CListGroupItem>
+                            <CListGroupItem>Tipo de Transação: <CBadge color={tipo == 'entrada'? "success" : "danger"} shape="rounded-pill">{tipo}</CBadge></CListGroupItem>
+                            <CListGroupItem>Saldo Anterior: {tipo === 'entrada' ? parseFloat(novo_saldo) - parseFloat(valor_transacao) : parseFloat(novo_saldo) + parseFloat(valor_transacao)}</CListGroupItem>
+                            <CListGroupItem>Valor da {tipo}: {valor_transacao}</CListGroupItem>
+                            <CListGroupItem>Novo Saldo: {novo_saldo}</CListGroupItem>
+                            <CListGroupItem> 
 
-                      {loadingSalvar && (
-                        <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
-                      )}
+                              {loadingSalvar && (
+                                <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+                              )}
 
-                      <DescricaoField
-                      onChange={setDescricao} descricao={descricao}
-                      />
-                      <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
-                        
-                      {sucesso.tipo != '' && (
-                        <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-                          <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-                          <div>{sucesso.menssagem}</div>
-                        </CAlert>
-                      )}
-                    </CListGroupItem>
-                  </CListGroup>
-                </CCard>
-              </CCollapse>
-            )}
-          </React.Fragment>
-        ))}
-      </CTableBody>
-    </CTable>
-
-    <Paginacao
-      currentPage={currentPage}
-      totalPages={totalPages}
-      handlePageChange={handlePageChange}
-    />
-
+                              <DescricaoField
+                              onChange={setDescricao} descricao={descricao}
+                              />
+                              <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
+                                
+                              {sucesso.tipo != '' && (
+                                <CAlert color={sucesso.tipo} className="d-flex align-items-center">
+                                  <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
+                                  <div>{sucesso.menssagem}</div>
+                                </CAlert>
+                              )}
+                            </CListGroupItem>
+                          </CListGroup>
+                        </CCard>
+                      </CCollapse>
+                    )}
+                  </React.Fragment>
+                ))}
+              </CTableBody>
+            </CTable>
+          </CCardBody>
+          <CCardFooter>
+            <Paginacao
+              currentPage={currentPage}
+              totalPages={totalPages}
+              handlePageChange={handlePageChange}
+            />
+          </CCardFooter>
+        </CCard>
+      </CCol>
     </>
   );
 };

@@ -448,7 +448,6 @@ const Dashboard = () => {
                   )}
                   </CCardHeader>
                   <CCardBody>
-
                     <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
                       <CTableHead color="dark">
                         <CTableRow>
@@ -473,7 +472,6 @@ const Dashboard = () => {
                         ))}
                       </CTableBody>
                     </CTable>
-                   
                   </CCardBody>
                 </CCard>
               </CCol>

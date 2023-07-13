@@ -11,6 +11,7 @@ import { IdadeField } from 'src/components/widget/idade';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { ContatoField } from 'src/components/formulario/contato';
+import { differenceInYears } from 'date-fns';
 
 
 const VerResponsaveis = () => {
@@ -136,26 +137,34 @@ const VerResponsaveis = () => {
         )}
      </h1>
 
-      <CTable striped hover bordered>
-        <CTableHead>
-          <CTableRow>
-            <CTableHeaderCell scope="col">Nome</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          {responsaveis.map((responsavel) => (
-            <CTableRow key={responsavel.id_responsavel} onClick={() => openModal(responsavel.id_responsavel)}>      
-              <CTableDataCell>{`${responsavel.nome} ${responsavel.sobrenome}`}            
-              </CTableDataCell>
-            </CTableRow>
-          ))}
-        </CTableBody>
-      </CTable>
+     <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
+        <CCard className="mt-2">
+          <CCardBody>
+            <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
+              <CTableHead color="dark">
+                <CTableRow>
+                  <CTableHeaderCell className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Nome</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Contato</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Idade</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {responsaveis.map((responsavel) => (
+                  <CTableRow key={responsavel.id_responsavel} onClick={() => openModal(responsavel.id_responsavel)}>      
+                    <CTableDataCell>{`${responsavel.nome} ${responsavel.sobrenome}`}</CTableDataCell>
+                    <CTableDataCell className="text-center">{responsavel.contato}</CTableDataCell>
+                    <CTableDataCell className="text-center">{responsavel.nascimento? differenceInYears(new Date(), new Date(responsavel.nascimento)) : ''}</CTableDataCell>
+                  </CTableRow>
+                ))}
+              </CTableBody>
+            </CTable>
+          </CCardBody>
+        </CCard>
+      </CCol>
 
       <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
           <CModalTitle>{selectedResponsavel && `${selectedResponsavel.nome} - ${selectedResponsavel.id_responsavel}`}
-          
           {sucesso.tipo != '' && (
             <CAlert color={sucesso.tipo} className="d-flex align-items-center">
               <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
@@ -169,9 +178,7 @@ const VerResponsaveis = () => {
           {selectedResponsavel && (
             <>
               <CForm className="row g-3">
-
-
-              <CRow className="row g-4">
+                <CRow className="row g-4">
                   <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
                     <NomeField
                       nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={false} incorreto={setNomeIncorreto} limpar={limparValidacao}>
@@ -229,14 +236,10 @@ const VerResponsaveis = () => {
             <CCol xs={4}>
               <CButton color="success" onClick={salvarAlteracoes} type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto, contatoIncorreto])}>{loading ? 'Carregando' : 'Salvar'}</CButton>
             </CCol>
-
           </CRow>
         </CModalFooter>
-
       </CModal>
 
-    
-      
      {/*
         <Paginacao
         currentPage={currentPage}
