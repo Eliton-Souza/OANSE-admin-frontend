@@ -1,4 +1,4 @@
-import { CSpinner } from '@coreui/react';
+import { CCol, CSpinner } from '@coreui/react';
 import React, { useState, useEffect } from 'react';
 import QRCodeReader from 'src/components/QRCodeReader';
 import { ModalSaldoField } from 'src/components/modalSaldo';
@@ -55,9 +55,11 @@ const QRCode = () => {
       }
 
       {aluno &&
-        <ModalSaldoField
-          id_carteira={aluno.id_carteira} id_aluno={aluno.id_aluno} modalSaldo={modalSaldo} onChange={setModalSaldo} saldo={aluno.saldo} modalPai={closeModal}>
-        </ModalSaldoField>
+        <CCol xs={12} sm={5} md={5} lg={5} xl={12}>
+          <ModalSaldoField
+            id_carteira={aluno.id_carteira} id_aluno={aluno.id_aluno} modalSaldo={modalSaldo} onChange={setModalSaldo} saldo={aluno.saldo} modalPai={closeModal}>
+          </ModalSaldoField>
+        </CCol>
       }
     
 
