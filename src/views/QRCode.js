@@ -1,35 +1,67 @@
-import React, { useState } from 'react';
-import QrScanner from 'react-qr-scanner';
+import { CSpinner } from '@coreui/react';
+import React, { useState, useEffect } from 'react';
+import QRCodeReader from 'src/components/QRCodeReader';
+import { ModalSaldoField } from 'src/components/modalSaldo';
+import { api } from 'src/services/api';
 
 const QRCode = () => {
+
+  const [modalSaldo, setModalSaldo] = useState(true)
+
+  const [lendo, setLendo] = useState(true);
+  const [loading, setLoading] = useState(true);
+
   const [qrData, setQrData] = useState('');
+  const [aluno, setAluno] = useState(null);
 
-  const handleScan = (data) => {
-    if (data) {
-      setQrData(data.text);
-      alert(data.text);
+  setTimeout(() => {
+    setLoading(false);
+  }, 2000); // 2 segundos
+
+  const pegarAluno= async (id) => {
+    setLoading(true);
+    const aluno = await api.pegarAluno(id);
+    setLoading(false);
+
+    setAluno(aluno);
+  }
+
+  const closeModal=(id)=>{
+    setLendo(true);
+    setAluno(null);
+
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000); // 2 segundos
+  }
+
+  useEffect(() => {
+    if (qrData != '') {
+      pegarAluno(qrData);
     }
-  };
-
-  const handleError = (error) => {
-    console.error(error);
-  };
-
-  const previewStyle = {
-    width: '40%',
-    height: 'auto',
-  };
+  }, [qrData]);
 
   return (
-    <div>
-      <QrScanner
-        delay={300}
-        onError={handleError}
-        onScan={handleScan}
-        style={previewStyle}
-      />
-      {qrData && <p>{qrData}</p>}
-    </div>
+    <>
+     <h1 style={{ fontSize: '24px' }}>Ler QRCode
+        {loading && (
+          <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+        )}
+     </h1>
+
+     {lendo &&
+        <QRCodeReader onChangeQR={setQrData} onChangeLendo={setLendo}></QRCodeReader>
+      }
+
+      {aluno &&
+        <ModalSaldoField
+          id_carteira={aluno.id_carteira} id_aluno={aluno.id_aluno} modalSaldo={modalSaldo} onChange={setModalSaldo} saldo={aluno.saldo} modalPai={closeModal}>
+        </ModalSaldoField>
+      }
+    
+
+    </>
   );
 };
 
