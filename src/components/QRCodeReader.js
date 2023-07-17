@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import QrReader from 'react-qr-reader';
 
 const QRCodeReader = ({onChangeQR, onChangeLendo}) => {
@@ -32,7 +32,7 @@ const QRCodeReader = ({onChangeQR, onChangeLendo}) => {
     <>
       <div style={scannerStyle}>
         <QrReader
-          delay={200}
+          delay={300}
           onError={handleError}
           onScan={handleScan}
           style={previewStyle}

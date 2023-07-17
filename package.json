@@ -1,5 +1,5 @@
 {
-  "name": "Projeto Frontend OANSE Japiim",
+  "name": "projeto_frontend_oanse_japiim",
   "version": "1.0",
   "description": "Usando CoreUI Admin Template",
   "homepage": ".",
@@ -39,7 +39,6 @@
     "react-app-polyfill": "^3.0.0",
     "react-dom": "^18.2.0",
     "react-qr-reader": "^2.2.1",
-    "react-qr-scanner": "^1.0.0-alpha.11",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.8.2",
     "redux": "4.2.1",
