@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import QrScanner from 'react-qr-scanner';
 
-const QRCodeReader = ({onChangeQR, onChangeLendo}) => {
+const QRCodeReader = ({ onChangeQR, onChangeLendo }) => {
+  const [facingMode, setFacingMode] = useState('rear');
 
   const handleScan = (data) => {
     if (data) {
@@ -24,23 +25,33 @@ const QRCodeReader = ({onChangeQR, onChangeLendo}) => {
     height: '100%',
   };
 
-  const videoConstraints = {
-    facingMode: 'environment', // Seleciona a câmera traseira
+  const handleCameraToggle = () => {
+    setFacingMode((prevFacingMode) => {
+      if (prevFacingMode === 'front') {
+        return 'rear';
+      } else if (prevFacingMode === 'rear') {
+        return 'front';
+      }
+      return prevFacingMode;
+    });
   };
 
   return (
     <>
+      <div>
+        <button onClick={handleCameraToggle}>Trocar Camera</button>
+      </div>
       <div style={scannerStyle}>
         <QrScanner
           delay={200}
           onError={handleError}
           onScan={handleScan}
           style={previewStyle}
-          facingMode= 'environment'
+          facingMode={facingMode}
         />
       </div>
-   </>
-  ); 
+    </>
+  );
 };
 
 export default QRCodeReader;
