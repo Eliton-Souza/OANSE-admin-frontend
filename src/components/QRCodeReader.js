@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import QrScanner from 'react-qr-scanner';
 
 const QRCodeReader = ({ onChangeQR, onChangeLendo }) => {
-  const [facingMode, setFacingMode] = useState('rear');
+  const [facingMode, setFacingMode] = useState('front');
 
   const handleScan = (data) => {
     if (data) {
@@ -26,14 +26,22 @@ const QRCodeReader = ({ onChangeQR, onChangeLendo }) => {
   };
 
   const handleCameraToggle = () => {
-    setFacingMode((prevFacingMode) => {
-      if (prevFacingMode === 'front') {
-        return 'rear';
-      } else if (prevFacingMode === 'rear') {
-        return 'front';
-      }
-      return prevFacingMode;
-    });
+    if (facingMode == 'front') {
+      setFacingMode('rear');
+    }
+    else if( facingMode == 'rear'){
+      setFacingMode('environment');
+    }
+    else if( facingMode == 'environment'){
+      setFacingMode('user');
+    }
+    else{
+      setFacingMode('front');
+    }
+
+    alert(facingMode);
+  
+
   };
 
   return (
