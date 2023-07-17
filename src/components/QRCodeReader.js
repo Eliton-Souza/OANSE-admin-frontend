@@ -1,5 +1,5 @@
 import React from 'react';
-import QrReader from 'react-qr-reader';
+import QrScanner from 'react-qr-scanner';
 
 const QRCodeReader = ({onChangeQR, onChangeLendo}) => {
 
@@ -15,7 +15,7 @@ const QRCodeReader = ({onChangeQR, onChangeLendo}) => {
   };
 
   const previewStyle = {
-    width: '50%',
+    width: '40%',
     height: 'auto',
   };
 
@@ -24,19 +24,19 @@ const QRCodeReader = ({onChangeQR, onChangeLendo}) => {
     height: '100%',
   };
 
-  /*const videoConstraints = {
+  const videoConstraints = {
     facingMode: 'environment', // Seleciona a câmera traseira
-  };*/
+  };
 
   return (
     <>
       <div style={scannerStyle}>
-        <QrReader
-          delay={300}
+        <QrScanner
+          delay={200}
           onError={handleError}
           onScan={handleScan}
           style={previewStyle}
-          //facingMode= "environment"
+          facingMode= 'environment'
         />
       </div>
    </>
