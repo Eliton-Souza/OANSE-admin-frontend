@@ -55,7 +55,7 @@ const QRCodeReader = ({ onChangeQR, onChangeLendo }) => {
           onError={handleError}
           onScan={handleScan}
           style={previewStyle}
-          facingMode={facingMode}
+          facingmode={facingMode}
         />
       </div>
     </>
