@@ -11,7 +11,7 @@ const QRCodeReader = ({ onChangeQR, onChangeLendo }) => {
       Errors={(error) => {
         console.log(error);
       }}
-      facingMode={"enviroment"} //or user
+      facingMode={"environment"} //or user
     />
   );
 }
