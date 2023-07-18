@@ -1,4 +1,4 @@
-import { CCol, CSpinner } from '@coreui/react';
+import { CCard, CCardBody, CCol, CHeader, CRow, CSpinner } from '@coreui/react';
 import React, { useState, useEffect } from 'react';
 import QRCodeReader from 'src/components/QRCodeReader';
 import { ModalSaldoField } from 'src/components/modalSaldo';
@@ -18,18 +18,24 @@ const QRCode = () => {
     setLoading(false);
   }, 2000); // 2 segundos
 
-  const pegarAluno= async (id) => {
+  const pegarAluno = async (id) => {
     setLoading(true);
     const aluno = await api.pegarAluno(id);
     setLoading(false);
+  
+    if (aluno) {
+      setAluno(aluno);
+    } else {
+      alert('Aluno não encontrado');
+    }
+  };
+  
 
-    setAluno(aluno);
-  }
-
-  const closeModal=(id)=>{
-    setLendo(true);
+  const closeModal=(value)=>{
+    setModalSaldo(value);
     setAluno(null);
-
+    setLendo(true);
+  
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -37,10 +43,16 @@ const QRCode = () => {
   }
 
   useEffect(() => {
-    if (qrData != '') {
-      pegarAluno(qrData);
+    if (qrData !== '') {
+      const id = parseInt(qrData);
+      if (!isNaN(id)) {
+        pegarAluno(id);
+      } else {
+        alert('qrCode lido não é uma carteira');
+      }
     }
   }, [qrData]);
+  
 
   return (
     <>
@@ -50,19 +62,26 @@ const QRCode = () => {
         )}
      </h1>
 
-     {lendo &&
-        <QRCodeReader onChangeQR={setQrData} onChangeLendo={setLendo}></QRCodeReader>
-      }
+    {lendo &&
+      <CCard>
+        <CHeader>Aponte a camera para o QRCode do aluno</CHeader>
+        <CCardBody>
+          <CRow>
+            <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
+              <QRCodeReader onChangeQR={setQrData} onChangeLendo={setLendo}></QRCodeReader>
+            </CCol>
+          </CRow>
+        </CCardBody>
+      </CCard>      
+    }
 
       {aluno &&
-        <CCol xs={12} sm={5} md={5} lg={5} xl={12}>
+        <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
           <ModalSaldoField
-            id_carteira={aluno.id_carteira} id_aluno={aluno.id_aluno} modalSaldo={modalSaldo} onChange={setModalSaldo} saldo={aluno.saldo} modalPai={closeModal}>
+            id_carteira={aluno.id_carteira} id_aluno={aluno.id_aluno} modalSaldo={modalSaldo} onChange={closeModal} saldo={aluno.saldo} nome={`${aluno.nome} ${aluno.sobrenome}`}>
           </ModalSaldoField>
         </CCol>
       }
-    
-
     </>
   );
 };

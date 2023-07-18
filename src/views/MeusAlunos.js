@@ -273,7 +273,7 @@ const MeusAlunos = () => {
 
       {modalSaldo && (
           <ModalSaldoField
-          id_carteira={id_carteira} id_aluno={id_aluno} modalSaldo={modalSaldo} onChange={setModalSaldo} saldo={saldo} modalPai={openModal}>
+          id_carteira={id_carteira} id_aluno={id_aluno} modalSaldo={modalSaldo} onChange={setModalSaldo} saldo={saldo} nome={`${nome} ${sobrenome}`}>
           </ModalSaldoField>
       )}
       

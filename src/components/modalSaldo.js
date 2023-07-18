@@ -9,7 +9,7 @@ import numeral from "numeral";
 import { DescricaoField } from "./formulario/descricao";
 
 
-export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, saldo, modalPai}) => {
+export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, saldo, nome}) => {
  
   const [loading, setLoading] = useState(false);
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
@@ -24,7 +24,6 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
 
   const closeModal = () => {
     onChange(false);
-    modalPai(id_aluno);
   }
 
   const salvarAlteracoes= async () => {
@@ -41,7 +40,7 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
 
       setTimeout(() => {
         closeModal();
-      }, 1000); // 1 segundo
+      }, 2000); // 2 segundos
     }
 
     setTimeout(() => {
@@ -72,7 +71,7 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
 
       <CModal alignment="top" visible={modalSaldo} onClose={closeModal} backdrop="static">
         <CModalHeader closeButton>
-          <CModalTitle>Saldo Atual: {numeral(saldo).format('0,0.00')}
+          <CModalTitle>{nome} - Saldo Atual: {numeral(saldo).format('0,0.00')}
 
           {sucesso.tipo != '' && (
             <CAlert color={sucesso.tipo} className="d-flex align-items-center">
