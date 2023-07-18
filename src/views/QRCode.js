@@ -33,6 +33,7 @@ const QRCode = () => {
 
   const closeModal=(value)=>{
     setModalSaldo(value);
+    window.location.reload();
     setAluno(null);
     setLendo(true);
   
