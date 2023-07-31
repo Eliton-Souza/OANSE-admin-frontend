@@ -27,10 +27,7 @@ const QRCode = () => {
       setAluno(aluno);
     } else {
       alert('Aluno não encontrado');
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000); // 1 segundos
-      
+      window.location.reload();      
     }
   };
   
@@ -54,9 +51,7 @@ const QRCode = () => {
         pegarAluno(id);
       } else {
         alert('qrCode lido não é uma carteira');
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000); // 1 segundos
+        window.location.reload();
       }
     }
   }, [qrData]);
