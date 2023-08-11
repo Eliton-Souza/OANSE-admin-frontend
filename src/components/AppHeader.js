@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   CContainer,
@@ -28,10 +28,10 @@ const AppHeader = () => {
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
         <CHeaderBrand className="mx-auto d-md-none" to="/">
-          <p>Logo OANSE Japiim</p>
+        <p></p>
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
-         <p>alguma coisa pra colocar aqui, tipo data</p>
+         <p></p>
         </CHeaderNav>
 
         <CHeaderNav className="ms-3">   {/*Icone Perfil*/}

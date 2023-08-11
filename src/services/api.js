@@ -133,5 +133,22 @@ export const api = {
   },
 
 
+  pegarLider: async (id) => {
+    const response = await http.get(`/lider/${id}`, {});
+    return response.data.lider;
+  },
+
+  meusDadosLider: async () => {
+    const response = await http.get(`/meusDadosLider`, {});
+    return response.data.lider;
+  },
+
+  atualizarLider: async (id, nome, sobrenome, genero, nascimento) => {
+    const response = await http.put(`/lider/${id}`, {
+      nome, sobrenome, genero, nascimento
+    });
+    return response.data;
+  },
+
 
 };
