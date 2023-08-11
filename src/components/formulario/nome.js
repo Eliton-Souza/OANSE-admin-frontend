@@ -42,7 +42,7 @@ export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto
         required={obrigatorio}
         valid={valido}
         invalid={invalido}
-        feedbackInvalid="Apenas letras sem espaços"
+        feedbackInvalid="Apenas o primeiro nome"
         feedbackValid="OK"
       />
     </>
