@@ -111,7 +111,7 @@ const MeusAlunos = () => {
 
       setTimeout(() => {
         setSucesso({tipo: '', menssagem: ''});
-      }, 3000); // 3 segundos
+      }, 1500); // 1.5 segundos
     }
 
     setLimparValidacao(true);
