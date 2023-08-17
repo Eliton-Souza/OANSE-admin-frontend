@@ -6,7 +6,7 @@ import { NomeField } from '../components/formulario/nome';
 import { SobrenomeField } from '../components/formulario/sobrenome';
 import { NascimentoField } from '../components/formulario/nascimento';
 import { GeneroField } from '../components/formulario/genero';
-import { hasCampoIncorreto } from '../components/formulario/helper';
+import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/helper';
 
 import { ClubeField } from '../components/widget/clube';
 import { IdadeField } from 'src/components/widget/idade';
@@ -107,7 +107,7 @@ const Perfil = () => {
         <CRow className="row g-4">
           <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
             <NomeField
-              nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={true} incorreto={setNomeIncorreto} limpar={limparValidacao}>
+              nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={true} incorreto={setNomeIncorreto} limpar={limparValidacao} regexName={regexNamePessoa}>
             </NomeField>
           </CCol>
 
@@ -134,13 +134,13 @@ const Perfil = () => {
 
 
         <CRow className="row g-3"> 
-          <CCol xs={4} sm={4} md={4} lg={4} xl={4}>
+          <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
             <ClubeField
               clube={clube}>
             </ClubeField>
           </CCol>
 
-          <CCol xs={4} sm={4} md={4} lg={4} xl={4}>
+          <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
             <IdadeField
               nascimento={nascimento}>
             </IdadeField>
