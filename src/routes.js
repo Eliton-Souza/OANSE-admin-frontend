@@ -7,6 +7,7 @@ const CadastrarAluno= React.lazy(() => import('./views/CadastrarAluno'));
 const CadastrarResponsavel= React.lazy(() => import('./views/CadastrarResponsavel'));
 const VerResponsaveis= React.lazy(() => import('./views/VerResponsaveis'));
 const HistoricoTransacao= React.lazy(() => import('./views/HistoricoTransacao'));
+const VerEstoque= React.lazy(() => import('./views/VerEstoque'));
 const QRCode= React.lazy(() => import('./views/QRCode'));
 const Perfil= React.lazy(() => import('./views/Perfil'));
 
@@ -23,6 +24,7 @@ const routes = [
   { path: '/responsaveis', name: 'Responsaveis', element: VerResponsaveis },
   { path: '/historico', name: 'Historico', element: HistoricoTransacao },
   { path: '/qrcode', name: 'QRCode', element: QRCode },
+  { path: '/estoque', name: 'Estoque', element: VerEstoque },
 
 
   

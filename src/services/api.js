@@ -101,7 +101,14 @@ export const api = {
     return response.data;
   },
 
-  
+  listarMateriais: async () => {
+    const response = await http.get('/materiais', {});
+    return response.data;
+  },
+  pegarMaterial: async (id) => {
+    const response = await http.get(`/material/${id}`, {});
+    return response.data.material;
+  },
 
   listarManuais: async () => {
     const response = await http.get('/manuais', {});

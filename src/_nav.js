@@ -18,9 +18,12 @@ import {
   cilGraph,
   cilLowVision,
   cilAddressBook,
+  cilPuzzle,
+  cilCash,
+  cilList,
 } from '@coreui/icons'
 
-import { CNavItem, CNavTitle } from '@coreui/react'
+import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
 const _nav = [
 
@@ -57,24 +60,58 @@ const _nav = [
   },
 
 
-  //CLUBE
+  //Secretaria
   {
     component: CNavTitle,
-    name: 'CLUBE',
-  },
-  {
-    component: CNavItem,
-    name: 'Meu Clube',
-    to: '#',
-    icon: <CIcon icon={cilGroup} customClassName="nav-icon" />,
+    name: 'SECRETARIA',
   },
 
   {
-    component: CNavItem,
-    name: 'Seções',
+    component: CNavGroup,
+    name: 'Estoque',
     to: '#',
-    icon: <CIcon icon={cilClipboard} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Cadastrar Material',
+        to: '#',
+      },
+      {
+        component: CNavItem,
+        name: 'Ver Estoque',
+        to: '/estoque',
+      },
+      {
+        component: CNavItem,
+        name: 'Histórico do Estoque ',
+        to: '#',
+      },
+    ],
   },
+
+
+  {
+    component: CNavGroup,
+    name: 'Caixa',
+    to: '#',
+    icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Ver Caixa ',
+        to: '#',
+      },
+      {
+        component: CNavItem,
+        name: 'Estatisticas',
+        to: '#',
+      },
+    ],
+  },
+
+
+  
 
 
    //TRANSACOES

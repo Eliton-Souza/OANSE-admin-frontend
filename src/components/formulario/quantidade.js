@@ -1,7 +1,7 @@
 import { CFormInput } from '@coreui/react';
 import { useEffect, useState } from 'react';
 
-export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto, limpar, regexName }) => {
+export const QuantidadeFild = ({ quantidade, onChange, desabilitado, incorreto, limpar, regexQuantidade }) => {
 
   const [valido, setValido] = useState();
   const [invalido, setInvalido] = useState();
@@ -13,14 +13,14 @@ export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto
     }
   }, [limpar]);
 
-  const handleNomeChange = (event) => {
-    const novoNome = event.target.value;
+  const handleQuantidadeChange = (event) => {
+    const novaQtd = event.target.value;
 
-    if (regexName.restricao.test(novoNome)) {
+    if (regexQuantidade.restricao.test(novaQtd)) {
       setValido(true);
       setInvalido(false);  
       incorreto(false);
-      onChange(novoNome); // Atualiza a variável nome no componente pai
+      onChange(novaQtd); // Atualiza a variável quantidade no componente pai
     } else {
       setValido(false);
       setInvalido(true);
@@ -31,17 +31,15 @@ export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto
   return (
     <>
       <CFormInput
-        placeholder="Nome"
         type="text"
-        id="nome"
-        label={obrigatorio? "Nome *" : "Nome"}
-        defaultValue={nome}
-        onChange={handleNomeChange}
+        id="quantidade"
+        label= "Quantidade"
+        defaultValue={quantidade}
+        onChange={handleQuantidadeChange}
         disabled={desabilitado}
-        required={obrigatorio}
         valid={valido}
         invalid={invalido}
-        feedbackInvalid= {regexName.feedbackInvalido}
+        feedbackInvalid={regexQuantidade.feedbackInvalido}
         feedbackValid="OK"
       />
     </>
@@ -49,6 +47,6 @@ export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto
 };
 
 //prop opcional
-NomeField.defaultProps = {
+QuantidadeFild.defaultProps = {
   limpar: undefined
 };
