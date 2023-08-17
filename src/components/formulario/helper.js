@@ -4,7 +4,7 @@ export const regexNamePessoa = {
   feedbackInvalido: 'Apenas o primeiro nome'
 };
 
-const restricaoNomeMaterial = /^[a-zA-ZçÇáÁàÀâÂãÃéÉèÈêÊíÍìÌîÎóÓòÒôÔõÕúÚùÙûÛ0-9\s]{2,50}$/;
+const restricaoNomeMaterial = /^[a-zA-ZçÇáÁàÀâÂãÃéÉèÈêÊíÍìÌîÎóÓòÒôÔõÕúÚùÙûÛ0-9\s.\-]{2,60}$/;
 export const regexNameMaterial = {
   restricao: restricaoNomeMaterial,
   feedbackInvalido: 'Apenas letras ou números'
