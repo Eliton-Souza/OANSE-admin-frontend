@@ -1,8 +1,7 @@
 import { CFormInput } from '@coreui/react';
 import { useEffect, useState } from 'react';
-import { regexName } from './helper';
 
-export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto, limpar }) => {
+export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto, limpar, regexName }) => {
 
   const [valido, setValido] = useState();
   const [invalido, setInvalido] = useState();
@@ -17,7 +16,7 @@ export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto
   const handleNomeChange = (event) => {
     const novoNome = event.target.value;
 
-    if (regexName.test(novoNome)) {
+    if (regexName.restricao.etest(novoNome)) {
       setValido(true);
       setInvalido(false);  
       incorreto(false);
@@ -42,7 +41,7 @@ export const NomeField = ({ nome, onChange, desabilitado, obrigatorio, incorreto
         required={obrigatorio}
         valid={valido}
         invalid={invalido}
-        feedbackInvalid="Apenas o primeiro nome"
+        feedbackInvalid= {regexName.feedbackInvalido}
         feedbackValid="OK"
       />
     </>

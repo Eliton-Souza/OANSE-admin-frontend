@@ -5,7 +5,7 @@ import { NomeField } from '../components/formulario/nome';
 import { SobrenomeField } from '../components/formulario/sobrenome';
 import { NascimentoField } from '../components/formulario/nascimento';
 import { GeneroField } from '../components/formulario/genero';
-import { hasCampoIncorreto } from '../components/formulario/helper';
+import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/helper';
 import { ManualField } from '../components/formulario/manual';
 
 import { SaldoField } from '../components/widget/saldo';
@@ -189,7 +189,7 @@ const MeusAlunos = () => {
                 <CRow className="row g-1">
                   <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
                     <NomeField
-                      nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={false} incorreto={setNomeIncorreto} limpar={limparValidacao}>
+                      nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={false} incorreto={setNomeIncorreto} limpar={limparValidacao} regexName={regexNamePessoa}>
                     </NomeField>
                   </CCol>
 
