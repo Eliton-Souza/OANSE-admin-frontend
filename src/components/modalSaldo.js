@@ -34,18 +34,22 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
 
     if (result.error) {
       setSucesso({tipo: 'danger', menssagem: result.error});
+
+      setTimeout(() => {
+        setSucesso({tipo: '', menssagem: ''});
+      }, 3000); // 3 segundos
+
     } else {
       setSucesso({tipo: 'success', menssagem: "Saldo alterado com sucesso"});
       setBlock(true);
 
       setTimeout(() => {
         closeModal();
-      }, 2000); // 2 segundos
+        setSucesso({tipo: '', menssagem: ''});
+      }, 1500); // 1.5 segundos
     }
 
-    setTimeout(() => {
-      setSucesso({tipo: '', menssagem: ''});
-    }, 3000); // 3 segundos
+    
   };
    
   const handleSaldo = () => {

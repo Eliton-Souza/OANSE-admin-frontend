@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage, CAlert, CSpinner } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardBody, CAlert, CSpinner } from '@coreui/react';
 import { api } from 'src/services/api';
 import { NomeField } from '../components/formulario/nome';
-import { NascimentoField } from '../components/formulario/nascimento';
 import { hasCampoIncorreto, regexNameMaterial, regexQuantidade } from '../components/formulario/helper';
 
 
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { QuantidadeFild } from 'src/components/formulario/quantidade';
+import { ListarClubesFild } from 'src/components/formulario/listarClubes';
 
 
 const VerEstoque = () => {
@@ -24,16 +24,14 @@ const VerEstoque = () => {
 
   //dados
   const [nome, setNome] = useState('');
-  const [clube, setClube] = useState('');
+  const [clube, setClube] = useState( {id_clube: null, nome: ''});
   const [quantidade, setQuantidade] = useState('');
  
 
 
   //verificar se os campos estão corretos:
   const [nomeIncorreto, setNomeIncorreto] = useState(false);
-  const [sobrenomeIncorreto, setSobrenomeIncorreto] = useState(false);
-  const [nascimentoIncorreto, setNascimentoIncorreto] = useState(false);
-  const [contatoIncorreto, setContatoIncorreto] = useState(false);
+  const [quantidadeIncorreta, setQuantidadeIncorreta] = useState(false);
 
   const [limparValidacao, setLimparValidacao] = useState(false);
 
@@ -67,7 +65,7 @@ const VerEstoque = () => {
 
   const setDados=(dado)=>{
     setNome(dado.nome);
-    setClube(dado.clube);
+    setClube({id_clube: dado.id_clube, nome: dado.clube});
     setQuantidade(dado.quantidade);
   }
    
@@ -81,20 +79,21 @@ const VerEstoque = () => {
 
   const salvarAlteracoes= async () => {
     setLoading(true);
-    const result = await api.atualizarResponsavel(selectedMaterial.id_responsavel, nome, sobrenome, clube, nascimento, quantidade);
+    const result = await api.atualizarMaterial(selectedMaterial.id_material, nome, clube.id_clube, quantidade);
     setLoading(false);
 
     if (result.error) {
       setSucesso({tipo: 'danger', menssagem: result.error});
     } else {
-      setSucesso({tipo: 'success', menssagem: "Responsável atualizado com sucesso"});
-      getMateriais();
+      setSucesso({tipo: 'success', menssagem: "Material atualizado com sucesso"});
+      getMateriais();   //melhorar no futuro
 
       setEditar(false);
 
       setTimeout(() => {
+        closeModal();
         setSucesso({tipo: '', menssagem: ''});
-      }, 3000); // 3 segundos
+      }, 1500); // 1.5 segundos
     }
 
     setLimparValidacao(true);
@@ -171,20 +170,22 @@ const VerEstoque = () => {
           {selectedMaterial && (
             <>
               <CForm className="row g-3">
-                <CRow className="row g-4">
-                  <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
+                <CRow className="row g-2">
+                  <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
                     <NomeField
                       nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={false} incorreto={setNomeIncorreto} limpar={limparValidacao} regexName={regexNameMaterial}>
                     </NomeField>
                   </CCol>
-                </CRow>
 
-             
+                  <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
+                    <ListarClubesFild
+                      clube={clube} onChange={setClube} desabilitado={!editar} obrigatorio={false}>
+                    </ListarClubesFild>
+                  </CCol>
 
-                <CRow className="row g-3">
                   <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
                     <QuantidadeFild
-                      quantidade={quantidade} onChange={setQuantidade} desabilitado={!editar} incorreto={setContatoIncorreto} limpar={limparValidacao} regexQuantidade={regexQuantidade}>
+                      quantidade={quantidade} onChange={setQuantidade} desabilitado={!editar} incorreto={setQuantidadeIncorreta} limpar={limparValidacao} regexQuantidade={regexQuantidade}>
                     </QuantidadeFild>
                   </CCol>
                 </CRow>
@@ -203,7 +204,7 @@ const VerEstoque = () => {
             </CCol>
 
             <CCol xs={4}>
-              <CButton color="success" onClick={salvarAlteracoes} type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto, contatoIncorreto])}>{loading ? 'Carregando' : 'Salvar'}</CButton>
+              <CButton color="success" onClick={salvarAlteracoes} type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, quantidadeIncorreta])}>{loading ? 'Carregando' : 'Salvar'}</CButton>
             </CCol>
           </CRow>
         </CModalFooter>

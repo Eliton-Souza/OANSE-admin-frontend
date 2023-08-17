@@ -109,6 +109,13 @@ export const api = {
     const response = await http.get(`/material/${id}`, {});
     return response.data.material;
   },
+  atualizarMaterial: async ( id, nome, id_clube, quantidade) => {
+    const response = await http.put(`/material/${id}`, {
+      nome, id_clube, quantidade
+    });
+
+    return response.data;
+  },
 
   listarManuais: async () => {
     const response = await http.get('/manuais', {});
@@ -154,6 +161,12 @@ export const api = {
     const response = await http.put(`/lider/${id}`, {
       nome, sobrenome, genero, nascimento
     });
+    return response.data;
+  },
+
+
+  listarClubes: async () => {
+    const response = await http.get('/clubes', {});
     return response.data;
   },
 
