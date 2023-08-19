@@ -141,7 +141,7 @@ const MeusAlunos = () => {
 
   return (
     <>
-     <h1 style={{ fontSize: '24px' }}>Meus Alunos
+     <h1>Meus Alunos
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}

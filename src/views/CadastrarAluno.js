@@ -80,7 +80,7 @@ const CadastrarAluno = () => {
 
   return (
     <>
-      <h1 style={{ fontSize: '24px' }}>Novo Aluno
+      <h1>Novo Aluno
           {loading && (
             <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
           )}

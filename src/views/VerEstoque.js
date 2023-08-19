@@ -125,7 +125,7 @@ const VerEstoque = () => {
 
   return (
     <>
-     <h1>Estoque de materiais
+     <h1>Estoque de Materiais
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}

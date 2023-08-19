@@ -88,7 +88,7 @@ const Perfil = () => {
 
   return (
     <>
-      <h1 style={{ fontSize: '24px' }}>Meu Perfil
+      <h1>Meu Perfil
           {loading && (
             <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
           )}

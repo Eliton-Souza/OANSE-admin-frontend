@@ -75,7 +75,7 @@ const CadastrarResponsavel = () => {
 
   return (
     <>
-      <h1 style={{ fontSize: '24px' }}>Novo Responsável
+      <h1>Novo Responsável
           {loading && (
             <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
           )}

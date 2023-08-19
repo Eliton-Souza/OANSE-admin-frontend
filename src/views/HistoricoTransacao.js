@@ -116,7 +116,7 @@ const HistoricoTransacao = () => {
 
   return (
     <>
-     <h1 style={{ fontSize: '24px' }}>Histórico de Transações
+     <h1>Histórico de Transações
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}

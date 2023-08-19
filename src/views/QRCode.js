@@ -59,7 +59,7 @@ const QRCode = () => {
 
   return (
     <>
-     <h1 style={{ fontSize: '24px' }}>Ler QRCode
+     <h1>Ler QRCode
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}

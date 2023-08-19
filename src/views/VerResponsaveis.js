@@ -131,7 +131,7 @@ const VerResponsaveis = () => {
 
   return (
     <>
-     <h1 style={{ fontSize: '24px' }}>Todos os Responsáveis
+     <h1>Responsáveis
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
