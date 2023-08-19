@@ -14,6 +14,7 @@ import { ListarClubesFild } from 'src/components/formulario/listarClubes';
 const VerEstoque = () => {
   const [loading, setLoading] = useState();
   const [materiais, setMateriais] = useState([]);
+  const [clubes, setClubes] = useState([]);
   const [selectedMaterial, setSelectdMaterial] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -36,20 +37,22 @@ const VerEstoque = () => {
   const [limparValidacao, setLimparValidacao] = useState(false);
 
 
-  const getMateriais = async () => {
+  const getDados = async () => {
     setLoading(true);
     const result = await api.listarMateriais();
+    const resultClubes= await api.listarClubes();
     setLoading(false);
 
-    if (result.error) {
-      alert(result.error);
+    if (result.error || resultClubes.error) {
+      alert("Ocorreu um erro ao buscar dados");
     } else {
       setMateriais(result.materiais);
+      setClubes(resultClubes.clubes);
     }
   };
 
   useEffect(() => {
-    getMateriais();
+    getDados();
   }, []);
 
   const openModal= async (id) => {
@@ -60,7 +63,7 @@ const VerEstoque = () => {
     setSelectdMaterial(material);
     setModalOpen(true);
 
-    setDados(material)
+    setDados(material);
   }
 
   const setDados=(dado)=>{
@@ -86,7 +89,7 @@ const VerEstoque = () => {
       setSucesso({tipo: 'danger', menssagem: result.error});
     } else {
       setSucesso({tipo: 'success', menssagem: "Material atualizado com sucesso"});
-      getMateriais();   //melhorar no futuro
+      getDados();   //melhorar no futuro
 
       setEditar(false);
 
@@ -118,45 +121,49 @@ const VerEstoque = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentAlunos = materiais.slice(startIndex, endIndex);*/
-
   
 
   return (
     <>
-     <h1 style={{ fontSize: '24px' }}>Estoque de materiais
+     <h1>Estoque de materiais
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
      </h1>
 
-     <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
-        <CCard className="mt-2">
-          <CCardBody>
-            <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
-              <CTableHead color="dark">
-                <CTableRow>
-                  <CTableHeaderCell className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Nome</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Clube</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Quantidade</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {materiais.map((material) => (
-                  <CTableRow key={material.id_material} onClick={() => openModal(material.id_material)}>      
-                    <CTableDataCell>{material.nome}</CTableDataCell>
-                    <CTableDataCell className="text-center">{material.clube}</CTableDataCell>
-                    <CTableDataCell className="text-center">{material.quantidade}</CTableDataCell>
-                  </CTableRow>
-                ))}
-              </CTableBody>
-            </CTable>
-          </CCardBody>
-        </CCard>
-      </CCol>
+      {clubes.map(clubeMap => (
+        <div key={clubeMap.id_clube} className="mt-5">
+          <h3>{clubeMap.nome}</h3>
+          <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
+            <CCard className="mt-2">
+              <CCardBody>
+                <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
+                  <CTableHead color="dark">
+                    <CTableRow>
+                      <CTableHeaderCell className="col-xs-9 col-sm-9 col-md-9 col-lg-6 col-xl-6">Material</CTableHeaderCell>
+                      <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-6 col-xl-6">Quantidade</CTableHeaderCell>
+                    </CTableRow>
+                  </CTableHead>
+                  <CTableBody>
+                    {materiais.filter(materialFilter => materialFilter.id_clube === clubeMap.id_clube).map(materialMap => (
+                      <CTableRow key={materialMap.id_material} onClick={() => openModal(materialMap.id_material)}>      
+                        <CTableDataCell>{materialMap.nome}</CTableDataCell>
+                        <CTableDataCell className="text-center">{materialMap.quantidade}</CTableDataCell>
+                      </CTableRow>
+                    ))}
+                  </CTableBody>
+                </CTable>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </div>
+      ))}
+
+
 
       <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
-          <CModalTitle>{selectedMaterial && `${selectedMaterial.nome}`}
+          <CModalTitle>{selectedMaterial && (selectedMaterial.nome)}
           {sucesso.tipo != '' && (
             <CAlert color={sucesso.tipo} className="d-flex align-items-center">
               <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
