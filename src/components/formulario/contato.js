@@ -1,9 +1,10 @@
 import { CFormInput } from '@coreui/react';
 import { useEffect, useState } from 'react';
 import { regexPhoneNumber } from './helper';
+import { IMaskMixin } from 'react-imask';
 
 export const ContatoField = ({ contato, onChange, desabilitado, incorreto, limpar }) => {
-
+  
   const [valido, setValido] = useState();
   const [invalido, setInvalido] = useState();
 
@@ -19,7 +20,7 @@ export const ContatoField = ({ contato, onChange, desabilitado, incorreto, limpa
 
     if (regexPhoneNumber.test(novoPhone)) {
       setValido(true);
-      setInvalido(false);  
+      setInvalido(false);
       incorreto(false);
       onChange(novoPhone); // Atualiza a variável contato no componente pai
     } else {
@@ -29,15 +30,20 @@ export const ContatoField = ({ contato, onChange, desabilitado, incorreto, limpa
     }
   };
 
+  const CFormInputWithMask = IMaskMixin(({ inputRef, ...props }) => (
+    <CFormInput {...props} ref={inputRef} />
+  ));
+
   return (
     <>
-      <CFormInput
-        placeholder="(XX) X XXXX-XXXX"
+      <CFormInputWithMask
+        mask="(00) 00000-0000"
+        placeholder="(XX) XXXXX-XXXX"
         type="text"
         id="contato"
-        label= "Telefone"
+        label="Telefone"
         defaultValue={contato}
-        onChange={handleContatoChange}
+        onAccept={(value) => handleContatoChange({ target: { value } })}
         disabled={desabilitado}
         valid={valido}
         invalid={invalido}
@@ -48,7 +54,7 @@ export const ContatoField = ({ contato, onChange, desabilitado, incorreto, limpa
   );
 };
 
-//prop opcional
+// prop opcional
 ContatoField.defaultProps = {
   limpar: undefined
 };
