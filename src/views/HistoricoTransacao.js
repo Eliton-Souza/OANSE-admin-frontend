@@ -105,7 +105,7 @@ const HistoricoTransacao = () => {
     setCurrentPage(page);
   };
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 30;
   const totalItems = transacoes.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
