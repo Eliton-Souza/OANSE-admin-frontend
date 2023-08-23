@@ -12,7 +12,7 @@ export const regexNameMaterial = {
 
 
 const regexQdt = /^[0-9]+$/;
-export const regexQuantidade = {
+export const regexNumero = {
   restricao: regexQdt,
   feedbackInvalido: 'Apenas números positivos'
 };

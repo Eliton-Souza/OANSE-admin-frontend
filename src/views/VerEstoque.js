@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardBody, CAlert, CSpinner } from '@coreui/react';
 import { api } from 'src/services/api';
 import { NomeField } from '../components/formulario/nome';
-import { hasCampoIncorreto, regexNameMaterial, regexQuantidade } from '../components/formulario/helper';
+import { hasCampoIncorreto, regexNameMaterial, regexNumero } from '../components/formulario/helper';
 
 
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { QuantidadeFild } from 'src/components/formulario/quantidade';
 import { ListarClubesFild } from 'src/components/formulario/listarClubes';
+import { ValorMaterial } from 'src/components/formulario/valorMaterial';
 
 
 const VerEstoque = () => {
@@ -27,6 +28,7 @@ const VerEstoque = () => {
   const [nome, setNome] = useState('');
   const [clube, setClube] = useState( {id_clube: null, nome: ''});
   const [quantidade, setQuantidade] = useState('');
+  const [valor, setValor] = useState('');
  
 
 
@@ -70,6 +72,7 @@ const VerEstoque = () => {
     setNome(dado.nome);
     setClube({id_clube: dado.id_clube, nome: dado.clube});
     setQuantidade(dado.quantidade);
+    setValor(dado.valor);
   }
    
 
@@ -82,7 +85,7 @@ const VerEstoque = () => {
 
   const salvarAlteracoes= async () => {
     setLoading(true);
-    const result = await api.atualizarMaterial(selectedMaterial.id_material, nome, clube.id_clube, quantidade);
+    const result = await api.atualizarMaterial(selectedMaterial.id_material, nome, clube.id_clube, quantidade, valor);
     setLoading(false);
 
     if (result.error) {
@@ -189,11 +192,19 @@ const VerEstoque = () => {
                       clube={clube} onChange={setClube} desabilitado={!editar} obrigatorio={false}>
                     </ListarClubesFild>
                   </CCol>
+                </CRow>
 
+                <CRow className="row g-2">
                   <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
                     <QuantidadeFild
-                      quantidade={quantidade} onChange={setQuantidade} desabilitado={!editar} incorreto={setQuantidadeIncorreta} limpar={limparValidacao} regexQuantidade={regexQuantidade}>
+                      quantidade={quantidade} onChange={setQuantidade} desabilitado={!editar} incorreto={setQuantidadeIncorreta} limpar={limparValidacao} regexQuantidade={regexNumero}>
                     </QuantidadeFild>
+                  </CCol>
+
+                  <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
+                    <ValorMaterial
+                      valor={valor} onChange={setValor} desabilitado={!editar} incorreto={setQuantidadeIncorreta} limpar={limparValidacao} regexValor={regexNumero}>
+                    </ValorMaterial>
                   </CCol>
                 </CRow>
               </CForm>

@@ -109,9 +109,9 @@ export const api = {
     const response = await http.get(`/material/${id}`, {});
     return response.data.material;
   },
-  atualizarMaterial: async ( id, nome, id_clube, quantidade) => {
+  atualizarMaterial: async ( id, nome, id_clube, quantidade, valor) => {
     const response = await http.put(`/material/${id}`, {
-      nome, id_clube, quantidade
+      nome, id_clube, quantidade, valor
     });
 
     return response.data;
