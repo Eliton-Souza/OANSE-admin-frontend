@@ -9,7 +9,7 @@ import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { QuantidadeFild } from 'src/components/formulario/quantidade';
 import { ListarClubesFild } from 'src/components/formulario/listarClubes';
-import { ValorMaterial } from 'src/components/formulario/valorMaterial';
+import { PrecoMaterial } from 'src/components/formulario/PrecoMaterial';
 
 
 const VerEstoque = () => {
@@ -28,7 +28,7 @@ const VerEstoque = () => {
   const [nome, setNome] = useState('');
   const [clube, setClube] = useState( {id_clube: null, nome: ''});
   const [quantidade, setQuantidade] = useState('');
-  const [valor, setValor] = useState('');
+  const [preco, setPreco] = useState('');
  
 
 
@@ -72,7 +72,7 @@ const VerEstoque = () => {
     setNome(dado.nome);
     setClube({id_clube: dado.id_clube, nome: dado.clube});
     setQuantidade(dado.quantidade);
-    setValor(dado.valor);
+    setPreco(dado.preco);
   }
    
 
@@ -85,7 +85,7 @@ const VerEstoque = () => {
 
   const salvarAlteracoes= async () => {
     setLoading(true);
-    const result = await api.atualizarMaterial(selectedMaterial.id_material, nome, clube.id_clube, quantidade, valor);
+    const result = await api.atualizarMaterial(selectedMaterial.id_material, nome, clube.id_clube, quantidade, preco);
     setLoading(false);
 
     if (result.error) {
@@ -202,9 +202,9 @@ const VerEstoque = () => {
                   </CCol>
 
                   <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
-                    <ValorMaterial
-                      valor={valor} onChange={setValor} desabilitado={!editar} incorreto={setQuantidadeIncorreta} limpar={limparValidacao} regexValor={regexNumero}>
-                    </ValorMaterial>
+                    <PrecoMaterial
+                      preco={preco} onChange={setPreco} desabilitado={!editar} incorreto={setQuantidadeIncorreta} limpar={limparValidacao} regexPreco={regexNumero}>
+                    </PrecoMaterial>
                   </CCol>
                 </CRow>
               </CForm>

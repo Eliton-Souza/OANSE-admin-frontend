@@ -1,7 +1,7 @@
 import { CFormInput } from '@coreui/react';
 import { useEffect, useState } from 'react';
 
-export const ValorMaterial = ({ valor, onChange, desabilitado, incorreto, limpar, regexValor }) => {
+export const PrecoMaterial = ({ preco, onChange, desabilitado, incorreto, limpar, regexPreco }) => {
 
   const [valido, setValido] = useState();
   const [invalido, setInvalido] = useState();
@@ -14,13 +14,13 @@ export const ValorMaterial = ({ valor, onChange, desabilitado, incorreto, limpar
   }, [limpar]);
 
   const handleValorChange = (event) => {
-    const novoValor = event.target.value;
+    const novoPreco = event.target.value;
 
-    if (regexValor.restricao.test(novoValor)) {
+    if (regexPreco.restricao.test(novoPreco)) {
       setValido(true);
       setInvalido(false);  
       incorreto(false);
-      onChange(novoValor); // Atualiza a variável valor no componente pai
+      onChange(novoPreco); // Atualiza a variável preco no componente pai
     } else {
       setValido(false);
       setInvalido(true);
@@ -32,14 +32,14 @@ export const ValorMaterial = ({ valor, onChange, desabilitado, incorreto, limpar
     <>
       <CFormInput
         type="text"
-        id="valor"
+        id="preco"
         label= "Valor"
-        defaultValue={valor}
+        defaultValue={preco}
         onChange={handleValorChange}
         disabled={desabilitado}
         valid={valido}
         invalid={invalido}
-        feedbackInvalid={regexValor.feedbackInvalido}
+        feedbackInvalid={regexPreco.feedbackInvalido}
         feedbackValid="OK"
       />
     </>
@@ -47,6 +47,6 @@ export const ValorMaterial = ({ valor, onChange, desabilitado, incorreto, limpar
 };
 
 //prop opcional
-ValorMaterial.defaultProps = {
+PrecoMaterial.defaultProps = {
   limpar: undefined
 };
