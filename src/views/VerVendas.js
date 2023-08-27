@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CCol, CSpinner, CCollapse, CListGroup, CListGroupItem, CBadge, CCardBody, CCardFooter } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CCol, CSpinner, CCollapse, CListGroup, CListGroupItem, CBadge, CCardBody, CCardFooter, CFormSelect, CRow } from '@coreui/react';
 import { api } from 'src/services/api';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import Paginacao from 'src/components/paginacao';
 
-const HistoricoTransacao = () => {
+const HistoricoVendas = () => {
   const [loading, setLoading] = useState();
   const [loadingSalvar, setLoadingSalvar] = useState();
-  const [transacoes, setTransacoes] = useState([]);
+  const [vendas, setVendas] = useState([]);
+  const [materiais, setMateriais] = useState([]);
   const [collapseOpen, setCollapseOpen] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
 
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
 
   //dados
-  const [id_transacao, setIdTransacao] = useState('');
+  const [id_venda, setIdVenda] = useState('');
   
   const [nome_aluno, setNomeAluno] = useState('');
   const [sobrenome_aluno, setSobrenomeAluno] = useState('');
@@ -24,29 +25,30 @@ const HistoricoTransacao = () => {
   const [nome_lider, setNomeLider] = useState('');
   const [sobrenome_lider, setSobrenomeLider] = useState('');
   
-  const [valor_transacao, setValorTransacao] = useState('');
-  const [novo_saldo, setNovoSaldo] = useState('');
+  const [valor_total, setValorTotal] = useState('');
 
-  const [data, setData] = useState(null);
-  const [tipo, setTipo] = useState('');
+  const [data, setData] = useState(null);;
   const [descricao, setDescricao] = useState('');
+  const [status, setStatus] = useState('');
 
+  const [escolha_status, setEscolhaStatus] = useState('pendente'); //escolhe o tipo de venda que que lista, paga, pendente ou todas.
+  
 
-  const getTransacoes = async () => {
+  const getVendas = async () => {
     setLoading(true);
-    const result = await api.listarTransacoes();
+    const result = await api.listarVendas(escolha_status);
     setLoading(false);
 
     if (result.error) {
       alert(result.error);
     } else {
-      setTransacoes(result.transacoes);
+      setVendas(result.vendas);
     }
   };
 
   useEffect(() => {
-    getTransacoes();
-  }, []);
+    getVendas();
+  }, [escolha_status]);
 
   const onClickRow= async (id) => {
 
@@ -56,17 +58,20 @@ const HistoricoTransacao = () => {
       setExpandedRow(null); // Fechar o collapse se a mesma linha for clicada novamente
     } else {
       setLoading(true);
-      const transacao = await api.pegarTransacao(id);
+      const venda = await api.pegarVenda(id);
       setLoading(false);
 
-      setDados(transacao);
+          
+      setMateriais(venda.materiais);
+      setDados(venda.venda);
+
       setExpandedRow(id);
     }
     setCollapseOpen(!collapseOpen);
   }
 
   const setDados=(dado)=>{
-    setIdTransacao(dado.id_transacao);
+    setIdVenda(dado.id_venda);
 
     setNomeAluno(dado.nome_aluno);
     setSobrenomeAluno(dado.sobrenome_aluno);
@@ -74,19 +79,18 @@ const HistoricoTransacao = () => {
     setNomeLider(dado.nome_lider);
     setSobrenomeLider(dado.sobrenome_lider);
     
-    setValorTransacao(dado.valor);
-    setNovoSaldo(dado.novo_saldo);
+    setValorTotal(dado.valor_total);
+    setStatus(dado.status);
 
     setData(dado.data.split('-').reverse().join('/'));
     setDescricao(dado.descricao);
-    setTipo(dado.tipo);
   }
    
 
   const salvarDescricao= async () => {
 
     setLoadingSalvar(true);
-    const result = await api.atualizarDescricaoTransacao( id_transacao, descricao );
+    const result = await api.atualizarDescricaoVenda( id_venda, descricao );
     setLoadingSalvar(false);
 
     if (result.error) {
@@ -100,27 +104,43 @@ const HistoricoTransacao = () => {
     }
   };
 
+  const handleEscolhaStatusChange = (event) => {
+    setEscolhaStatus(event.target.value);
+  };
+
   const [currentPage, setCurrentPage] = useState(1);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const itemsPerPage = 30;
-  const totalItems = transacoes.length;
+  const itemsPerPage = 15;
+  const totalItems = vendas.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  // Lógica para obter a lista de transacoes a ser exibida na página atual
+  // Lógica para obter a lista de vendas a ser exibida na página atual
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const transacoesCorrentes = transacoes.slice(startIndex, endIndex);
+  const vendasCorrentes = vendas.slice(startIndex, endIndex);
 
   return (
     <>
-     <h1>Histórico de Transações
+     <h1>Histórico de Vendas
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
      </h1>
+
+     <CRow className="row g-2">
+        <CCol xs={3} sm={3} md={3} lg={3} xl={3}>
+          <CFormSelect size="lg" value={escolha_status} onChange={handleEscolhaStatusChange}>
+          <option value="todas">Todas</option>
+          <option value="paga">Pagas</option>
+          <option value="pendente">Pendentes</option>
+        </CFormSelect>
+        </CCol>
+      </CRow>
+
+     
 
      <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
         <CCard className="mt-2">
@@ -130,30 +150,28 @@ const HistoricoTransacao = () => {
                 <CTableRow>
                   <CTableHeaderCell className="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">Aluno</CTableHeaderCell>
                   <CTableHeaderCell className="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">Lider</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Tipo</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Valor</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Status</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Valor Total</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {transacoesCorrentes.map((transacao) => (
-                  <React.Fragment key={transacao.id_transacao}>
-                    <CTableRow key={transacao.id_transacao} onClick={() => onClickRow(transacao.id_transacao)}>
-                      <CTableDataCell>{transacao.nome_aluno}</CTableDataCell>
-                      <CTableDataCell>{transacao.nome_lider}</CTableDataCell>
-                      <CTableDataCell className="text-center"><CBadge color={transacao.tipo == 'entrada'? "success" : "danger"} shape="rounded-pill">{transacao.tipo}</CBadge></CTableDataCell>
-                      <CTableDataCell className="text-center">{transacao.valor}</CTableDataCell>
+                {vendasCorrentes.map((venda) => (
+                  <React.Fragment key={venda.id_venda}>
+                    <CTableRow key={venda.id_venda} onClick={() => onClickRow(venda.id_venda)}>
+                      <CTableDataCell>{venda.nome_aluno}</CTableDataCell>
+                      <CTableDataCell>{venda.nome_lider}</CTableDataCell>
+                      <CTableDataCell className="text-center"><CBadge color={venda.status == 'paga'? "success" : "warning"} shape="rounded-pill">{venda.status}</CBadge></CTableDataCell>
+                      <CTableDataCell className="text-center">{venda.valor_total}</CTableDataCell>
                     </CTableRow>
-                    {expandedRow === transacao.id_transacao && (
+                    {expandedRow === venda.id_venda && (
                       <CCollapse visible={true}>
                         <CCard className="mt-3" style={{ width: '180%' }}>
                           <CListGroup>
                             <CListGroupItem>Aluno: {`${nome_aluno} ${sobrenome_aluno}`}</CListGroupItem>
                             <CListGroupItem>Lider: {`${nome_lider} ${sobrenome_lider}`}</CListGroupItem>
                             <CListGroupItem>Data: {data}</CListGroupItem>
-                            <CListGroupItem>Tipo de Transação: <CBadge color={tipo == 'entrada'? "success" : "danger"} shape="rounded-pill">{tipo}</CBadge></CListGroupItem>
-                            <CListGroupItem>Saldo Anterior: {tipo === 'entrada' ? parseFloat(novo_saldo) - parseFloat(valor_transacao) : parseFloat(novo_saldo) + parseFloat(valor_transacao)}</CListGroupItem>
-                            <CListGroupItem>Valor da {tipo}: {valor_transacao}</CListGroupItem>
-                            <CListGroupItem>Novo Saldo: {novo_saldo}</CListGroupItem>
+                            <CListGroupItem>Valor Total: {valor_total}</CListGroupItem>
+                            <CListGroupItem>Status: <CBadge color={status == 'paga'? "success" : "warning"} shape="rounded-pill">{status}</CBadge></CListGroupItem>
                             <CListGroupItem> 
 
                               {loadingSalvar && (
@@ -161,7 +179,7 @@ const HistoricoTransacao = () => {
                               )}
 
                               <DescricaoField
-                              onChange={setDescricao} descricao={descricao}
+                                onChange={setDescricao} descricao={descricao}
                               />
                               <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
                                 
@@ -194,4 +212,4 @@ const HistoricoTransacao = () => {
   );
 };
 
-export default HistoricoTransacao;
+export default HistoricoVendas;

@@ -138,7 +138,7 @@ export const api = {
     return response.data.transacao;
   },
 
-  atualizarDescricao: async ( id, descricao) => {
+  atualizarDescricaoTransacao: async ( id, descricao) => {
     const response = await http.put(`/transacao/${id}`, {
       descricao
     });
@@ -167,6 +167,25 @@ export const api = {
 
   listarClubes: async () => {
     const response = await http.get('/clubes', {});
+    return response.data;
+  },
+
+
+  listarVendas: async (tipo) => {
+    const response = await http.get(`/vendas/${tipo}`, {});
+    return response.data;
+  },
+
+  pegarVenda: async (id) => {
+    const response = await http.get(`/venda/${id}`, {});
+    return response.data;
+  },
+
+  atualizarDescricaoVenda: async ( id, descricao) => {
+    const response = await http.put(`/venda/${id}`, {
+      descricao
+    });
+
     return response.data;
   },
 
