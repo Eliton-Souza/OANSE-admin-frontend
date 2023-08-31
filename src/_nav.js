@@ -121,7 +121,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Fazer Venda',
-        to: '#',
+        to: '/venda',
       },
       {
         component: CNavItem,

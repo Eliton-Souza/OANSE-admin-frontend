@@ -11,6 +11,7 @@ const VerEstoque= React.lazy(() => import('./views/VerEstoque'));
 const QRCode= React.lazy(() => import('./views/QRCode'));
 const Perfil= React.lazy(() => import('./views/Perfil'));
 const Vendas= React.lazy(() => import('./views/VerVendas'));
+const FazerVenda= React.lazy(() => import('./views/FazerVenda'));
 
 
 
@@ -27,6 +28,7 @@ const routes = [
   { path: '/qrcode', name: 'QRCode', element: QRCode },
   { path: '/estoque', name: 'Estoque', element: VerEstoque },
   { path: '/vendas', name: 'Vendas', element: Vendas },
+  { path: '/venda', name: 'Venda', element: FazerVenda },
 
 
   
