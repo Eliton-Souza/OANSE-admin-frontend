@@ -131,7 +131,7 @@ const HistoricoVendas = () => {
      </h1>
 
      <CRow className="row g-2">
-        <CCol xs={3} sm={3} md={3} lg={3} xl={3}>
+        <CCol xs={6} sm={6} md={3} lg={3} xl={3}>
           <CFormSelect size="lg" value={escolha_status} onChange={handleEscolhaStatusChange}>
           <option value="todas">Todas</option>
           <option value="paga">Pagas</option>
