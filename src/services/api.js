@@ -105,6 +105,10 @@ export const api = {
     const response = await http.get('/materiais', {});
     return response.data;
   },
+  listarMateriaisClube: async (id) => {
+    const response = await http.get(`/materiais/${id}`, {});
+    return response.data;
+  },
   pegarMaterial: async (id) => {
     const response = await http.get(`/material/${id}`, {});
     return response.data.material;
@@ -186,6 +190,13 @@ export const api = {
       descricao
     });
 
+    return response.data;
+  },
+  criarVenda: async (id_aluno, valor_total, descricao, materiais) => {
+    const response = await http.post('/venda', {
+      id_aluno, valor_total, descricao, materiais,
+    });
+      
     return response.data;
   },
 
