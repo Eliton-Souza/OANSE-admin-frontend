@@ -45,7 +45,7 @@ const VerResponsaveis = () => {
 
   const getResponsaveis = async () => {
     setLoading(true);
-    const result = await api.listarTodosResponsaveis();
+    const result = await api.listarResponsaveis();
     setLoading(false);
 
     if (result.error) {
