@@ -18,7 +18,6 @@ export const api = {
     const response = await http.get('/rotaProtegida', {});
     return response.data;
   },
-  
 
   fazerLogin: async (login, senha) => {
     const response = await http.post('/login', {
@@ -30,6 +29,8 @@ export const api = {
   },
 
 
+
+  //ALUNOS
   listarTodosAlunos: async () => {
     const response = await http.get('/alunos', {});
     return response.data;
@@ -40,13 +41,10 @@ export const api = {
     return response.data;
   },
 
-
-
   pegarAluno: async (id) => {
     const response = await http.get(`/aluno/${id}`, {});
     return response.data.aluno;
   },
-
 
   atualizarAluno: async ( id, nome, sobrenome, genero, nascimento, id_responsavel, id_manual) => {
     const response = await http.put(`/aluno/${id}`, {
@@ -56,7 +54,6 @@ export const api = {
     return response.data;
   },
 
-
   criarAluno: async (nome, sobrenome, genero, nascimento, id_responsavel, id_manual) => {
     const response = await http.post('/aluno', {
       nome, sobrenome, genero, nascimento, id_responsavel, id_manual,
@@ -65,6 +62,9 @@ export const api = {
     return response.data;
   },
 
+
+
+  //RESPONSÁVEIS
   criarResponsavel: async (nome, sobrenome, genero, nascimento, contato) => {
     const response = await http.post('/responsavel', {
       nome, sobrenome, genero, nascimento, contato,
@@ -73,7 +73,7 @@ export const api = {
     return response.data;
   },
 
-  listarTodosResponsaveis: async () => {
+  listarResponsaveis: async () => {
     const response = await http.get('/responsaveis', {});
     return response.data;
   },
@@ -83,24 +83,16 @@ export const api = {
     return response.data.responsavel;
   },
 
-
   atualizarResponsavel: async ( id, nome, sobrenome, genero, nascimento, contato) => {
     const response = await http.put(`/responsavel/${id}`, {
       nome, sobrenome, genero, nascimento, contato
     });
-
     return response.data;
   },
 
 
-  alterarSaldo: async ( id, valor, tipo, id_aluno, descricao ) => {
-    const response = await http.put(`/carteira/${id}`, {
-      valor, tipo, id_aluno, descricao
-    });
 
-    return response.data;
-  },
-
+  //MATERIAIS
   listarMateriais: async () => {
     const response = await http.get('/materiais', {});
     return response.data;
@@ -117,20 +109,19 @@ export const api = {
     const response = await http.put(`/material/${id}`, {
       nome, id_clube, quantidade, preco
     });
-
     return response.data;
   },
 
-  listarManuais: async () => {
-    const response = await http.get('/manuais', {});
+  
+
+
+  //TRANSAÇÕES CARTEIRA ALUNO
+  alterarSaldo: async ( id, valor, tipo, id_aluno, descricao ) => {
+    const response = await http.put(`/carteira/${id}`, {
+      valor, tipo, id_aluno, descricao
+    });
     return response.data;
   },
-
-  listarResponsaveis: async () => {
-    const response = await http.get('/responsaveis', {});
-    return response.data;
-  },
-
 
   listarTransacoes: async () => {
     const response = await http.get('/transacoes', {});
@@ -146,10 +137,16 @@ export const api = {
     const response = await http.put(`/transacao/${id}`, {
       descricao
     });
-
     return response.data;
   },
 
+
+
+  //LIDERES
+  listarLideres: async () => {
+    const response = await http.get('/lideres', {});
+    return response.data;
+  },
 
   pegarLider: async (id) => {
     const response = await http.get(`/lider/${id}`, {});
@@ -169,12 +166,20 @@ export const api = {
   },
 
 
+  //CLUBE
   listarClubes: async () => {
     const response = await http.get('/clubes', {});
     return response.data;
   },
 
+  listarManuais: async () => {
+    const response = await http.get('/manuais', {});
+    return response.data;
+  },
 
+
+
+  //VENDAS
   listarVendas: async (tipo) => {
     const response = await http.get(`/vendas/${tipo}`, {});
     return response.data;
@@ -199,6 +204,20 @@ export const api = {
       
     return response.data;
   },
+
+
+  //PAGAMENTOS
+  criarPagamento: async (id_venda, valor_pago, valor_restante, tipo) => {
+    const response = await http.post('/pagamento', {
+      id_venda, valor_pago, valor_restante, tipo,
+    });
+    return response.data;
+  },
+
+
+
+
+  
 
 
 };
