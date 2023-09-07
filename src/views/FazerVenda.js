@@ -5,6 +5,7 @@ import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { ListarAlunosField } from 'src/components/formulario/listarAlunos';
 import { DescricaoField } from 'src/components/formulario/descricao';
+import { ModalPagamento } from 'src/components/modalPagamento';
 
 
 const FazerVenda = () => {
@@ -13,14 +14,20 @@ const FazerVenda = () => {
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
 
   const [materiais, setMateriais] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
+
+  //controle dos modais
+  const [modalResumo, setModalResumo] = useState(false);
+  const [modalPag, setModalPag] = useState(false);
+  
 
   //dados
+  const [id_venda, setIdVenda] = useState();
   const [aluno, setAluno] = useState({ id_aluno: null, nome: '', id_clube: '' });
   const [materiaisSelecionados, setMateriaisSelecionados] = useState([]);
 
   const [descricao, setDescricao]= useState(null);
   const [valor_total, setValorTotal] = useState();
+  const [valor_restante, setValorRestante] = useState();
 
 
   const getMateriais = async () => {
@@ -38,7 +45,7 @@ const FazerVenda = () => {
   useEffect(() => {
     if (aluno.id_aluno !== null) {
       getMateriais();
-      limparMateriaisSelecionados();
+      setMateriaisSelecionados([]);
     }
   }, [aluno]);
 
@@ -49,36 +56,26 @@ const FazerVenda = () => {
   }, [materiaisSelecionados]);
 
 
-  
-  const openModal= async () => {
-    setModalOpen(true);
-  }
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setSucesso({tipo: '', menssagem: ''});
-  };
-
-  const limparMateriaisSelecionados = () => {
-    setMateriaisSelecionados([]);
-  };
-  
-
   const salvarAlteracoes= async () => {
     setLoading(true);
-    const result = await api.criarVenda(aluno.id_aluno, valor_total, descricao, materiaisSelecionados)
+    const result = await api.criarVenda(aluno.id_aluno, valor_total, descricao, materiaisSelecionados);   
     setLoading(false);
 
     if (result.error) {
       setSucesso({tipo: 'danger', menssagem: result.error});
     }else {
       setSucesso({tipo: 'success', menssagem: "Venda registrada com sucesso"});
-      
-      limparMateriaisSelecionados();
+
+      setIdVenda(result.Venda);
+      setValorRestante(valor_total);
 
       setTimeout(() => {
-        closeModal();
-      }, 1500); // 1.5 segundos
+        setModalResumo(false);
+        setModalPag(true);
+
+        setSucesso({tipo: '', menssagem: ''});
+        setMateriaisSelecionados([]);
+      }, 1000); // 1 segundo
     }
   };
   
@@ -201,8 +198,8 @@ const FazerVenda = () => {
             <CCardFooter>
               <CRow>
                 <CCol xs={4} sm={4} md={4} lg={4} xl={4} className="d-grid gap-2 d-md-flex">
-                  <CButton color="warning" onClick={limparMateriaisSelecionados}>Limpar</CButton>
-                  <CButton color="success" onClick={openModal} disabled={materiaisSelecionados.length === 0}>Continuar</CButton>
+                  <CButton color="warning" onClick={() => setMateriaisSelecionados([])}>Limpar</CButton>
+                  <CButton color="success" onClick={() => setModalResumo(true)} disabled={materiaisSelecionados.length === 0}>Continuar</CButton>
                 </CCol>
 
                 <CCol className="mt-1 text-end" xs={8} sm={8} md={8} lg={8} xl={8}>
@@ -216,7 +213,7 @@ const FazerVenda = () => {
 
 
 
-      <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" >
+      <CModal alignment="center" scrollable visible={modalResumo==1} onClose={() => setModalResumo(false)} backdrop="static" size="lg" >
         <CModalHeader>
           <CModalTitle>Resumo de Pedido
           {sucesso.tipo != '' && (
@@ -271,14 +268,21 @@ const FazerVenda = () => {
         <CModalFooter>
           <CRow>
             <CCol xs={6}>
-              <CButton color="secondary" onClick={closeModal}>Fechar</CButton>
+              <CButton color="secondary" onClick={() => setModalResumo(false)}>Fechar</CButton>
             </CCol>
             <CCol xs={6}>
               <CButton color="success" onClick={salvarAlteracoes} type="submit">{loading ? 'Carregando' : 'Finalizar'}</CButton>
             </CCol>
           </CRow>
-        </CModalFooter>
+        </CModalFooter>        
       </CModal>
+
+      {modalPag && (
+          <ModalPagamento
+            id_venda={id_venda} valor_restante={valor_restante} modalPag={modalPag} onChange={setModalPag}>
+          </ModalPagamento>
+      )}
+      
     </>
   );
 };

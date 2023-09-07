@@ -31,7 +31,7 @@ const HistoricoVendas = () => {
   const [descricao, setDescricao] = useState('');
   const [status, setStatus] = useState('');
 
-  const [escolha_status, setEscolhaStatus] = useState('pendente'); //escolhe o tipo de venda que que lista, paga, pendente ou todas.
+  const [escolha_status, setEscolhaStatus] = useState('Pendente'); //escolhe o tipo de venda que que lista, paga, pendente ou todas.
   
 
   const getVendas = async () => {
@@ -134,8 +134,8 @@ const HistoricoVendas = () => {
         <CCol xs={6} sm={6} md={3} lg={3} xl={3}>
           <CFormSelect size="lg" value={escolha_status} onChange={handleEscolhaStatusChange}>
           <option value="todas">Todas</option>
-          <option value="paga">Pagas</option>
-          <option value="pendente">Pendentes</option>
+          <option value="Pago">Pagas</option>
+          <option value="Pendente">Pendentes</option>
         </CFormSelect>
         </CCol>
       </CRow>
@@ -160,7 +160,7 @@ const HistoricoVendas = () => {
                     <CTableRow key={venda.id_venda} onClick={() => onClickRow(venda.id_venda)}>
                       <CTableDataCell>{venda.nome_aluno}</CTableDataCell>
                       <CTableDataCell>{venda.nome_lider}</CTableDataCell>
-                      <CTableDataCell className="text-center"><CBadge color={venda.status == 'paga'? "success" : "warning"} shape="rounded-pill">{venda.status}</CBadge></CTableDataCell>
+                      <CTableDataCell className="text-center"><CBadge color={venda.status == 'Pago'? "success" : "warning"} shape="rounded-pill">{venda.status}</CBadge></CTableDataCell>
                       <CTableDataCell className="text-center">{venda.valor_total}</CTableDataCell>
                     </CTableRow>
                     {expandedRow === venda.id_venda && (
@@ -168,10 +168,10 @@ const HistoricoVendas = () => {
                         <CCard className="mt-3" style={{ width: '180%' }}>
                           <CListGroup>
                             <CListGroupItem>Aluno: {`${nome_aluno} ${sobrenome_aluno}`}</CListGroupItem>
-                            <CListGroupItem>Lider: {`${nome_lider} ${sobrenome_lider}`}</CListGroupItem>
+                            <CListGroupItem>Secretário(a): {`${nome_lider} ${sobrenome_lider}`}</CListGroupItem>
                             <CListGroupItem>Data: {data}</CListGroupItem>
                             <CListGroupItem>Valor Total: {valor_total}</CListGroupItem>
-                            <CListGroupItem>Status: <CBadge color={status == 'paga'? "success" : "warning"} shape="rounded-pill">{status}</CBadge></CListGroupItem>
+                            <CListGroupItem>Status: <CBadge color={status == 'Pago'? "success" : "warning"} shape="rounded-pill">{status}</CBadge></CListGroupItem>
                             <CListGroupItem> 
 
                               {loadingSalvar && (
