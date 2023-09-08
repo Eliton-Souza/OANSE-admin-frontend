@@ -1,39 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CCol, CSpinner, CCollapse, CListGroup, CListGroupItem, CBadge, CCardBody, CCardFooter, CFormSelect, CRow } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CCol, CSpinner, CCollapse, CListGroup, CListGroupItem, CBadge, CCardBody, CCardFooter, CFormSelect, CRow, CCardHeader, CCardTitle, CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/react';
 import { api } from 'src/services/api';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import Paginacao from 'src/components/paginacao';
+import { ModalPagamento } from 'src/components/modalPagamento';
+import numeral from 'numeral';
 
 const HistoricoVendas = () => {
   const [loading, setLoading] = useState();
   const [loadingSalvar, setLoadingSalvar] = useState();
-  const [vendas, setVendas] = useState([]);
-  const [materiais, setMateriais] = useState([]);
-  const [collapseOpen, setCollapseOpen] = useState(false);
-  const [expandedRow, setExpandedRow] = useState(null);
-
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
-
-  //dados
-  const [id_venda, setIdVenda] = useState('');
-  
-  const [nome_aluno, setNomeAluno] = useState('');
-  const [sobrenome_aluno, setSobrenomeAluno] = useState('');
-  
-  const [nome_lider, setNomeLider] = useState('');
-  const [sobrenome_lider, setSobrenomeLider] = useState('');
-  
-  const [valor_total, setValorTotal] = useState('');
-
-  const [data, setData] = useState(null);;
-  const [descricao, setDescricao] = useState('');
-  const [status, setStatus] = useState('');
-
   const [escolha_status, setEscolhaStatus] = useState('Pendente'); //escolhe o tipo de venda que que lista, paga, pendente ou todas.
-  
 
+  const [vendas, setVendas] = useState([]);
+
+  const [materiais, setMateriais] = useState([]);
+  const [pagamentos, setPagamentos] = useState([]);
+  const [infos, setInfos] = useState();
+
+  const [modalVenda, setModalVenda] = useState(false);
+  const [modalPag, setModalPag] = useState(false);
+  
+  //dados
+  const [descricao, setDescricao] = useState('');
+  const [id_venda, setIdVenda] = useState();
+  const [valor_total_pago, setValorTotalPago] = useState();
+  const [valor_restante, setValorRestante] = useState();
+
+  
   const getVendas = async () => {
     setLoading(true);
     const result = await api.listarVendas(escolha_status);
@@ -50,47 +46,59 @@ const HistoricoVendas = () => {
     getVendas();
   }, [escolha_status]);
 
-  const onClickRow= async (id) => {
-
-    setSucesso({tipo: '', menssagem: ''});
-
-    if (expandedRow === id) {
-      setExpandedRow(null); // Fechar o collapse se a mesma linha for clicada novamente
-    } else {
-      setLoading(true);
-      const venda = await api.pegarVenda(id);
-      setLoading(false);
-
-          
-      setMateriais(venda.materiais);
-      setDados(venda.venda);
-
-      setExpandedRow(id);
+  useEffect(() => {
+    if (pagamentos.length > 0) {
+      const valorTotalPago = pagamentos?.reduce((total, pagamento) => total + pagamento?.valor_pago, 0);
+      const restante = valorTotalPago >= infos?.valor_total ? 0 : infos?.valor_total - valorTotalPago;
+    
+      setValorTotalPago(valorTotalPago);
+      setValorRestante(restante);
+    }else{
+      setValorTotalPago(0);
+      setValorRestante(infos?.valor_total);
     }
-    setCollapseOpen(!collapseOpen);
-  }
 
-  const setDados=(dado)=>{
-    setIdVenda(dado.id_venda);
+  }, [pagamentos]);
+  
+  
 
-    setNomeAluno(dado.nome_aluno);
-    setSobrenomeAluno(dado.sobrenome_aluno);
-    
-    setNomeLider(dado.nome_lider);
-    setSobrenomeLider(dado.sobrenome_lider);
-    
-    setValorTotal(dado.valor_total);
-    setStatus(dado.status);
+  const openModal= async (id) => {
 
-    setData(dado.data.split('-').reverse().join('/'));
-    setDescricao(dado.descricao);
-  }
+    setLoading(true);
+    const result = await api.pegarVenda(id);
+    setLoading(false);
+
+    setInfos(result.venda.info);
+    setIdVenda(result.venda.info.id_venda);
+    setDescricao(result.venda.info.descricao);
+
+    setMateriais(result.venda.materiais);
+    setPagamentos(result.venda.pagamentos);
    
+    setModalVenda(true);
+  }
+
+  const closeModal = () => {
+    setInfos();
+    setDescricao('');
+    //setPagamentos([]);
+    setMateriais([]);
+
+    setModalVenda(false);
+    setSucesso({tipo: '', menssagem: ''});
+  };
+
+  const closeModalPag = (estadoModal) => {
+    setModalPag(estadoModal);
+    getVendas();
+  };
+ 
+
 
   const salvarDescricao= async () => {
 
     setLoadingSalvar(true);
-    const result = await api.atualizarDescricaoVenda( id_venda, descricao );
+    const result = await api.atualizarDescricaoVenda(id_venda, descricao);
     setLoadingSalvar(false);
 
     if (result.error) {
@@ -148,52 +156,21 @@ const HistoricoVendas = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
               <CTableHead color="dark">
                 <CTableRow>
-                  <CTableHeaderCell className="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">Aluno</CTableHeaderCell>
-                  <CTableHeaderCell className="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">Lider</CTableHeaderCell>
+                  <CTableHeaderCell className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Aluno</CTableHeaderCell>
                   <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Status</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Data</CTableHeaderCell>
                   <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Valor Total</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {vendasCorrentes.map((venda) => (
                   <React.Fragment key={venda.id_venda}>
-                    <CTableRow key={venda.id_venda} onClick={() => onClickRow(venda.id_venda)}>
-                      <CTableDataCell>{venda.nome_aluno}</CTableDataCell>
-                      <CTableDataCell>{venda.nome_lider}</CTableDataCell>
+                    <CTableRow key={venda.id_venda} onClick={() => openModal(venda.id_venda)}>
+                      <CTableDataCell>{`${venda.nome_aluno} ${venda.sobrenome_aluno}`}</CTableDataCell>
                       <CTableDataCell className="text-center"><CBadge color={venda.status == 'Pago'? "success" : "warning"} shape="rounded-pill">{venda.status}</CBadge></CTableDataCell>
+                      <CTableDataCell className="text-center">{venda.data.split('-').reverse().join('/')}</CTableDataCell>
                       <CTableDataCell className="text-center">{venda.valor_total}</CTableDataCell>
                     </CTableRow>
-                    {expandedRow === venda.id_venda && (
-                      <CCollapse visible={true}>
-                        <CCard className="mt-3" style={{ width: '180%' }}>
-                          <CListGroup>
-                            <CListGroupItem>Aluno: {`${nome_aluno} ${sobrenome_aluno}`}</CListGroupItem>
-                            <CListGroupItem>Secretário(a): {`${nome_lider} ${sobrenome_lider}`}</CListGroupItem>
-                            <CListGroupItem>Data: {data}</CListGroupItem>
-                            <CListGroupItem>Valor Total: {valor_total}</CListGroupItem>
-                            <CListGroupItem>Status: <CBadge color={status == 'Pago'? "success" : "warning"} shape="rounded-pill">{status}</CBadge></CListGroupItem>
-                            <CListGroupItem> 
-
-                              {loadingSalvar && (
-                                <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
-                              )}
-
-                              <DescricaoField
-                                onChange={setDescricao} descricao={descricao}
-                              />
-                              <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
-                                
-                              {sucesso.tipo != '' && (
-                                <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-                                  <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-                                  <div>{sucesso.menssagem}</div>
-                                </CAlert>
-                              )}
-                            </CListGroupItem>
-                          </CListGroup>
-                        </CCard>
-                      </CCollapse>
-                    )}
                   </React.Fragment>
                 ))}
               </CTableBody>
@@ -208,6 +185,152 @@ const HistoricoVendas = () => {
           </CCardFooter>
         </CCard>
       </CCol>
+
+
+      <CModal alignment="center" scrollable visible={modalVenda && !modalPag} onClose={closeModal} backdrop="static" size="lg" >
+        <CModalHeader>
+        <CCardTitle component="h5"> Número da Venda: {id_venda}</CCardTitle>
+          {sucesso.tipo != '' && (
+            <CAlert color={sucesso.tipo} className="d-flex align-items-center">
+              <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
+              <div>{sucesso.menssagem}</div>
+            </CAlert>
+          )}
+        </CModalHeader>
+        <CModalBody>
+        
+          {infos && (
+            <>
+              <CRow className="row g-2">
+                <CCard className="mt-3 border-0">
+                  <CCardTitle component="h5"> Aluno: {`${infos.nome_aluno} ${infos.sobrenome_aluno}`}</CCardTitle>
+                  <CRow className="row g-2">
+                    <CCol xs={6}>
+                      <CListGroup>
+                        <CListGroupItem>Secretário(a): {`${infos.nome_lider} ${infos.sobrenome_lider}`}</CListGroupItem>
+                        <CListGroupItem>Data: {infos.data.split('-').reverse().join('/')}</CListGroupItem>
+                      </CListGroup>
+                    </CCol>
+
+                    <CCol xs={6}>
+                      <CListGroup>
+                        <CListGroupItem>Valor Total: {infos.valor_total}</CListGroupItem>
+                        <CListGroupItem>Status: <CBadge color={infos.status == 'Pago'? "success" : "warning"} shape="rounded-pill">{infos.status}</CBadge></CListGroupItem>
+                      </CListGroup>
+                    </CCol>
+                  </CRow>
+                </CCard>                
+              </CRow>
+
+              <CRow className="row g-2">
+                <CCard className="mt-5 border-0">
+                  <CCardTitle component="h5">Materiais Vendidos</CCardTitle>          
+                  <CCol xs={12}>
+                    <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
+                      <CTableHead color="dark">
+                        <CTableRow>
+                          <CTableHeaderCell className="col-xs-3">Material</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center col-xs-3">Preço Unitário</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center col-xs-3">Quantidade</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center col-xs-3">Total</CTableHeaderCell>
+                        </CTableRow>
+                      </CTableHead>
+                      <CTableBody>
+                        {materiais.map((material) => (
+                          <CTableRow key={material.id_material} color="info">      
+                            <CTableDataCell>{materiais.find(item => item.id_material === material.id_material)?.nome}</CTableDataCell>
+                            <CTableDataCell className="text-center">{material.valor_unit}</CTableDataCell>
+                            <CTableDataCell className="text-center">{material.quantidade}</CTableDataCell>
+                            <CTableDataCell className="text-center">{material.quantidade * material.valor_unit}</CTableDataCell>
+                          </CTableRow>
+                        ))}
+                      </CTableBody>
+                    </CTable>                        
+                  </CCol>                   
+                </CCard>                
+              </CRow>
+
+              <CRow className="row g-2">
+                <CCard className="mt-5 border-0">
+                  <CCardTitle component="h5">Pagamentos</CCardTitle>
+                  {pagamentos.length === 0 ? (
+                    <p>Nenhum pagamento realizado</p>
+                  ) : (
+                    <CRow className="row g-2">
+                      {pagamentos.map((pagamento) => (
+                        <React.Fragment key={pagamento.id_pagamento}>
+                          <CCol xs={6}>
+                            <CListGroup>
+                              <CListGroupItem>Secretário(a): {`${pagamento.nome_lider} ${pagamento.sobrenome_lider}`}</CListGroupItem>
+                              <CListGroupItem>Data: {pagamento.data.split('-').reverse().join('/')}</CListGroupItem>
+                            </CListGroup>
+                            <hr style={{ height: '4px', backgroundColor: 'black' }} />
+                          </CCol>
+                      
+                          <CCol xs={6}>
+                            <CListGroup>
+                              <CListGroupItem>Valor Pago: {pagamento.valor_pago}</CListGroupItem>
+                              <CListGroupItem>Tipo: {pagamento.tipo}</CListGroupItem>
+                            </CListGroup>
+                            <hr style={{ height: '4px', backgroundColor: 'black' }} />
+                          </CCol>    
+                        </React.Fragment>                       
+                      ))}          
+                    </CRow>
+                  )}
+                  {infos.status == 'Pendente' ? (
+                    <>
+                      <CRow className="row mt-4">
+                        <CCol xs={6}>
+                          <CCardTitle component="h5">Valor Restante: {numeral(valor_restante).format('0,0.00')}</CCardTitle>
+                        </CCol>
+
+                        <CCol xs={6}>
+                          <CButton color="info" onClick={() => setModalPag(true)}>Novo Pagamento</CButton>
+                        </CCol>
+                      </CRow>
+                    </>
+                  ) : (null)}
+                </CCard>                
+              </CRow>
+
+              <CRow className="row mt-4">
+                <CCol xs={12}>
+                  {loadingSalvar && (
+                    <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+                  )}
+
+                  <DescricaoField
+                    onChange={setDescricao} descricao={descricao}>
+                  </DescricaoField>
+
+                  <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
+                    
+                  {sucesso.tipo != '' && (
+                    <CAlert color={sucesso.tipo} className="d-flex align-items-center">
+                      <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
+                      <div>{sucesso.menssagem}</div>
+                    </CAlert>
+                  )}
+                </CCol>
+              </CRow>
+            </>
+          )}
+        </CModalBody>
+        <CModalFooter>
+          <CRow>
+            <CCol xs={4}>
+              <CButton color="secondary" onClick={closeModal}>Fechar</CButton>
+            </CCol>      
+          </CRow>
+        </CModalFooter>
+      </CModal>
+
+      {modalPag && (
+          <ModalPagamento
+            id_venda={id_venda} valor_restante={valor_restante} modalPag={modalPag} onChange={closeModalPag}>
+          </ModalPagamento>
+      )}
     </>
   );
 };
