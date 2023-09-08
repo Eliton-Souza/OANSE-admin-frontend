@@ -207,9 +207,9 @@ export const api = {
 
 
   //PAGAMENTOS
-  criarPagamento: async (id_venda, valor_pago, valor_restante, tipo) => {
+  criarPagamento: async (id_venda, valor_pago, tipo) => {
     const response = await http.post('/pagamento', {
-      id_venda, valor_pago, valor_restante, tipo,
+      id_venda, valor_pago, tipo,
     });
     return response.data;
   },

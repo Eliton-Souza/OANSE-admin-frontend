@@ -19,8 +19,8 @@ export const TipoPagamento = ({ onChange, tipo }) => {
             name="options"
             id="success"
             label="Pix"
-            value="pix"
-            checked={tipo === 'pix'}
+            value="Pix"
+            checked={tipo === 'Pix'}
             onChange={handleTipoChange}
             required= {true}
           />
@@ -33,8 +33,8 @@ export const TipoPagamento = ({ onChange, tipo }) => {
             name="options"
             id="danger"
             label="Dinheiro"
-            value="dinheiro"
-            checked={tipo === 'dinheiro'}
+            value="Dinheiro"
+            checked={tipo === 'Dinheiro'}
             onChange={handleTipoChange}
             required= {true}
           />

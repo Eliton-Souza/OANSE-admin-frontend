@@ -19,7 +19,7 @@ export const ModalPagamento = ({ id_venda, valor_restante, modalPag, onChange}) 
   const [valor_pago, setValorPago]= useState(0);
   const [novo_valor_restante, setNovoValorRestante]= useState(valor_restante);
 
-  const [tipo, setTipo]= useState('pix');
+  const [tipo, setTipo]= useState('Pix');
 
   const closeModal = () => {
     onChange(false);
@@ -39,7 +39,7 @@ export const ModalPagamento = ({ id_venda, valor_restante, modalPag, onChange}) 
   const salvarAlteracoes= async () => {
 
     setLoading(true);
-    const result = await api.criarPagamento(id_venda, valor_pago, valor_restante, tipo);
+    const result = await api.criarPagamento(id_venda, valor_pago, tipo);
     setLoading(false);
 
     if (result.error) {
