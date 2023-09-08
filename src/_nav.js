@@ -21,6 +21,7 @@ import {
   cilPuzzle,
   cilCash,
   cilList,
+  cilCreditCard,
 } from '@coreui/icons'
 
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
@@ -106,6 +107,26 @@ const _nav = [
         component: CNavItem,
         name: 'Estatisticas',
         to: '#',
+      },
+    ],
+  },
+
+
+  {
+    component: CNavGroup,
+    name: 'Vendas',
+    to: '#',
+    icon: <CIcon icon={cilCreditCard} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Fazer Venda',
+        to: '/venda',
+      },
+      {
+        component: CNavItem,
+        name: 'Ver Vendas',
+        to: '/vendas',
       },
     ],
   },

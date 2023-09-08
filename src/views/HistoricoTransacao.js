@@ -86,7 +86,7 @@ const HistoricoTransacao = () => {
   const salvarDescricao= async () => {
 
     setLoadingSalvar(true);
-    const result = await api.atualizarDescricao( id_transacao, descricao );
+    const result = await api.atualizarDescricaoTransacao( id_transacao, descricao );
     setLoadingSalvar(false);
 
     if (result.error) {

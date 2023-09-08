@@ -109,23 +109,6 @@ const VerEstoque = () => {
     }, 1000); // 1 segundos
   };
 
-  /*// Configurações da paginação
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  const itemsPerPage = 5;
-  const totalItems = materiais.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  // Lógica para obter a lista de materiais a ser exibida na página atual
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentAlunos = materiais.slice(startIndex, endIndex);*/
-  
-
   return (
     <>
      <h1>Estoque de Materiais
@@ -161,8 +144,6 @@ const VerEstoque = () => {
           </CCol>
         </div>
       ))}
-
-
 
       <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
@@ -227,15 +208,6 @@ const VerEstoque = () => {
           </CRow>
         </CModalFooter>
       </CModal>
-
-     {/*
-        <Paginacao
-        currentPage={currentPage}
-        totalPages={totalPages}
-        handlePageChange={handlePageChange}
-        />
-      */}
-
     </>
   );
 };
