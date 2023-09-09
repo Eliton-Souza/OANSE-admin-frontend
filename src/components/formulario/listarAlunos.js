@@ -9,7 +9,8 @@ export const ListarAlunosField = ({ aluno, onChange, desabilitado, obrigatorio }
     const fetchAlunos = async () => {
       try {
         const response = await api.listarTodosAlunos();
-        setAlunos(response.alunos);
+        const alunosOrdenados = response.alunos.sort((a, b) => a.id_clube - b.id_clube);
+        setAlunos(alunosOrdenados);
       } catch (error) {
         alert(error);
       }
