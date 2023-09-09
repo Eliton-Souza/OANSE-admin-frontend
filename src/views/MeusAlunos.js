@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage, CAlert, CSpinner } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardHeader, CCardBody, CAlert, CSpinner } from '@coreui/react';
 import { api } from 'src/services/api';
 import { NomeField } from '../components/formulario/nome';
 import { SobrenomeField } from '../components/formulario/sobrenome';
@@ -21,7 +21,7 @@ const MeusAlunos = () => {
   const [alunos, setAlunos] = useState([]);
   const [clubes, setClubes] = useState([]);
   const [selectedAluno, setSelectedAluno] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalAluno, setModalAluno] = useState(false);
   const [modalSaldo, setModalSaldo] = useState(false)
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
 
@@ -73,7 +73,7 @@ const MeusAlunos = () => {
     setLoading(false);
 
     setSelectedAluno(aluno);
-    setModalOpen(true);
+    setModalAluno(true);
 
     setDados(aluno)
   }
@@ -94,7 +94,7 @@ const MeusAlunos = () => {
 
   const closeModal = () => {
     setSelectedAluno(null);
-    setModalOpen(false);
+    setModalAluno(false);
     setEditar(false);
     setSucesso({tipo: '', menssagem: ''});
   };
@@ -124,31 +124,15 @@ const MeusAlunos = () => {
     }, 1000); // 1 segundos
   };
 
-  /*// Configurações da paginação
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  const itemsPerPage = 5;
-  const totalItems = alunos.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  // Lógica para obter a lista de alunos a ser exibida na página atual
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentAlunos = alunos.slice(startIndex, endIndex);*/
-
   
 
   return (
     <>
-    <CCardHeader component="h1">Meus Alunos
-      {loading && (
-        <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
-      )}
-    </CCardHeader>
+      <CCardHeader component="h1">Meus Alunos
+        {loading && (
+          <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+        )}
+      </CCardHeader>
   
      {clubes.map(clubeMap => (
         <div key={clubeMap.id_clube} className="mt-4">
@@ -178,30 +162,7 @@ const MeusAlunos = () => {
         </div>
       ))}
 
-      <CCol xs={12}>
-        <CCard className="mt-2">
-          <CCardBody>
-            <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
-              <CTableHead color="dark">
-                <CTableRow>
-                  <CTableHeaderCell className="col-xs-7 col-sm-7 col-md-7 col-lg-7 col-xl-7">Nome</CTableHeaderCell>
-                  <CTableHeaderCell className="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">Manual</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {alunos.map((aluno) => (
-                  <CTableRow v-for="item in tableItems" key={aluno.id_aluno} onClick={() => openModal(aluno.id_aluno)}>      
-                    <CTableDataCell>{`${aluno.nome} ${aluno.sobrenome}`}</CTableDataCell>
-                    <CTableDataCell>{aluno.manual}</CTableDataCell>
-                  </CTableRow>
-                ))}
-              </CTableBody>
-            </CTable>
-          </CCardBody>
-        </CCard>
-      </CCol>
-
-      <CModal alignment="center" scrollable visible={modalOpen && !modalSaldo} onClose={closeModal} backdrop="static" size="lg" > {/*fullscreen="md"*/}
+      <CModal alignment="center" scrollable visible={modalAluno && !modalSaldo} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
           <CModalTitle>{selectedAluno && `${selectedAluno.nome} - ${selectedAluno.id_aluno}`}
           
@@ -308,15 +269,6 @@ const MeusAlunos = () => {
           id_carteira={id_carteira} id_aluno={id_aluno} modalSaldo={modalSaldo} onChange={setModalSaldo} saldo={saldo} nome={`${nome} ${sobrenome}`}>
           </ModalSaldoField>
       )}
-      
-     {/*
-        <Paginacao
-        currentPage={currentPage}
-        totalPages={totalPages}
-        handlePageChange={handlePageChange}
-        />
-      */}
-
     </>
   );
 };
