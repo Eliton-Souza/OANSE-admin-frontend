@@ -118,7 +118,7 @@ const VerEstoque = () => {
      </h1>
 
       {clubes.map(clubeMap => (
-        <div key={clubeMap.id_clube} className="mt-5">
+        <div key={clubeMap.id_clube} className="mt-4">
           <h3>{clubeMap.nome}</h3>
           <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
             <CCard className="mt-2">
@@ -126,8 +126,8 @@ const VerEstoque = () => {
                 <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
                   <CTableHead color="dark">
                     <CTableRow>
-                      <CTableHeaderCell className="col-xs-9 col-sm-9 col-md-9 col-lg-6 col-xl-6">Material</CTableHeaderCell>
-                      <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-6 col-xl-6">Quantidade</CTableHeaderCell>
+                      <CTableHeaderCell className="col-xs-9 col-sm-9 col-md-6 col-lg-6 col-xl-6">Material</CTableHeaderCell>
+                      <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-6 col-lg-6 col-xl-6">Estoque</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>

@@ -19,6 +19,7 @@ import { ModalSaldoField } from 'src/components/modalSaldo';
 const MeusAlunos = () => {
   const [loading, setLoading] = useState();
   const [alunos, setAlunos] = useState([]);
+  const [clubes, setClubes] = useState([]);
   const [selectedAluno, setSelectedAluno] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalSaldo, setModalSaldo] = useState(false)
@@ -51,12 +52,14 @@ const MeusAlunos = () => {
   const getAlunos = async () => {
     setLoading(true);
     const result = await api.listarTodosAlunos();
+    const resultClubes= await api.listarClubes();
     setLoading(false);
 
-    if (result.error) {
-      alert(result.error);
+    if (result.error || resultClubes.error) {
+      alert("Ocoreu um erro");
     } else {
       setAlunos(result.alunos);
+      setClubes(resultClubes.clubes);
     }
   };
 
@@ -141,11 +144,40 @@ const MeusAlunos = () => {
 
   return (
     <>
-     <h1>Meus Alunos
-        {loading && (
-          <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
-        )}
-     </h1>
+    <CCardHeader component="h1">Meus Alunos
+      {loading && (
+        <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+      )}
+    </CCardHeader>
+  
+     {clubes.map(clubeMap => (
+        <div key={clubeMap.id_clube} className="mt-4">
+          <CCardHeader component="h3">{clubeMap.nome}</CCardHeader>
+          <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
+            <CCard className="mt-2">
+              <CCardBody>
+                <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
+                  <CTableHead color="dark">
+                    <CTableRow>
+                      <CTableHeaderCell className="col-xs-9 col-sm-9 col-md-6 col-lg-6 col-xl-6">Nome</CTableHeaderCell>
+                      <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-6 col-lg-6 col-xl-6">Manual</CTableHeaderCell>
+                    </CTableRow>
+                  </CTableHead>
+                  <CTableBody>
+                    {alunos.filter(alunoFilter => alunoFilter.id_clube == clubeMap.id_clube).map(alunoMap => (
+                      <CTableRow key={alunoMap.id_aluno} onClick={() => openModal(alunoMap.id_aluno)}>      
+                        <CTableDataCell>{`${alunoMap.nome} ${alunoMap.sobrenome}`}</CTableDataCell>
+                        <CTableDataCell className="text-center">{alunoMap.manual}</CTableDataCell>
+                      </CTableRow>
+                    ))}
+                  </CTableBody>
+                </CTable>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </div>
+      ))}
+
       <CCol xs={12}>
         <CCard className="mt-2">
           <CCardBody>
