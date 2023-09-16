@@ -215,6 +215,21 @@ export const api = {
   },
 
 
+  //CAIXA
+  listarMovimentacoes: async (tipo) => {
+    const response = await http.get('/caixas', {});
+    return response.data;
+  },
+  pegarMovimentacao: async (id) => {
+    const response = await http.get(`/caixa/${id}`, {});
+    return response.data.movimentacao;
+  },
+  atualizarDescricaoMovimentacao: async ( id, descricao) => {
+    const response = await http.put(`/caixa/${id}`, {
+      descricao
+    });
+    return response.data;
+  },
 
 
   

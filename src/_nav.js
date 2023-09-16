@@ -96,7 +96,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Ver Caixa ',
-        to: '#',
+        to: '/caixa',
       },
       {
         component: CNavItem,

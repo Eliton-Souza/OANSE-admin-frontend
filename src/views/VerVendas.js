@@ -51,10 +51,8 @@ const HistoricoVendas = () => {
       const valorTotalPago = pagamentos?.reduce((total, pagamento) => total + pagamento?.valor_pago, 0);
       const restante = valorTotalPago >= infos?.valor_total ? 0 : infos?.valor_total - valorTotalPago;
     
-      setValorTotalPago(valorTotalPago);
       setValorRestante(restante);
     }else{
-      setValorTotalPago(0);
       setValorRestante(infos?.valor_total);
     }
 
