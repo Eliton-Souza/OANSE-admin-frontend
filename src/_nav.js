@@ -9,16 +9,11 @@ import {
   cilUserPlus,
   cilWc,
  
-  //Clube
-  cilClipboard,
-  cilGroup,
-
   //Transacoes
   cilQrCode,
   cilGraph,
   cilLowVision,
   cilAddressBook,
-  cilPuzzle,
   cilCash,
   cilList,
   cilCreditCard,
