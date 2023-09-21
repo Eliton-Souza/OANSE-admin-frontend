@@ -3,7 +3,7 @@ import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableData
 import { api } from 'src/services/api';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
-import { ListarAlunosField } from 'src/components/formulario/listarAlunos';
+import { SelectOansistas } from 'src/components/formulario/selectOansistas';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import { ModalPagamento } from 'src/components/modalPagamento';
 
@@ -22,7 +22,7 @@ const FazerVenda = () => {
 
   //dados
   const [id_venda, setIdVenda] = useState();
-  const [aluno, setAluno] = useState({ id_aluno: null, nome: '', id_clube: '' });
+  const [pessoa, setPessoa] = useState({ id_pessoa: null, nome: '', id_clube: '' });
   const [materiaisSelecionados, setMateriaisSelecionados] = useState([]);
 
   const [descricao, setDescricao]= useState(null);
@@ -32,7 +32,7 @@ const FazerVenda = () => {
 
   const getMateriais = async () => {
     setLoading(true);
-    const result = await api.listarMateriaisClube(aluno.id_clube);
+    const result = await api.listarMateriaisClube(pessoa.id_clube);
     setLoading(false);
 
     if (result.error) {
@@ -43,11 +43,11 @@ const FazerVenda = () => {
   };
 
   useEffect(() => {
-    if (aluno.id_aluno !== null) {
+    if (pessoa.id_pessoa !== null) {
       getMateriais();
       setMateriaisSelecionados([]);
     }
-  }, [aluno]);
+  }, [pessoa]);
 
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const FazerVenda = () => {
 
   const salvarAlteracoes= async () => {
     setLoading(true);
-    const result = await api.criarVenda(aluno.id_aluno, valor_total, descricao, materiaisSelecionados);   
+    const result = await api.criarVenda(pessoa.id_pessoa, valor_total, descricao, materiaisSelecionados);   
     setLoading(false);
 
     if (result.error) {
@@ -129,9 +129,9 @@ const FazerVenda = () => {
               <CCard className="mt-2">
               <CCardHeader component="h5">Aluno</CCardHeader>
                 <CCardBody>
-                  <ListarAlunosField
-                    aluno={aluno} onChange={setAluno} desabilitado={false} obrigatorio={true}>
-                  </ListarAlunosField>
+                  <SelectOansistas
+                    pessoa={pessoa} onChange={setPessoa} desabilitado={false} obrigatorio={true}>
+                  </SelectOansistas>
                 </CCardBody>
               </CCard>
             </CCol>
@@ -227,7 +227,7 @@ const FazerVenda = () => {
         <CModalBody>
           <CCard className="mt-2">
             <CCard className="mt-2 border-0">
-              <CCardTitle component="h5"> Aluno: {aluno.nome}</CCardTitle>
+              <CCardTitle component="h5"> Aluno: {pessoa.nome}</CCardTitle>
               <CCardBody>
                 <CTable align="middle" className="mb-0 border" striped>
                   <CTableHead color="dark">
