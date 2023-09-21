@@ -3,16 +3,17 @@ import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableData
 import { api } from 'src/services/api';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
+import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
 import Paginacao from 'src/components/paginacao';
 import { ModalPagamento } from 'src/components/modalPagamento';
 import numeral from 'numeral';
+import { ordena } from './helper';
 
 const HistoricoVendas = () => {
   const [loading, setLoading] = useState();
   const [loadingSalvar, setLoadingSalvar] = useState();
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
-  const [escolha_status, setEscolhaStatus] = useState('Pendente'); //escolhe o tipo de venda que que lista, paga, pendente ou todas.
+  const [ordemCrescente, setOrdemCrescente] = useState(true);
 
   const [vendas, setVendas] = useState([]);
 
@@ -26,13 +27,12 @@ const HistoricoVendas = () => {
   //dados
   const [descricao, setDescricao] = useState('');
   const [id_venda, setIdVenda] = useState();
-  const [valor_total_pago, setValorTotalPago] = useState();
   const [valor_restante, setValorRestante] = useState();
 
   
   const getVendas = async () => {
     setLoading(true);
-    const result = await api.listarVendas(escolha_status);
+    const result = await api.listarVendas();
     setLoading(false);
 
     if (result.error) {
@@ -44,7 +44,8 @@ const HistoricoVendas = () => {
 
   useEffect(() => {
     getVendas();
-  }, [escolha_status]);
+  }, []);
+
 
   useEffect(() => {
     if (pagamentos.length > 0) {
@@ -79,7 +80,6 @@ const HistoricoVendas = () => {
   const closeModal = () => {
     setInfos();
     setDescricao('');
-    //setPagamentos([]);
     setMateriais([]);
 
     setModalVenda(false);
@@ -110,15 +110,12 @@ const HistoricoVendas = () => {
     }
   };
 
-  const handleEscolhaStatusChange = (event) => {
-    setEscolhaStatus(event.target.value);
-  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const handlePageChange = (page) => {
     setCurrentPage(page);
-  };
-
+  }; 
+  
   const itemsPerPage = 15;
   const totalItems = vendas.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -135,18 +132,7 @@ const HistoricoVendas = () => {
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
      </h1>
-
-     <CRow className="row g-2">
-        <CCol xs={6} sm={6} md={3} lg={3} xl={3}>
-          <CFormSelect size="lg" value={escolha_status} onChange={handleEscolhaStatusChange}>
-          <option value="todas">Todas</option>
-          <option value="Pago">Pagas</option>
-          <option value="Pendente">Pendentes</option>
-        </CFormSelect>
-        </CCol>
-      </CRow>
-
-     
+  
 
      <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
         <CCard className="mt-2">
@@ -154,17 +140,33 @@ const HistoricoVendas = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
               <CTableHead color="dark">
                 <CTableRow>
-                  <CTableHeaderCell className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Aluno</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Status</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Data</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Valor Total</CTableHeaderCell>
+                  <CTableHeaderCell
+                    onClick={() => setVendas(ordena(vendas, 'nome_pessoa', ordemCrescente),
+                    setOrdemCrescente(!ordemCrescente))} className="col-sm-6">Comprador
+                    <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
+                  </CTableHeaderCell>
+                  <CTableHeaderCell
+                    onClick={() => setVendas(ordena(vendas, 'status', ordemCrescente),
+                    setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-2">Status
+                    <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
+                  </CTableHeaderCell>
+                  <CTableHeaderCell
+                    onClick={() => setVendas(ordena(vendas, 'data', ordemCrescente),
+                    setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-2">Data
+                    <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg"/>
+                  </CTableHeaderCell>
+                  <CTableHeaderCell
+                    onClick={() => setVendas(ordena(vendas, 'valor_total', ordemCrescente),
+                    setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-2">Valor Total
+                    <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg"/>
+                  </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {vendasCorrentes.map((venda) => (
                   <React.Fragment key={venda.id_venda}>
                     <CTableRow key={venda.id_venda} onClick={() => openModal(venda.id_venda)}>
-                      <CTableDataCell>{`${venda.nome_aluno} ${venda.sobrenome_aluno}`}</CTableDataCell>
+                      <CTableDataCell>{`${venda.nome_pessoa} ${venda.sobrenome_pessoa}`}</CTableDataCell>
                       <CTableDataCell className="text-center"><CBadge color={venda.status == 'Pago'? "success" : "warning"} shape="rounded-pill">{venda.status}</CBadge></CTableDataCell>
                       <CTableDataCell className="text-center">{venda.data.split('-').reverse().join('/')}</CTableDataCell>
                       <CTableDataCell className="text-center">{venda.valor_total}</CTableDataCell>
@@ -201,7 +203,7 @@ const HistoricoVendas = () => {
             <>
               <CRow className="row g-2">
                 <CCard className="mt-3 border-0">
-                  <CCardTitle component="h5"> Aluno: {`${infos.nome_aluno} ${infos.sobrenome_aluno}`}</CCardTitle>
+                  <CCardTitle component="h5"> Pessoa: {`${infos.nome_pessoa} ${infos.sobrenome_pessoa}`}</CCardTitle>
                   <CRow className="row g-2">
                     <CCol xs={6}>
                       <CListGroup>
@@ -228,8 +230,8 @@ const HistoricoVendas = () => {
                       <CTableHead color="dark">
                         <CTableRow>
                           <CTableHeaderCell className="col-xs-3">Material</CTableHeaderCell>
-                          <CTableHeaderCell className="text-center col-xs-3">Preço Unitário</CTableHeaderCell>
                           <CTableHeaderCell className="text-center col-xs-3">Quantidade</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center col-xs-3">Preço Unitário</CTableHeaderCell>                          
                           <CTableHeaderCell className="text-center col-xs-3">Total</CTableHeaderCell>
                         </CTableRow>
                       </CTableHead>
@@ -237,8 +239,8 @@ const HistoricoVendas = () => {
                         {materiais.map((material) => (
                           <CTableRow key={material.id_material} color="info">      
                             <CTableDataCell>{materiais.find(item => item.id_material === material.id_material)?.nome}</CTableDataCell>
-                            <CTableDataCell className="text-center">{material.valor_unit}</CTableDataCell>
                             <CTableDataCell className="text-center">{material.quantidade}</CTableDataCell>
+                            <CTableDataCell className="text-center">{material.valor_unit}</CTableDataCell>
                             <CTableDataCell className="text-center">{material.quantidade * material.valor_unit}</CTableDataCell>
                           </CTableRow>
                         ))}
