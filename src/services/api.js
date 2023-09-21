@@ -180,8 +180,8 @@ export const api = {
 
 
   //VENDAS
-  listarVendas: async (tipo) => {
-    const response = await http.get(`/vendas/${tipo}`, {});
+  listarVendas: async () => {
+    const response = await http.get(`/vendas`);
     return response.data;
   },
 
@@ -197,9 +197,9 @@ export const api = {
 
     return response.data;
   },
-  criarVenda: async (id_aluno, valor_total, descricao, materiais) => {
+  criarVenda: async (id_pessoa, valor_total, descricao, materiais) => {
     const response = await http.post('/venda', {
-      id_aluno, valor_total, descricao, materiais,
+      id_pessoa, valor_total, descricao, materiais,
     });
       
     return response.data;
