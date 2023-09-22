@@ -16,8 +16,8 @@ export const TipoPagamento = ({ onChange, tipo }) => {
           <CFormCheck
             inline
             type="radio"
-            name="options"
-            id="success"
+            name="optionsP"
+            id="successP"
             label="Pix"
             value="Pix"
             checked={tipo === 'Pix'}
@@ -30,8 +30,8 @@ export const TipoPagamento = ({ onChange, tipo }) => {
           <CFormCheck
             inline
             type="radio"
-            name="options"
-            id="danger"
+            name="optionsP"
+            id="dangerP"
             label="Dinheiro"
             value="Dinheiro"
             checked={tipo === 'Dinheiro'}
