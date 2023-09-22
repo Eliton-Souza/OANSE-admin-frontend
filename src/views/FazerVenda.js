@@ -140,7 +140,7 @@ const FazerVenda = () => {
           <CRow className="row g-1">  
             <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
               <CCard className="mt-2">
-              <CCardHeader component="h5">Aluno</CCardHeader>
+              <CCardHeader component="h5">Pessoa</CCardHeader>
                 <CCardBody>
                   <SelectOansistas
                     pessoa={pessoa} onChange={setPessoa} desabilitado={false} obrigatorio={true}>
@@ -238,7 +238,7 @@ const FazerVenda = () => {
           </CModalTitle>
         </CModalHeader>
         <CModalBody>          
-          <CCardTitle component="h5"> Aluno: {pessoa.nome}</CCardTitle>
+          <CCardTitle component="h5"> Pessoa: {pessoa.nome}</CCardTitle>
           <CCardBody>
             <CTable align="middle" className="mt-3 border" striped>
               <CTableHead color="dark">
