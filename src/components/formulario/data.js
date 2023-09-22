@@ -2,7 +2,7 @@ import { CFormInput } from '@coreui/react';
 import { useEffect, useState } from 'react';
 import moment from 'moment-timezone';
 
-export const NascimentoField = ({ nascimento, onChange, desabilitado, obrigatorio, incorreto, limpar }) => {
+export const Data = ({ data, onChange, desabilitado, obrigatorio, incorreto, label, limpar }) => {
   const [valido, setValido] = useState();
   const [invalido, setInvalido] = useState();
 
@@ -15,15 +15,15 @@ export const NascimentoField = ({ nascimento, onChange, desabilitado, obrigatori
     }
   }, [limpar]);
  
-  const handleNascimentoChange = (event) => {
-    let novoNascimento;
-    event.target.value== ''? novoNascimento= null : novoNascimento = event.target.value;
+  const handleData = (event) => {
+    let novaData;
+    event.target.value== ''? novaData= null : novaData = event.target.value;
 
-    if (novoNascimento <= currentDate || novoNascimento== null) {
+    if (novaData <= currentDate || novaData== null) {
       setValido(true);
       setInvalido(false);
       incorreto(false);
-      onChange(novoNascimento); // Atualiza a variável nascimento no componente pai
+      onChange(novaData); // Atualiza a variável data no componente pai
     } else {
       setValido(false);
       setInvalido(true);
@@ -35,10 +35,10 @@ export const NascimentoField = ({ nascimento, onChange, desabilitado, obrigatori
     <CFormInput
       placeholder="dd/mm/aaaa"
       type="date"
-      id="nascimento"
-      label="Nascimento"
-      defaultValue={nascimento}
-      onChange={handleNascimentoChange}
+      id="data"
+      label={label}
+      defaultValue={data}
+      onChange={handleData}
       disabled={desabilitado}
       required={obrigatorio}
       valid={valido}
@@ -50,6 +50,6 @@ export const NascimentoField = ({ nascimento, onChange, desabilitado, obrigatori
 };
 
 //prop opcional
-NascimentoField.defaultProps = {
+Data.defaultProps = {
   limpar: undefined
 };

@@ -6,6 +6,8 @@ import { api } from "src/services/api";
 import numeral from "numeral";
 import { TipoPagamento } from "./formulario/tipoPagamento";
 import { ValorField } from "./formulario/valor";
+import { format } from "date-fns";
+import { Data } from "./formulario/data";
 
 
 export const ModalPagamento = ({ id_venda, valor_restante, modalPag, onChange}) => {
@@ -15,11 +17,13 @@ export const ModalPagamento = ({ id_venda, valor_restante, modalPag, onChange}) 
   const [block, setBlock] = useState(false);
 
   const [valorIncorreto, setValorIncorreto] = useState(false);
+  const [dataIncorreta, setDataIncorreta] = useState(false);
 
   const [valor_pago, setValorPago]= useState(0);
   const [novo_valor_restante, setNovoValorRestante]= useState(valor_restante);
 
   const [tipo, setTipo]= useState('Pix');
+  const [data, setData] = useState(format(new Date(), 'yyyy-MM-dd'));
 
   const closeModal = () => {
     onChange(false);
@@ -39,7 +43,7 @@ export const ModalPagamento = ({ id_venda, valor_restante, modalPag, onChange}) 
   const salvarAlteracoes= async () => {
 
     setLoading(true);
-    const result = await api.criarPagamento(id_venda, valor_pago, tipo);
+    const result = await api.criarPagamento(id_venda, valor_pago, tipo, data);
     setLoading(false);
 
     if (result.error) {
@@ -97,6 +101,14 @@ export const ModalPagamento = ({ id_venda, valor_restante, modalPag, onChange}) 
                 </TipoPagamento>
               </CCol>
             </CRow>
+            
+            <CRow className="row g-0 mt-4">           
+              <CCol xs={5}>
+                <Data
+                  data={data} onChange={setData} desabilitado={false} obrigatorio={true} incorreto={setDataIncorreta} label={'Data *'} limpar={null}>
+                </Data>
+              </CCol> 
+            </CRow>
 
           </CForm>
         </CModalBody>
@@ -119,13 +131,13 @@ export const ModalPagamento = ({ id_venda, valor_restante, modalPag, onChange}) 
             </CCol>
             <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
               <CButton
-                disabled={valorIncorreto || !valor_pago || block}
+                disabled={valorIncorreto || dataIncorreta || !valor_pago || block}
                 color="success"
                 onClick={salvarAlteracoes}
                 type="submit"
                 shape="rounded-pill"
               >
-                {loading ? 'Carregando' : 'Salvar'}
+                {loading ? 'Salvando' : 'Salvar'}
               </CButton>
             </CCol>
           </CRow>

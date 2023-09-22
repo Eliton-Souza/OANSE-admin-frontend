@@ -4,7 +4,7 @@ import { api } from 'src/services/api';
 
 import { NomeField } from '../components/formulario/nome';
 import { SobrenomeField } from '../components/formulario/sobrenome';
-import { NascimentoField } from '../components/formulario/nascimento';
+import { Data } from '../components/formulario/data';
 import { GeneroField } from '../components/formulario/genero';
 import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/helper';
 import { ManualField } from '../components/formulario/manual';
@@ -112,9 +112,9 @@ const CadastrarAluno = () => {
 
         <CRow className="row g-3">
           <CCol xs={6} sm={5} md={5} lg={5} xl={5}>
-            <NascimentoField
-              nascimento={nascimento} onChange={setNascimento} desabilitado={loading} obrigatorio={false} incorreto={setNascimentoIncorreto} limpar={limparValidacao}>
-            </NascimentoField>
+            <Data
+              data={nascimento} onChange={setNascimento} desabilitado={loading} obrigatorio={false} incorreto={setNascimentoIncorreto} label={'Nascimento'} limpar={limparValidacao}>
+            </Data>
           </CCol> 
 
           <CCol xs={6} sm={7} md={7} lg={7} xl={7}>
