@@ -84,36 +84,36 @@ export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) =>
         </CCardTitle>
         <CCardBody>
           <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
-            <CTableHead color="dark">
-              <CTableRow>
-                <CTableHeaderCell
-                  onClick={() => onChange(ordena(movimentacoes, 'motivo', ordemCrescente),
-                  setOrdemCrescente(!ordemCrescente))} className="col-sm-4">Motivo
-                  <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
-                </CTableHeaderCell>
-                <CTableHeaderCell
-                  onClick={() => onChange(ordena(movimentacoes, 'nome_lider', ordemCrescente),
-                  setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-4">Secretário
-                  <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
-                </CTableHeaderCell>
-                <CTableHeaderCell
-                  onClick={() => onChange(ordena(movimentacoes, 'data', ordemCrescente),
-                  setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-2">Data
-                  <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg"/>
-                </CTableHeaderCell>
-                <CTableHeaderCell
-                  onClick={() => onChange(ordena(movimentacoes, 'valor', ordemCrescente),
-                  setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-2">Valor
-                  <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg"/>
-                </CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
+          <CTableHead color="dark">
+            <CTableRow>
+              <CTableHeaderCell
+                onClick={() => onChange(ordena(movimentacoes, 'motivo', ordemCrescente), setOrdemCrescente(!ordemCrescente))}
+                className="col-5 col-sm-6 col-md-5 col-lg-4 col-xl-4">Motivo
+                <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg" />
+              </CTableHeaderCell>
+              <CTableHeaderCell
+                onClick={() => onChange(ordena(movimentacoes, 'nome_lider', ordemCrescente), setOrdemCrescente(!ordemCrescente))}
+                className="text-center d-none d-md-table-cell col-md-3 col-lg-4 col-xl-4">Secretário
+                <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg" />
+              </CTableHeaderCell>
+              <CTableHeaderCell
+                onClick={() => onChange(ordena(movimentacoes, 'data', ordemCrescente), setOrdemCrescente(!ordemCrescente))}
+                className="text-center col-4 col-sm-3 col-md-2 col-lg-2 col-xl-2">Data
+                <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg" />
+              </CTableHeaderCell>
+              <CTableHeaderCell
+                onClick={() => onChange(ordena(movimentacoes, 'valor', ordemCrescente), setOrdemCrescente(!ordemCrescente))}
+                className="text-center col-3 col-sm-3 col-md-2 col-lg-2 col-xl-2">Valor
+                <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg" />
+              </CTableHeaderCell>
+            </CTableRow>
+          </CTableHead>
             <CTableBody>
               {movimentacoesCorrentes.map((movimentacao) => (
                 <React.Fragment key={movimentacao.id_movimentacao}>
                   <CTableRow key={movimentacao.id_movimentacao} onClick={() => onClickRow(movimentacao.id_movimentacao)}>
                     <CTableDataCell>{movimentacao.motivo}</CTableDataCell>
-                    <CTableDataCell className="text-center">{movimentacao.nome_lider}</CTableDataCell>
+                    <CTableDataCell className="text-center d-none d-md-table-cell">{movimentacao.nome_lider}</CTableDataCell>
                     <CTableDataCell className="text-center">{movimentacao.data.split('-').reverse().join('/')}</CTableDataCell>
                     <CTableDataCell className="text-center">{numeral(movimentacao.valor).format('0,0.00')}</CTableDataCell>                    
                   </CTableRow>
@@ -148,7 +148,8 @@ export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) =>
                 </React.Fragment>
               ))}
               <CTableRow>
-                <CTableHeaderCell colSpan={2} active></CTableHeaderCell>
+                <CTableHeaderCell className="text-center"></CTableHeaderCell>
+                <CTableHeaderCell className="text-center d-none d-md-table-cell"></CTableHeaderCell>
                 <CTableDataCell color= {tipo=='Entradas'? "success" : 'danger'} className="text-center">
                   <CPopover
                       content={`Quantidade de ${tipo} : ${total.quantidade}`}

@@ -75,23 +75,24 @@ const HistoricoMovimentacao = () => {
   return (
     <>    
       <CRow className="justify-content-center">
-        <CCol xs={6}>
+        <CCol xs={12} sm={12} md={12} lg={6} xl={6}>
           <CCardHeader component="h1">Movimentações do Caixa
             {loading && (
               <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
             )}
           </CCardHeader>
         </CCol>
-        <CCol xs={3}>
+        <CCol xs={8} sm={5} md={5} lg={3} xl={3}>
           <CWidgetStatsF
             className="mb-3"
             color="info"
             icon={<CIcon icon={cilHandPointUp} height={24} />}
-            title="Nova Movimentação"
+            value={'Nova'}
+            title="Movimentação"
             onClick={() => setModalCaixa(true)}
           />
         </CCol>
-        <CCol xs={3}>
+        <CCol xs={8} sm={5} md={5} lg={3} xl={3}>
           <CWidgetStatsF
             className="mb-3"
             color="success"
