@@ -1,13 +1,15 @@
-import { cilCheckCircle, cilReportSlash } from "@coreui/icons";
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CSpinner, CCollapse, CListGroup, CListGroupItem, CCardBody, CCardFooter, CCardTitle } from '@coreui/react';
+import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from "@coreui/icons";
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CSpinner, CCollapse, CListGroup, CListGroupItem, CCardBody, CCardFooter, CCardTitle, CTableFoot, CPopover } from '@coreui/react';
 import React, { useState } from 'react';
 import { api } from "src/services/api";
 import { DescricaoField } from 'src/components/formulario/descricao';
 import Paginacao from "./paginacao";
 import CIcon from "@coreui/icons-react";
+import numeral from "numeral";
+import { ordena } from "src/views/helper";
 
 
-export const TabelaMovimentacoes = ({ movimentacoes, tipo }) => {
+export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) => {
 
   const [loading, setLoading] = useState();
   const [loadingSalvar, setLoadingSalvar] = useState();
@@ -16,6 +18,7 @@ export const TabelaMovimentacoes = ({ movimentacoes, tipo }) => {
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
   const [descricao, setDescricao] = useState('');
   const [movimentacaoAtual, setMovimentacaoAtual] = useState();
+  const [ordemCrescente, setOrdemCrescente] = useState(true);
 
   const onClickRow= async (id) => {
 
@@ -67,30 +70,42 @@ export const TabelaMovimentacoes = ({ movimentacoes, tipo }) => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const movimentacoesCorrentes = movimentacoes.slice(startIndex, endIndex);
+  //movimentacoesCorrentes.reverse();
 
   return (
     <>
-      
-  
       <CCard className="mt-2">
 
-      <CCardTitle style={{ paddingLeft: '20px', paddingTop: '20px' }} component="h3">
-  {tipo} do Caixa
-  {loading && (
-    <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
-  )}
-</CCardTitle>
-
-
-
+        <CCardTitle style={{ paddingLeft: '20px', paddingTop: '20px' }} component="h3">
+          {tipo} do Caixa
+          {loading && (
+            <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+          )}
+        </CCardTitle>
         <CCardBody>
           <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
             <CTableHead color="dark">
               <CTableRow>
-                <CTableHeaderCell className="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">Motivo</CTableHeaderCell>
-                <CTableHeaderCell className="text-center col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">Secretário</CTableHeaderCell>
-                <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Valor</CTableHeaderCell>
-                <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Data</CTableHeaderCell>
+                <CTableHeaderCell
+                  onClick={() => onChange(ordena(movimentacoes, 'motivo', ordemCrescente),
+                  setOrdemCrescente(!ordemCrescente))} className="col-sm-4">Motivo
+                  <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
+                </CTableHeaderCell>
+                <CTableHeaderCell
+                  onClick={() => onChange(ordena(movimentacoes, 'nome_lider', ordemCrescente),
+                  setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-4">Secretário
+                  <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
+                </CTableHeaderCell>
+                <CTableHeaderCell
+                  onClick={() => onChange(ordena(movimentacoes, 'data', ordemCrescente),
+                  setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-2">Data
+                  <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg"/>
+                </CTableHeaderCell>
+                <CTableHeaderCell
+                  onClick={() => onChange(ordena(movimentacoes, 'valor', ordemCrescente),
+                  setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-2">Valor
+                  <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg"/>
+                </CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
@@ -99,8 +114,8 @@ export const TabelaMovimentacoes = ({ movimentacoes, tipo }) => {
                   <CTableRow key={movimentacao.id_movimentacao} onClick={() => onClickRow(movimentacao.id_movimentacao)}>
                     <CTableDataCell>{movimentacao.motivo}</CTableDataCell>
                     <CTableDataCell className="text-center">{movimentacao.nome_lider}</CTableDataCell>
-                    <CTableDataCell className="text-center">{movimentacao.valor}</CTableDataCell>
                     <CTableDataCell className="text-center">{movimentacao.data.split('-').reverse().join('/')}</CTableDataCell>
+                    <CTableDataCell className="text-center">{numeral(movimentacao.valor).format('0,0.00')}</CTableDataCell>                    
                   </CTableRow>
                   {expandedRow === movimentacao.id_movimentacao && (
                     <CCollapse visible={true}>
@@ -132,7 +147,18 @@ export const TabelaMovimentacoes = ({ movimentacoes, tipo }) => {
                   )}
                 </React.Fragment>
               ))}
-            </CTableBody>
+              <CTableRow>
+                <CTableHeaderCell colSpan={2} active></CTableHeaderCell>
+                <CTableDataCell color= {tipo=='Entradas'? "success" : 'danger'} className="text-center">
+                  <CPopover
+                      content={`Quantidade de ${tipo} : ${total.quantidade}`}
+                      placement="left">
+                    <CButton color="link" variant="ghost">Total</CButton>
+                  </CPopover>
+                </CTableDataCell>
+                <CTableDataCell color= {tipo=='Entradas'? "success" : 'danger'} className="text-center">{numeral(total.valor).format('0,0.00')}</CTableDataCell>
+              </CTableRow>
+            </CTableBody>           
           </CTable>
         </CCardBody>
         <CCardFooter>
@@ -144,6 +170,5 @@ export const TabelaMovimentacoes = ({ movimentacoes, tipo }) => {
         </CCardFooter>
       </CCard>
     </>
-
   );
 };

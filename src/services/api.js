@@ -207,15 +207,21 @@ export const api = {
 
 
   //PAGAMENTOS
-  criarPagamento: async (id_venda, valor_pago, tipo) => {
+  criarPagamento: async (id_venda, valor_pago, tipo, data) => {
     const response = await http.post('/pagamento', {
-      id_venda, valor_pago, tipo,
+      id_venda, valor_pago, tipo, data
     });
     return response.data;
   },
 
 
   //CAIXA
+  criarMovimentacao: async (valor, tipo, tipo_pag, descricao, data, motivo) => {
+    const response = await http.post('/caixa', {
+      valor, tipo, tipo_pag, descricao, data, motivo,
+    });
+    return response.data;
+  },
   listarMovimentacoes: async (tipo) => {
     const response = await http.get('/caixas', {});
     return response.data;
