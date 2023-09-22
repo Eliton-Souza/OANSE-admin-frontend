@@ -88,7 +88,7 @@ export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) =>
             <CTableRow>
               <CTableHeaderCell
                 onClick={() => onChange(ordena(movimentacoes, 'motivo', ordemCrescente), setOrdemCrescente(!ordemCrescente))}
-                className="col-5 col-sm-6 col-md-5 col-lg-4 col-xl-4">Motivo
+                className="col-6 col-sm-6 col-md-5 col-lg-4 col-xl-4">Motivo
                 <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg" />
               </CTableHeaderCell>
               <CTableHeaderCell
@@ -98,7 +98,7 @@ export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) =>
               </CTableHeaderCell>
               <CTableHeaderCell
                 onClick={() => onChange(ordena(movimentacoes, 'data', ordemCrescente), setOrdemCrescente(!ordemCrescente))}
-                className="text-center col-4 col-sm-3 col-md-2 col-lg-2 col-xl-2">Data
+                className="text-center col-3 col-sm-3 col-md-2 col-lg-2 col-xl-2">Data
                 <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg" />
               </CTableHeaderCell>
               <CTableHeaderCell
