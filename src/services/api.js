@@ -197,9 +197,9 @@ export const api = {
 
     return response.data;
   },
-  criarVenda: async (id_pessoa, valor_total, descricao, materiais) => {
+  criarVenda: async (id_pessoa, valor_total, descricao, data, materiais) => {
     const response = await http.post('/venda', {
-      id_pessoa, valor_total, descricao, materiais,
+      id_pessoa, valor_total, descricao, data, materiais,
     });
       
     return response.data;

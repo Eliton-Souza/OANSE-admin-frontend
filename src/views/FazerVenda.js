@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CCol, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CAlert, CSpinner, CCardFooter } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CCol, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CAlert, CSpinner, CCardFooter, CFormLabel } from '@coreui/react';
 import { api } from 'src/services/api';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { SelectOansistas } from 'src/components/formulario/selectOansistas';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import { ModalPagamento } from 'src/components/modalPagamento';
+import { format } from 'date-fns';
+import { Data } from 'src/components/formulario/data';
+import { ValorField } from 'src/components/formulario/valor';
+import numeral from 'numeral';
 
 
 const FazerVenda = () => {
@@ -28,6 +32,11 @@ const FazerVenda = () => {
   const [descricao, setDescricao]= useState(null);
   const [valor_total, setValorTotal] = useState();
   const [valor_restante, setValorRestante] = useState();
+
+  const [desconto, setDesconto]= useState(0);
+  const [data, setData] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [dataIncorreta, setDataIncorreta] = useState(false);
+  const [valorIncorreto, setValorIncorreto] = useState(false);
 
 
   const getMateriais = async () => {
@@ -58,7 +67,7 @@ const FazerVenda = () => {
 
   const salvarAlteracoes= async () => {
     setLoading(true);
-    const result = await api.criarVenda(pessoa.id_pessoa, valor_total, descricao, materiaisSelecionados);   
+    const result = await api.criarVenda(pessoa.id_pessoa, valor_total-desconto, descricao, data, materiaisSelecionados);   
     setLoading(false);
 
     if (result.error) {
@@ -71,8 +80,12 @@ const FazerVenda = () => {
 
       setTimeout(() => {
         setModalResumo(false);
-        setModalPag(true);
 
+        if((valor_total - desconto)>0){
+          setModalPag(true);
+        }
+
+        setDesconto(0);
         setSucesso({tipo: '', menssagem: ''});
         setMateriaisSelecionados([]);
       }, 1000); // 1 segundo
@@ -224,60 +237,86 @@ const FazerVenda = () => {
           )}
           </CModalTitle>
         </CModalHeader>
-        <CModalBody>
-          <CCard className="mt-2">
-            <CCard className="mt-2 border-0">
-              <CCardTitle component="h5"> Aluno: {pessoa.nome}</CCardTitle>
-              <CCardBody>
-                <CTable align="middle" className="mb-0 border" striped>
-                  <CTableHead color="dark">
-                    <CTableRow>
-                      <CTableHeaderCell className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Material</CTableHeaderCell>
-                      <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Preço Unitário</CTableHeaderCell>
-                      <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Quantidade</CTableHeaderCell>
-                      <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Total</CTableHeaderCell>
-                    </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                    {materiaisSelecionados.map((materialSelecionado) => (
-                      <CTableRow key={materialSelecionado.id_material} color="info">      
-                        <CTableDataCell>{materiais.find(item => item.id_material === materialSelecionado.id_material)?.nome}</CTableDataCell>
-                        <CTableDataCell className="text-center">{materialSelecionado.valor_unit}</CTableDataCell>
-                        <CTableDataCell className="text-center">{materialSelecionado.quantidade}</CTableDataCell>
-                        <CTableDataCell className="text-center">{materialSelecionado.quantidade * materialSelecionado.valor_unit}</CTableDataCell>
-                      </CTableRow>
-                    ))}
-                  </CTableBody>
-                </CTable>
-              </CCardBody>
-              <CCardFooter>
-                <CCol className="mt-1 text-end">
-                  <CCardText component="h5">Total: {valor_total}</CCardText>
+        <CModalBody>          
+          <CCardTitle component="h5"> Aluno: {pessoa.nome}</CCardTitle>
+          <CCardBody>
+            <CTable align="middle" className="mt-3 border" striped>
+              <CTableHead color="dark">
+                <CTableRow>
+                  <CTableHeaderCell className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Material</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Preço Unitário</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Quantidade</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Total</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {materiaisSelecionados.map((materialSelecionado) => (
+                  <CTableRow key={materialSelecionado.id_material} color="info">      
+                    <CTableDataCell>{materiais.find(item => item.id_material === materialSelecionado.id_material)?.nome}</CTableDataCell>
+                    <CTableDataCell className="text-center">{materialSelecionado.valor_unit}</CTableDataCell>
+                    <CTableDataCell className="text-center">{materialSelecionado.quantidade}</CTableDataCell>
+                    <CTableDataCell className="text-center">{materialSelecionado.quantidade * materialSelecionado.valor_unit}</CTableDataCell>
+                  </CTableRow>
+                ))}
+              </CTableBody>
+              <CTableRow>
+                <CTableHeaderCell colSpan={2} active></CTableHeaderCell>
+                <CTableDataCell className="text-center">  <CCardText component="h5">Total</CCardText>  </CTableDataCell>
+                <CTableDataCell className="text-center">  <CCardText component="h5">{numeral(valor_total - desconto).format('0,0.00')}</CCardText>  </CTableDataCell>
+              </CTableRow>
+            </CTable>
+          </CCardBody>       
+  
+          <CRow>
+            <CCol xs={6}>
+              <CRow className="row g-0 mt-4">
+                <CCol xs={12}>
+                  <DescricaoField
+                    onChange={setDescricao}>
+                  </DescricaoField>
                 </CCol>
-              </CCardFooter>
-            </CCard>
-            <CRow className="row g-0 mt-4">
-              <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
-                <DescricaoField
-                  onChange={setDescricao}>
-                </DescricaoField>
-              </CCol>
-            </CRow>
-          </CCard>
+              </CRow>
+            </CCol>
+
+            <CCol xs={6}>
+              <CRow className="mt-3 justify-content-end">
+                <CCol xs={10}>
+                  <CFormLabel>Desconto</CFormLabel>
+                  <ValorField
+                    onChange={setDesconto} incorreto={setValorIncorreto}>
+                  </ValorField>
+                </CCol>
+              </CRow>
+
+              <CRow className="mt-3 justify-content-end">
+                <CCol xs={10}>
+                  <Data
+                    data={data} onChange={setData} desabilitado={loading} obrigatorio={true} incorreto={setDataIncorreta} label={'Data *'} limpar={null}>
+                  </Data>
+                </CCol>
+              </CRow>
+            </CCol>
+          </CRow>
+
         </CModalBody>
         <CModalFooter>
           <CRow>
             <CCol xs={6}>
-              <CButton color="secondary" onClick={() => setModalResumo(false)}>Fechar</CButton>
+              <CButton color="secondary" onClick={() => {
+                  setModalResumo(false);
+                  setDesconto(0);
+                  }}
+                >Fechar
+              </CButton>
             </CCol>
             <CCol xs={6}>
-              <CButton color="success" onClick={salvarAlteracoes} type="submit">{loading ? 'Carregando' : 'Finalizar'}</CButton>
+              <CButton color="success" disabled={dataIncorreta || valorIncorreto} onClick={salvarAlteracoes} type="submit">{loading ? 'Salvando' : 'Finalizar'}</CButton>
             </CCol>
           </CRow>
         </CModalFooter>        
       </CModal>
 
-      {modalPag && (
+      {modalPag &&(
           <ModalPagamento
             id_venda={id_venda} valor_restante={valor_restante} modalPag={modalPag} onChange={setModalPag}>
           </ModalPagamento>
