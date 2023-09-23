@@ -225,7 +225,7 @@ const FazerVenda = () => {
               <CRow>
                 <CCol xs={4} sm={4} md={4} lg={4} xl={4} className="d-grid gap-2 d-md-flex">
                   <CButton color="warning" onClick={() => setMateriaisSelecionados([])}>Limpar</CButton>
-                  <CButton color="success" onClick={() => setModalResumo(true)} disabled={materiaisSelecionados.length === 0}>Continuar</CButton>
+                  <CButton color="success" onClick={() => setModalResumo(true)} disabled={materiaisSelecionados.length === 0 || pessoa.id_pessoa==null}>Continuar</CButton>
                 </CCol>
 
                 <CCol className="mt-1 text-end" xs={8} sm={8} md={8} lg={8} xl={8}>
