@@ -9,7 +9,7 @@ export const ResponsavelField = ({ responsavel, onChange, desabilitado, obrigato
     const fetchResponsaveis = async () => {
       try {
         const response = await api.listarResponsaveis();
-        setResponsaveis(response.responsaveis);
+        setResponsaveis(response);
       } catch (error) {
         alert(error);
       }

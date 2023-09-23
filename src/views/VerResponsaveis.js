@@ -51,7 +51,7 @@ const VerResponsaveis = () => {
     if (result.error) {
       alert(result.error);
     } else {
-      setResponsaveis(result.responsaveis);
+      setResponsaveis(result);
     }
   };
 

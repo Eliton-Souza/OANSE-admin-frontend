@@ -48,7 +48,7 @@ const VerEstoque = () => {
     if (result.error || resultClubes.error) {
       alert("Ocorreu um erro ao buscar dados");
     } else {
-      setMateriais(result.materiais);
+      setMateriais(result);
       setClubes(resultClubes.clubes);
     }
   };

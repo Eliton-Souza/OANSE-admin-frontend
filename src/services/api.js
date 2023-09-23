@@ -75,7 +75,7 @@ export const api = {
 
   listarResponsaveis: async () => {
     const response = await http.get('/responsaveis', {});
-    return response.data;
+    return response.data.responsaveis;
   },
 
   pegarResponsavel: async (id) => {
@@ -95,7 +95,7 @@ export const api = {
   //MATERIAIS
   listarMateriais: async () => {
     const response = await http.get('/materiais', {});
-    return response.data;
+    return response.data.materiais;
   },
   listarMateriaisClube: async (id) => {
     const response = await http.get(`/materiais/${id}`, {});
@@ -145,7 +145,7 @@ export const api = {
   //LIDERES
   listarLideres: async () => {
     const response = await http.get('/lideres', {});
-    return response.data;
+    return response.data.lideres;
   },
 
   pegarLider: async (id) => {
