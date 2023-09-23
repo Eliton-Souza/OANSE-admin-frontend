@@ -3,8 +3,9 @@ import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableData
 import { api } from 'src/services/api';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
+import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
 import Paginacao from 'src/components/paginacao';
+import { ordena } from './helper';
 
 const HistoricoTransacao = () => {
   const [loading, setLoading] = useState();
@@ -14,6 +15,7 @@ const HistoricoTransacao = () => {
   const [expandedRow, setExpandedRow] = useState(null);
 
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
+  const [ordemCrescente, setOrdemCrescente] = useState(true);
 
   //dados
   const [id_transacao, setIdTransacao] = useState('');
@@ -128,18 +130,34 @@ const HistoricoTransacao = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
               <CTableHead color="dark">
                 <CTableRow>
-                  <CTableHeaderCell className="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">Aluno</CTableHeaderCell>
-                  <CTableHeaderCell className="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">Lider</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Tipo</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Valor</CTableHeaderCell>
+                  <CTableHeaderCell
+                    onClick={() => setTransacoes(ordena(transacoes, 'nome_aluno', ordemCrescente),
+                    setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-4">Aluno
+                    <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
+                  </CTableHeaderCell>
+                  <CTableHeaderCell
+                    onClick={() => setTransacoes(ordena(transacoes, 'nome_lider', ordemCrescente),
+                    setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-4">Lider
+                    <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
+                  </CTableHeaderCell>
+                  <CTableHeaderCell
+                    onClick={() => setTransacoes(ordena(transacoes, 'tipo', ordemCrescente),
+                    setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-2">Tipo
+                    <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
+                  </CTableHeaderCell>
+                  <CTableHeaderCell
+                    onClick={() => setTransacoes(ordena(transacoes, 'valor', ordemCrescente),
+                    setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-2">Valor
+                    <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg"/>
+                  </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {transacoesCorrentes.map((transacao) => (
                   <React.Fragment key={transacao.id_transacao}>
                     <CTableRow key={transacao.id_transacao} onClick={() => onClickRow(transacao.id_transacao)}>
-                      <CTableDataCell>{transacao.nome_aluno}</CTableDataCell>
-                      <CTableDataCell>{transacao.nome_lider}</CTableDataCell>
+                      <CTableDataCell className="text-center">{transacao.nome_aluno}</CTableDataCell>
+                      <CTableDataCell className="text-center">{transacao.nome_lider}</CTableDataCell>
                       <CTableDataCell className="text-center"><CBadge color={transacao.tipo == 'entrada'? "success" : "danger"} shape="rounded-pill">{transacao.tipo}</CBadge></CTableDataCell>
                       <CTableDataCell className="text-center">{transacao.valor}</CTableDataCell>
                     </CTableRow>

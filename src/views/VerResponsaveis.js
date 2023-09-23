@@ -9,9 +9,10 @@ import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/hel
 
 import { IdadeField } from 'src/components/widget/idade';
 import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
+import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
 import { ContatoField } from 'src/components/formulario/contato';
 import { differenceInYears } from 'date-fns';
+import { ordena } from './helper';
 
 
 const VerResponsaveis = () => {
@@ -21,6 +22,7 @@ const VerResponsaveis = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
+  const [ordemCrescente, setOrdemCrescente] = useState(true);
 
   //formulario
   const [editar, setEditar] = useState(false);
@@ -143,15 +145,23 @@ const VerResponsaveis = () => {
             <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
               <CTableHead color="dark">
                 <CTableRow>
-                  <CTableHeaderCell className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Nome</CTableHeaderCell>
+                  <CTableHeaderCell
+                    onClick={() => setResponsaveis(ordena(responsaveis, 'nome', ordemCrescente),
+                    setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-6">Nome
+                    <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
+                  </CTableHeaderCell>
                   <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Contato</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Idade</CTableHeaderCell>
+                  <CTableHeaderCell
+                    onClick={() => setResponsaveis(ordena(responsaveis, 'nascimento', ordemCrescente),
+                    setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-3">Idade
+                    <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg"/>
+                  </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {responsaveis.map((responsavel) => (
                   <CTableRow key={responsavel.id_responsavel} onClick={() => openModal(responsavel.id_responsavel)}>      
-                    <CTableDataCell>{`${responsavel.nome} ${responsavel.sobrenome}`}</CTableDataCell>
+                    <CTableDataCell className="text-center">{`${responsavel.nome} ${responsavel.sobrenome}`}</CTableDataCell>
                     <CTableDataCell className="text-center">{responsavel.contato}</CTableDataCell>
                     <CTableDataCell className="text-center">{responsavel.nascimento? differenceInYears(new Date(), new Date(responsavel.nascimento)) : ''}</CTableDataCell>
                   </CTableRow>

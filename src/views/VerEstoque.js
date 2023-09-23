@@ -6,10 +6,11 @@ import { hasCampoIncorreto, regexNameMaterial, regexNumero } from '../components
 
 
 import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
+import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
 import { QuantidadeFild } from 'src/components/formulario/quantidade';
 import { ListarClubesFild } from 'src/components/formulario/listarClubes';
 import { PrecoMaterial } from 'src/components/formulario/PrecoMaterial';
+import { ordena } from './helper';
 
 
 const VerEstoque = () => {
@@ -20,6 +21,7 @@ const VerEstoque = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
+  const [ordemCrescente, setOrdemCrescente] = useState(true);
 
   //formulario
   const [editar, setEditar] = useState(false);
@@ -126,14 +128,22 @@ const VerEstoque = () => {
                 <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
                   <CTableHead color="dark">
                     <CTableRow>
-                      <CTableHeaderCell className="col-xs-9 col-sm-9 col-md-6 col-lg-6 col-xl-6">Material</CTableHeaderCell>
-                      <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-6 col-lg-6 col-xl-6">Estoque</CTableHeaderCell>
+                      <CTableHeaderCell
+                        onClick={() => setMateriais(ordena(materiais, 'nome', ordemCrescente),
+                        setOrdemCrescente(!ordemCrescente))} className="text-center col-xs-9 col-sm-9 col-md-6 col-lg-6 col-xl-6">Material
+                        <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
+                      </CTableHeaderCell>
+                      <CTableHeaderCell
+                        onClick={() => setMateriais(ordena(materiais, 'quantidade', ordemCrescente),
+                        setOrdemCrescente(!ordemCrescente))} className="text-center col-xs-3 col-sm-3 col-md-6 col-lg-6 col-xl-6">Estoque
+                        <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg"/>
+                      </CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
                     {materiais.filter(materialFilter => materialFilter.id_clube === clubeMap.id_clube).map(materialMap => (
                       <CTableRow key={materialMap.id_material} onClick={() => openModal(materialMap.id_material)}>      
-                        <CTableDataCell>{materialMap.nome}</CTableDataCell>
+                        <CTableDataCell className="text-center">{materialMap.nome}</CTableDataCell>
                         <CTableDataCell className="text-center">{materialMap.quantidade}</CTableDataCell>
                       </CTableRow>
                     ))}

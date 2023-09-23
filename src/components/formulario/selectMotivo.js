@@ -9,7 +9,7 @@ export const SelectMotivo = ({ setMotivo, desabilitado, tipo }) => {
     if (tipo === 'entrada') {
       setOpcoes(['Oferta', 'Repasse da Igreja', 'Outras']);
     } else {
-      setOpcoes(['Compra de Materiais Oanse', 'Compra de Materias de Expediente', 'Lanche', 'Outras']);
+      setOpcoes(['Compra de Materiais Oanse', 'Compra de Materias de Expediente', 'Lanche', 'Pagamento', 'Outras']);
     }
     setValorSelecionado('');
     setMotivo(null);
