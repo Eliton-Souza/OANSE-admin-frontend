@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { Data } from 'src/components/formulario/data';
 import { ValorField } from 'src/components/formulario/valor';
 import numeral from 'numeral';
+import { EscolherClube } from 'src/components/formulario/selectClube';
 
 
 const FazerVenda = () => {
@@ -18,6 +19,7 @@ const FazerVenda = () => {
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
 
   const [materiais, setMateriais] = useState([]);
+  const [materiaisClube, setMateriaisClube] = useState([]);
 
   //controle dos modais
   const [modalResumo, setModalResumo] = useState(false);
@@ -37,26 +39,30 @@ const FazerVenda = () => {
   const [data, setData] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [dataIncorreta, setDataIncorreta] = useState(false);
   const [valorIncorreto, setValorIncorreto] = useState(false);
+  const [id_clube, setIdClube] = useState(null);
 
 
   const getMateriais = async () => {
     setLoading(true);
-    const result = await api.listarMateriaisClube(pessoa.id_clube);
+    const result = await api.listarMateriais();
     setLoading(false);
 
     if (result.error) {
       alert(result.error);
     } else {
-      setMateriais(result.materiais);
+      setMateriais(result);
     }
   };
 
   useEffect(() => {
-    if (pessoa.id_pessoa !== null) {
-      getMateriais();
-      setMateriaisSelecionados([]);
-    }
-  }, [pessoa]);
+    getMateriais();
+  }, []);
+
+
+  useEffect(() => { 
+    setMateriaisClube(materiais.filter(material => material.id_clube == id_clube));
+  }, [id_clube]);
+  
 
 
   useEffect(() => {
@@ -140,11 +146,18 @@ const FazerVenda = () => {
           <CRow className="row g-1">  
             <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
               <CCard className="mt-2">
-              <CCardHeader component="h5">Pessoa</CCardHeader>
+              <CCardHeader component="h5">Responsável</CCardHeader>
                 <CCardBody>
-                  <SelectOansistas
-                    pessoa={pessoa} onChange={setPessoa} desabilitado={false} obrigatorio={true}>
-                  </SelectOansistas>
+                  <CCol>                  
+                    <SelectOansistas
+                      pessoa={pessoa} onChange={setPessoa} desabilitado={false} obrigatorio={true}>                      
+                    </SelectOansistas>
+                  </CCol>
+                  <CCol className='mt-4'>
+                    <EscolherClube
+                      onChange={setIdClube} clube={id_clube}>                    
+                    </EscolherClube>
+                  </CCol>
                 </CCardBody>
               </CCard>
             </CCol>
@@ -162,7 +175,7 @@ const FazerVenda = () => {
                       </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                      {materiais.map((material) => (
+                    {materiaisClube.map((material) => (
                         <CTableRow key={material.id_material}>      
                           <CTableDataCell>{material.nome}</CTableDataCell>
                           <CTableDataCell className="text-center">{material.preco}</CTableDataCell>
@@ -238,7 +251,7 @@ const FazerVenda = () => {
           </CModalTitle>
         </CModalHeader>
         <CModalBody>          
-          <CCardTitle component="h5"> Pessoa: {pessoa.nome}</CCardTitle>
+          <CCardTitle component="h5"> Responsável: {pessoa.nome}</CCardTitle>
           <CCardBody>
             <CTable align="middle" className="mt-3 border" striped>
               <CTableHead color="dark">
