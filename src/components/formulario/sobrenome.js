@@ -32,6 +32,7 @@ export const SobrenomeField = ({ sobrenome, onChange, desabilitado, obrigatorio,
   return (
     <>
       <CFormInput
+        key={limpar} 
         placeholder="Sobrenome"
         type="text"
         id="sobrenome"

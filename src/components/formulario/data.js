@@ -33,6 +33,7 @@ export const Data = ({ data, onChange, desabilitado, obrigatorio, incorreto, lab
 
   return (
     <CFormInput
+      key={limpar} 
       placeholder="dd/mm/aaaa"
       type="date"
       id="data"
