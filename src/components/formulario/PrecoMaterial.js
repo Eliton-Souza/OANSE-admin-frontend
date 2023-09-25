@@ -31,9 +31,11 @@ export const PrecoMaterial = ({ preco, onChange, desabilitado, incorreto, limpar
   return (
     <>
       <CFormInput
-        type="text"
+        key={limpar}
+        placeholder='Digite um Valor'
+        type="number"
         id="preco"
-        label= "Valor"
+        label= "Preço Unitário"
         defaultValue={preco}
         onChange={handleValorChange}
         disabled={desabilitado}

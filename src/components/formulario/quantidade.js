@@ -31,9 +31,11 @@ export const QuantidadeFild = ({ quantidade, onChange, desabilitado, incorreto, 
   return (
     <>
       <CFormInput
-        type="text"
+        key={limpar}
+        placeholder='Escolha a quantidade'
+        type="number"
         id="quantidade"
-        label= "Quantidade"
+        label= "Estoque"
         defaultValue={quantidade}
         onChange={handleQuantidadeChange}
         disabled={desabilitado}
