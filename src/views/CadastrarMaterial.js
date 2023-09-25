@@ -123,11 +123,7 @@ const CadastrarMaterial = () => {
             </CCol>
           </CRow>
         </CCardBody>
-
-   
       </CCard>
-
-      
     </>
   );
 };

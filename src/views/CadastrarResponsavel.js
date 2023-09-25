@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { CButton, CForm, CCol, CRow, CAlert, CSpinner } from '@coreui/react';
+import { CButton, CForm, CCol, CRow, CAlert, CSpinner, CCard, CCardBody } from '@coreui/react';
 import { api } from 'src/services/api';
 
 import { NomeField } from '../components/formulario/nome';
@@ -88,65 +88,70 @@ const CadastrarResponsavel = () => {
         </CAlert>
       )}
 
+        <CCard className='mt-4'>
+          <CCardBody>
+            <CForm className="row g-3">
+              <CRow className="row g-2">
+                <CCol xs={5}>
+                  <NomeField
+                    nome={nome} onChange={setNome} desabilitado={loading} obrigatorio={true} incorreto={setNomeIncorreto} limpar={limparValidacao} regexName={regexNamePessoa}>
+                  </NomeField>
+                </CCol>
 
-      <CForm className="row g-3" ref={formRef} onSubmit={(event) => { event.preventDefault(); salvarAlteracoes();}}>
-        
-        <CRow className="row g-4">
-          <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
-            <NomeField
-              nome={nome} onChange={setNome} desabilitado={loading} obrigatorio={true} incorreto={setNomeIncorreto} limpar={limparValidacao} regexName={regexNamePessoa}>
-            </NomeField>
-          </CCol>
+                <CCol xs={7}>
+                  <SobrenomeField
+                    sobrenome={sobrenome} onChange={setSobrenome} desabilitado={loading} obrigatorio={true} incorreto={setSobrenomeIncorreto} limpar={limparValidacao}>
+                  </SobrenomeField>
+                </CCol>
+              </CRow>
 
-          <CCol xs={7} sm={7} md={7} lg={7} xl={7}>
-            <SobrenomeField
-              sobrenome={sobrenome} onChange={setSobrenome} desabilitado={loading} obrigatorio={true} incorreto={setSobrenomeIncorreto} limpar={limparValidacao}>
-            </SobrenomeField>
-          </CCol>
-        </CRow>
+              <CRow className="row g-3">
+                <CCol xs={5}>
+                  <Data
+                    data={nascimento} onChange={setNascimento} desabilitado={loading} obrigatorio={false} incorreto={setNascimentoIncorreto} label={'Nascimento'} limpar={limparValidacao}>
+                  </Data>
+                </CCol> 
 
-        <CRow className="row g-3">
-          <CCol xs={6} sm={6} md={6} lg={6} xl={5}>
-            <Data
-              data={nascimento} onChange={setNascimento} desabilitado={loading} obrigatorio={false} incorreto={setNascimentoIncorreto} label={'Nascimento'} limpar={limparValidacao}>
-            </Data>
-          </CCol> 
+                <CCol xs={7}>
+                  <GeneroField
+                    genero={genero} onChange={setGenero} desabilitado={loading} obrigatorio={true}>
+                  </GeneroField>
+                </CCol>
+              </CRow>
 
-          <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
-            <GeneroField
-              genero={genero} onChange={setGenero} desabilitado={loading} obrigatorio={true}>
-            </GeneroField>
-          </CCol>
-        </CRow>
+              <CRow className="row g-3">
+                <CCol xs={5}>
+                  <IdadeField
+                    nascimento={nascimento}>
+                  </IdadeField>
+                </CCol>
 
-        <CRow className="row g-3">
-          <CCol xs={6} sm={6} md={6} lg={6} xl={5}>
-            <IdadeField
-              nascimento={nascimento}>
-            </IdadeField>
-          </CCol>
+                <CCol xs={7}>
+                  <CRow className="row g-3">
+                    <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
+                      <ContatoField
+                        contato={contato} onChange={setContato} desabilitado={loading} incorreto={setContatoIncorreto} limpar={limparValidacao}>
+                      </ContatoField>
+                    </CCol>
+                  </CRow>
 
-          <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
-            <CRow className="row g-3">
-              <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
-                <ContatoField
-                  contato={contato} onChange={setContato} desabilitado={loading} incorreto={setContatoIncorreto} limpar={limparValidacao}>
-                </ContatoField>
-              </CCol>
-            </CRow>
-
-            <CRow className="mt-5">
-              <CCol xs={6} sm={5} md={5} lg={5} xl={5}>
-                <CButton color="warning" onClick={Limpar}>Limpar</CButton>
-              </CCol>
-              <CCol xs={6} sm={5} md={5} lg={5} xl={5}>
-                <CButton color="success" type="submit" disabled={hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto, contatoIncorreto])}>Salvar</CButton>
-              </CCol>
-            </CRow>
-          </CCol>     
-        </CRow>
-
-      </CForm>
+                  <CRow className="mt-5 text-end">
+                    <CCol xs={12}>
+                      <CButton
+                        color="success"
+                        onClick={salvarAlteracoes}
+                        type="submit"
+                        disabled={loading || nome=='' || sobrenome=='' || genero=='' ||
+                        hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto, contatoIncorreto])}>
+                        {loading? 'Salvando' : 'Salvar'}
+                      </CButton>
+                    </CCol>
+                  </CRow>
+                </CCol>     
+              </CRow>
+            </CForm>
+          </CCardBody>
+        </CCard>
     </>
   );
 };
