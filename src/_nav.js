@@ -17,6 +17,7 @@ import {
   cilCash,
   cilList,
   cilCreditCard,
+  cilEqualizer,
 } from '@coreui/icons'
 
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
@@ -71,7 +72,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Cadastrar Material',
-        to: '#',
+        to: '/material',
       },
       {
         component: CNavItem,
@@ -122,6 +123,26 @@ const _nav = [
         component: CNavItem,
         name: 'Ver Vendas',
         to: '/vendas',
+      },
+    ],
+  },
+
+
+  {
+    component: CNavGroup,
+    name: 'Gerenciamento',
+    to: '#',
+    icon: <CIcon icon={cilEqualizer} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Cadastrar Líder',
+        to: '#',
+      },
+      {
+        component: CNavItem,
+        name: 'Ver lideres',
+        to: '#',
       },
     ],
   },

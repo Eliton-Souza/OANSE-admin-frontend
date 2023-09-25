@@ -93,6 +93,13 @@ export const api = {
 
 
   //MATERIAIS
+  criarMaterial: async (nome, id_clube, quantidade, preco) => {
+    const response = await http.post('/material', {
+      nome, id_clube, quantidade, preco
+    });
+      
+    return response.data;
+  },
   listarMateriais: async () => {
     const response = await http.get('/materiais', {});
     return response.data.materiais;
