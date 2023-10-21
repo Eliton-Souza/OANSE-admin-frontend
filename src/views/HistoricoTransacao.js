@@ -136,8 +136,8 @@ const HistoricoTransacao = () => {
                     <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
                   </CTableHeaderCell>
                   <CTableHeaderCell
-                    onClick={() => setTransacoes(ordena(transacoes, 'nome_lider', ordemCrescente),
-                    setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-4">Lider
+                    onClick={() => setTransacoes(ordena(transacoes, 'data', ordemCrescente),
+                    setOrdemCrescente(!ordemCrescente))} className="text-center col-sm-2">Data
                     <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
                   </CTableHeaderCell>
                   <CTableHeaderCell
@@ -157,7 +157,7 @@ const HistoricoTransacao = () => {
                   <React.Fragment key={transacao.id_transacao}>
                     <CTableRow key={transacao.id_transacao} onClick={() => onClickRow(transacao.id_transacao)}>
                       <CTableDataCell className="text-center">{transacao.nome_aluno}</CTableDataCell>
-                      <CTableDataCell className="text-center">{transacao.nome_lider}</CTableDataCell>
+                      <CTableDataCell className="text-center">{transacao.data.split('-').reverse().join('/')}</CTableDataCell>
                       <CTableDataCell className="text-center"><CBadge color={transacao.tipo == 'entrada'? "success" : "danger"} shape="rounded-pill">{transacao.tipo}</CBadge></CTableDataCell>
                       <CTableDataCell className="text-center">{transacao.valor}</CTableDataCell>
                     </CTableRow>
