@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardBody, CAlert, CSpinner } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardBody, CAlert, CSpinner, CCardHeader } from '@coreui/react';
 import { api } from 'src/services/api';
 import { NomeField } from '../components/formulario/nome';
 import { hasCampoIncorreto, regexNameMaterial, regexNumero } from '../components/formulario/helper';
-
 
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
@@ -61,7 +60,8 @@ const VerEstoque = () => {
 
   const openModal= async (id) => {
     setLoading(true);
-    const material = await api.pegarMaterial(id);
+    const material = materiais.find(item => item.id_material == id);
+    //const material = await api.pegarMaterial(id);
     setLoading(false);
 
     setSelectdMaterial(material);
@@ -119,10 +119,13 @@ const VerEstoque = () => {
         )}
      </h1>
 
-      {clubes.map(clubeMap => (
-        <div key={clubeMap.id_clube} className="mt-4">
-          <h3>{clubeMap.nome}</h3>
-          <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
+
+      <CRow>
+        {clubes.map(clubeMap => (
+          <CCol xs={12} sm={12} md={12} lg={6} xl={6}>
+            <CCardHeader className="mt-4" component="h3">
+              {clubeMap.nome}
+            </CCardHeader>
             <CCard className="mt-2">
               <CCardBody>
                 <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
@@ -130,12 +133,17 @@ const VerEstoque = () => {
                     <CTableRow>
                       <CTableHeaderCell
                         onClick={() => setMateriais(ordena(materiais, 'nome', ordemCrescente),
-                        setOrdemCrescente(!ordemCrescente))} className="text-center col-xs-9 col-sm-9 col-md-6 col-lg-6 col-xl-6">Material
+                        setOrdemCrescente(!ordemCrescente))} className="text-center col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Material
                         <CIcon icon={ordemCrescente ? cilSortAlphaDown : cilSortAlphaUp} size="lg"/>
                       </CTableHeaderCell>
                       <CTableHeaderCell
                         onClick={() => setMateriais(ordena(materiais, 'quantidade', ordemCrescente),
-                        setOrdemCrescente(!ordemCrescente))} className="text-center col-xs-3 col-sm-3 col-md-6 col-lg-6 col-xl-6">Estoque
+                        setOrdemCrescente(!ordemCrescente))} className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Estoque
+                        <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg"/>
+                      </CTableHeaderCell>
+                      <CTableHeaderCell
+                        onClick={() => setMateriais(ordena(materiais, 'preco', ordemCrescente),
+                        setOrdemCrescente(!ordemCrescente))} className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Preço
                         <CIcon icon={ordemCrescente ? cilSortNumericDown : cilSortNumericUp} size="lg"/>
                       </CTableHeaderCell>
                     </CTableRow>
@@ -145,6 +153,7 @@ const VerEstoque = () => {
                       <CTableRow key={materialMap.id_material} onClick={() => openModal(materialMap.id_material)}>      
                         <CTableDataCell className="text-center">{materialMap.nome}</CTableDataCell>
                         <CTableDataCell className="text-center">{materialMap.quantidade}</CTableDataCell>
+                        <CTableDataCell className="text-center">{materialMap.preco}</CTableDataCell>
                       </CTableRow>
                     ))}
                   </CTableBody>
@@ -152,8 +161,8 @@ const VerEstoque = () => {
               </CCardBody>
             </CCard>
           </CCol>
-        </div>
-      ))}
+        ))}
+      </CRow>
 
       <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
