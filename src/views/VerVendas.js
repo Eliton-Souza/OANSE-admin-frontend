@@ -203,7 +203,7 @@ const HistoricoVendas = () => {
             <>
               <CRow className="row g-2">
                 <CCard className="mt-3 border-0">
-                  <CCardTitle component="h5"> Pessoa: {`${infos.nome_pessoa} ${infos.sobrenome_pessoa}`}</CCardTitle>
+                  <CCardTitle component="h5"> Comprador: {`${infos.nome_pessoa} ${infos.sobrenome_pessoa}`}</CCardTitle>
                   <CRow className="row g-2">
                     <CCol xs={6}>
                       <CListGroup>
