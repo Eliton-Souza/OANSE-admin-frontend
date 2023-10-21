@@ -2,7 +2,7 @@ import React from 'react'
 import CIcon from '@coreui/icons-react'
 
 import {
-  //Painel Geral
+  //Visão Geral
   cilSpeedometer,
  
   //Meus alunos
@@ -24,16 +24,11 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
 const _nav = [
 
-  //Painel Geral - Titulo do NAV
   {
     component: CNavItem,
-    name: 'Painel Geral',
+    name: 'Visão Geral',
     to: '/',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
   },
 
 
@@ -64,54 +59,16 @@ const _nav = [
   },
 
   {
-    component: CNavGroup,
-    name: 'Estoque',
-    to: '#',
-    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Cadastrar Material',
-        to: '/material',
-      },
-      {
-        component: CNavItem,
-        name: 'Ver Estoque',
-        to: '/estoque',
-      },
-      {
-        component: CNavItem,
-        name: 'Histórico do Estoque ',
-        to: '#',
-      },
-    ],
-  },
-
-
-  {
-    component: CNavGroup,
+    component: CNavItem,
     name: 'Caixa',
-    to: '#',
+    to: '/caixa',
     icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Ver Caixa ',
-        to: '/caixa',
-      },
-      {
-        component: CNavItem,
-        name: 'Estatisticas',
-        to: '#',
-      },
-    ],
   },
 
 
   {
     component: CNavGroup,
     name: 'Vendas',
-    to: '#',
     icon: <CIcon icon={cilCreditCard} customClassName="nav-icon" />,
     items: [
       {
@@ -128,27 +85,53 @@ const _nav = [
   },
 
 
+
+  {
+    component: CNavGroup,
+    name: 'Estoque',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Cadastrar Material',
+        to: '/material',
+      },
+      {
+        component: CNavItem,
+        name: 'Ver Estoque',
+        to: '/estoque',
+      },
+      {
+        component: CNavItem,
+        name: 'Histórico do Estoque ',
+        to: '/',
+      },
+    ],
+  },
+
+
+
   {
     component: CNavGroup,
     name: 'Gerenciamento',
-    to: '#',
     icon: <CIcon icon={cilEqualizer} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
         name: 'Cadastrar Líder',
-        to: '#',
+        to: '/',
       },
       {
         component: CNavItem,
         name: 'Ver lideres',
-        to: '#',
+        to: '/',
       },
     ],
   },
 
 
   
+
 
 
    //TRANSACOES
