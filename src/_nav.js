@@ -124,7 +124,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Ver lideres',
-        to: '/',
+        to: '/lideres',
       },
     ],
   },

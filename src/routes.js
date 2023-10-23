@@ -14,6 +14,7 @@ const Perfil= React.lazy(() => import('./views/Perfil'));
 const Vendas= React.lazy(() => import('./views/VerVendas'));
 const FazerVenda= React.lazy(() => import('./views/FazerVenda'));
 const VerCaixa= React.lazy(() => import('./views/VerMovimentacoesCaixa'));
+const VerLideres= React.lazy(() => import('./views/VerLideres'));
 
 
 
@@ -33,6 +34,7 @@ const routes = [
   { path: '/vendas', name: 'Vendas', element: Vendas },
   { path: '/venda', name: 'Venda', element: FazerVenda },
   { path: '/caixa', name: 'Caixa', element: VerCaixa },
+  { path: '/lideres', name: 'Lideres', element: VerLideres },
 
 
   
