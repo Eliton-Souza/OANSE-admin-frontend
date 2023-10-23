@@ -28,6 +28,7 @@ import logoJV from "../assets/images/logosClubes/jv.png"
 import logoVQ7 from "../assets/images/logosClubes/vq7.png"
 
 import colors from '../layout/color';
+import numeral from 'numeral'
 
 const Dashboard = () => {
 
@@ -121,14 +122,21 @@ const Dashboard = () => {
               </CTableHead>
               <CTableBody>
                 {alunos.map((aluno, index) => (
-                  <CTableRow v-for="item in tableItems" key={aluno.id_aluno}>
-                    <CTableDataCell className="text-center">{index+1}</CTableDataCell>
+                  <CTableRow key={aluno.id_aluno}>
+                    {index === 0 || alunos[index - 1].saldo !== aluno.saldo ? (
+                      <CTableDataCell className="text-center">{index + 1}</CTableDataCell>
+                    ) : (
+                      <CTableDataCell className="text-center">{' '}</CTableDataCell>
+                    )}
                     <CTableDataCell className="text-center">
-                      <CAvatar size="md" src={'https://w7.pngwing.com/pngs/31/457/png-transparent-computer-icons-user-profile-avatar-user-heroes-business-user.png'} />
-                </CTableDataCell>
+                      <CAvatar
+                        size="md"
+                        src={'https://w7.pngwing.com/pngs/31/457/png-transparent-computer-icons-user-profile-avatar-user-heroes-business-user.png'}
+                      />
+                    </CTableDataCell>
                     <CTableDataCell>{`${aluno.nome} ${aluno.sobrenome}`}</CTableDataCell>
                     <CTableDataCell className="text-center">{aluno.clube}</CTableDataCell>
-                    <CTableDataCell className="text-center">{aluno.saldo}</CTableDataCell>
+                    <CTableDataCell className="text-center">{numeral(aluno.saldo).format('0,0').split(',').join('.')}</CTableDataCell>
                   </CTableRow>
                 ))}
               </CTableBody>
