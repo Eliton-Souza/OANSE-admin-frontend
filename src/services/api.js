@@ -1,4 +1,5 @@
 import http from "./axiosConfig";
+import jwt_decode from "jwt-decode";
 
 export const saveToken = (token) => {
   localStorage.setItem('token', token);
@@ -11,6 +12,13 @@ export const getToken = () => {
 export const removeToken = () => {
   localStorage.removeItem('token');
 };
+
+export const dadosUsuário = () => {
+  const token = getToken();
+  const decodedToken = jwt_decode(token);
+  return decodedToken;
+};
+
 
 export const api = {
 

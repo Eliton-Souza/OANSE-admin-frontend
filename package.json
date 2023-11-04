@@ -32,6 +32,7 @@
     "classnames": "^2.3.2",
     "core-js": "^3.29.0",
     "date-fns": "^2.30.0",
+    "jwt-decode": "^3.1.2",
     "moment-timezone": "^0.5.43",
     "numeral": "^2.0.6",
     "prop-types": "^15.8.1",
