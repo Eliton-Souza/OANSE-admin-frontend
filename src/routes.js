@@ -1,4 +1,5 @@
 import React from 'react'
+import { dadosUsuário } from './services/api';
 
 const Dashboard = React.lazy(() => import('./views/Dashboard'))
 const Logout = React.lazy(() => import('./views/logout'));
@@ -16,7 +17,9 @@ const FazerVenda= React.lazy(() => import('./views/FazerVenda'));
 const VerCaixa= React.lazy(() => import('./views/VerMovimentacoesCaixa'));
 const VerLideres= React.lazy(() => import('./views/VerLideres'));
 
+const NaoAutorizado= React.lazy(() => import('./views/NaoAutorizado'));
 
+const usuario= dadosUsuário();
 
 
 const routes = [
@@ -29,12 +32,15 @@ const routes = [
   { path: '/responsaveis', name: 'Responsaveis', element: VerResponsaveis },
   { path: '/historico', name: 'Historico', element: HistoricoTransacao },
   { path: '/qrcode', name: 'QRCode', element: QRCode },
-  { path: '/estoque', name: 'Estoque', element: VerEstoque },
-  { path: '/material', name: 'Material', element: CadastrarMaterial },
-  { path: '/vendas', name: 'Vendas', element: Vendas },
-  { path: '/venda', name: 'Venda', element: FazerVenda },
-  { path: '/caixa', name: 'Caixa', element: VerCaixa },
-  { path: '/lideres', name: 'Lideres', element: VerLideres },
+
+  //secretaria
+  { path: '/naoautorizado', name: 'NaoAutorizado', element: NaoAutorizado },
+  { path: '/estoque', name: 'Estoque', element: usuario.id_clube=='8'? VerEstoque : NaoAutorizado},
+  { path: '/material', name: 'Material', element: usuario.id_clube=='8'? CadastrarMaterial : NaoAutorizado},
+  { path: '/vendas', name: 'Vendas', element: usuario.id_clube=='8'? Vendas : NaoAutorizado},
+  { path: '/venda', name: 'Venda', element: usuario.id_clube=='8'? FazerVenda : NaoAutorizado},
+  { path: '/caixa', name: 'Caixa', element: usuario.id_clube=='8'? VerCaixa : NaoAutorizado},
+  { path: '/lideres', name: 'Lideres', element: usuario.id_clube=='8'? VerLideres : NaoAutorizado},
 
 
   
