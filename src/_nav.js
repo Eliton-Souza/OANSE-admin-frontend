@@ -21,6 +21,9 @@ import {
 } from '@coreui/icons'
 
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import { dadosUsuário } from './services/api';
+
+const usuario= dadosUsuário();
 
 const _nav = [
 
@@ -52,83 +55,8 @@ const _nav = [
   },
 
 
-  //Secretaria
-  {
-    component: CNavTitle,
-    name: 'SECRETARIA',
-  },
 
-  {
-    component: CNavItem,
-    name: 'Caixa',
-    to: '/caixa',
-    icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
-  },
-
-
-  {
-    component: CNavGroup,
-    name: 'Vendas',
-    icon: <CIcon icon={cilCreditCard} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Fazer Venda',
-        to: '/venda',
-      },
-      {
-        component: CNavItem,
-        name: 'Ver Vendas',
-        to: '/vendas',
-      },
-    ],
-  },
-
-
-
-  {
-    component: CNavGroup,
-    name: 'Estoque',
-    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Cadastrar Material',
-        to: '/material',
-      },
-      {
-        component: CNavItem,
-        name: 'Ver Estoque',
-        to: '/estoque',
-      },
-      {
-        component: CNavItem,
-        name: 'Histórico do Estoque ',
-        to: '/',
-      },
-    ],
-  },
-
-
-
-  {
-    component: CNavGroup,
-    name: 'Gerenciamento',
-    icon: <CIcon icon={cilEqualizer} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Cadastrar Líder',
-        to: '/',
-      },
-      {
-        component: CNavItem,
-        name: 'Ver lideres',
-        to: '/lideres',
-      },
-    ],
-  },
-
+  
 
   
 
@@ -173,4 +101,76 @@ const _nav = [
 
 ]
 
-export default _nav
+
+if(usuario.id_clube=='8'){
+  _nav.splice(1, 0,
+    {
+      component: CNavTitle,
+      name: 'SECRETARIA',
+    },
+    {
+      component: CNavItem,
+      name: 'Caixa',
+      to: '/caixa',
+      icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
+    },
+    {
+      component: CNavGroup,
+      name: 'Vendas',
+      icon: <CIcon icon={cilCreditCard} customClassName="nav-icon" />,
+      items: [
+        {
+          component: CNavItem,
+          name: 'Fazer Venda',
+          to: '/venda',
+        },
+        {
+          component: CNavItem,
+          name: 'Ver Vendas',
+          to: '/vendas',
+        },
+      ],
+    },
+    {
+      component: CNavGroup,
+      name: 'Estoque',
+      icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+      items: [
+        {
+          component: CNavItem,
+          name: 'Cadastrar Material',
+          to: '/material',
+        },
+        {
+          component: CNavItem,
+          name: 'Ver Estoque',
+          to: '/estoque',
+        },
+        {
+          component: CNavItem,
+          name: 'Histórico do Estoque',
+          to: '/',
+        },
+      ],
+    },
+    {
+      component: CNavGroup,
+      name: 'Gerenciamento',
+      icon: <CIcon icon={cilEqualizer} customClassName="nav-icon" />,
+      items: [
+        {
+          component: CNavItem,
+          name: 'Cadastrar Líder',
+          to: '/',
+        },
+        {
+          component: CNavItem,
+          name: 'Ver líderes',
+          to: '/lideres',
+        },
+      ],
+    }
+  );
+}
+
+export default _nav;
