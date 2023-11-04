@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CIcon from '@coreui/icons-react';
 import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardHeader, CCardBody, CAlert, CSpinner } from '@coreui/react';
 
-import { api } from 'src/services/api';
+import { api, dadosUsuário } from 'src/services/api';
 
 import { NomeField } from '../components/formulario/nome';
 import { SobrenomeField } from '../components/formulario/sobrenome';
@@ -19,10 +19,11 @@ import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { ModalSaldoField } from 'src/components/modalSaldo';
 
 import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/helper';
-import colors from '../layout/color';
+
 
 const MeusAlunos = () => {
   const [loading, setLoading] = useState();
+  const [usuario, setUsuario] = useState();
   const [alunos, setAlunos] = useState([]);
   const [clubes, setClubes] = useState([]);
   const [selectedAluno, setSelectedAluno] = useState(null);
@@ -69,6 +70,8 @@ const MeusAlunos = () => {
   };
 
   useEffect(() => {
+    const usuario= dadosUsuário();
+    setUsuario(usuario.id_clube);
     getAlunos();
   }, []);
 
@@ -129,14 +132,7 @@ const MeusAlunos = () => {
     }, 1000); // 1 segundos
   };
 
-  const clubColors = {
-    1: colors.ursinho,
-    2: colors.faisca,  
-    3: colors.flama,
-    4: colors.tocha,
-    5: colors.jv,
-    6: colors.vq7,
-  };
+
 
   return (
     <>
@@ -147,33 +143,64 @@ const MeusAlunos = () => {
       </CCardHeader>
 
       <CRow>
-        {clubes.map(clubeMap => (
-          <CCol xs={12} sm={12} md={12} lg={6} xl={6}>      
-            <CCardHeader className="mt-4" component="h3">
-              {clubeMap.nome}
-            </CCardHeader>
-            <CCard className="mt-2">
-              <CCardBody>
-                <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
-                  <CTableHead color='dark'>
-                    <CTableRow>
-                      <CTableHeaderCell className="text-center col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Nome</CTableHeaderCell>
-                      <CTableHeaderCell className="text-center col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Manual</CTableHeaderCell>
-                    </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                    {alunos.filter(alunoFilter => alunoFilter.id_clube == clubeMap.id_clube).map(alunoMap => (
-                      <CTableRow key={alunoMap.id_aluno} onClick={() => openModal(alunoMap.id_aluno)}>      
-                        <CTableDataCell className="text-center">{`${alunoMap.nome} ${alunoMap.sobrenome}`}</CTableDataCell>
-                        <CTableDataCell className="text-center">{alunoMap.manual}</CTableDataCell>
-                      </CTableRow>
-                    ))}
-                  </CTableBody>
-                </CTable>
-              </CCardBody>
-            </CCard>
-          </CCol> 
-        ))}
+        {usuario == '8'
+          ? clubes.map(clubeMap => (
+              <CCol xs={12} sm={12} md={12} lg={6} xl={6}>
+                <CCardHeader className="mt-4" component="h3">
+                      {clubeMap.nome}
+                    </CCardHeader>
+                    <CCard className="mt-2">
+                      <CCardBody>
+                        <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
+                          <CTableHead color='dark'>
+                            <CTableRow>
+                              <CTableHeaderCell className="text-center col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Nome</CTableHeaderCell>
+                              <CTableHeaderCell className="text-center col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Manual</CTableHeaderCell>
+                            </CTableRow>
+                          </CTableHead>
+                          <CTableBody>
+                            {alunos.filter(alunoFilter => alunoFilter.id_clube == clubeMap.id_clube).map(alunoMap => (
+                              <CTableRow key={alunoMap.id_aluno} onClick={() => openModal(alunoMap.id_aluno)}>      
+                                <CTableDataCell className="text-center">{`${alunoMap.nome} ${alunoMap.sobrenome}`}</CTableDataCell>
+                                <CTableDataCell className="text-center">{alunoMap.manual}</CTableDataCell>
+                              </CTableRow>
+                            ))}
+                          </CTableBody>
+                        </CTable>
+                      </CCardBody>
+                    </CCard>
+              </CCol>
+            ))
+          : clubes
+              .filter(clubeMap => clubeMap.id_clube === usuario)
+              .map(clubeMap => (
+                <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
+                  <CCardHeader className="mt-4" component="h3">
+                      {clubeMap.nome}
+                    </CCardHeader>
+                    <CCard className="mt-2">
+                      <CCardBody>
+                        <CTable align="middle" className="mb-0 border" hover responsive striped bordered>
+                          <CTableHead color='dark'>
+                            <CTableRow>
+                              <CTableHeaderCell className="text-center col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Nome</CTableHeaderCell>
+                              <CTableHeaderCell className="text-center col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Manual</CTableHeaderCell>
+                            </CTableRow>
+                          </CTableHead>
+                          <CTableBody>
+                            {alunos.filter(alunoFilter => alunoFilter.id_clube == clubeMap.id_clube).map(alunoMap => (
+                              <CTableRow key={alunoMap.id_aluno} onClick={() => openModal(alunoMap.id_aluno)}>      
+                                <CTableDataCell className="text-center">{`${alunoMap.nome} ${alunoMap.sobrenome}`}</CTableDataCell>
+                                <CTableDataCell className="text-center">{alunoMap.manual}</CTableDataCell>
+                              </CTableRow>
+                            ))}
+                          </CTableBody>
+                        </CTable>
+                      </CCardBody>
+                    </CCard>
+                </CCol>
+              ))
+        }
       </CRow>
 
       <CModal alignment="center" scrollable visible={modalAluno && !modalSaldo} onClose={closeModal} backdrop="static" size="lg" >
