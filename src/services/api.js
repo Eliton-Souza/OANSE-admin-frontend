@@ -15,8 +15,13 @@ export const removeToken = () => {
 
 export const dadosUsuário = () => {
   const token = getToken();
-  const decodedToken = jwt_decode(token);
-  return decodedToken;
+
+  if(token){
+    const decodedToken = jwt_decode(token);
+    return decodedToken;
+  }
+
+  window.location.href = '/login';
 };
 
 
