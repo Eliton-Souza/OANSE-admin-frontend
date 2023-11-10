@@ -137,7 +137,7 @@ const CadastrarLider = () => {
               <CRow className="row g-3">           
                 <CCol xs={5}>
                   <CCardTitle component="h6">Login
-                    <span style={{ color: 'red' }}>*</span>
+                    <span style={{ color: 'red' }}> *</span>
                   </CCardTitle>
                   <ContatoField
                     contato={contato} onChange={setContato} desabilitado={loading} incorreto={setContatoIncorreto} limpar={limparValidacao} obrigatorio={true}>
@@ -146,7 +146,7 @@ const CadastrarLider = () => {
                   
                 <CCol xs={7}>
                   <CCardTitle component="h6">Senha
-                    <span style={{ color: 'red' }}>*</span>
+                    <span style={{ color: 'red' }}> *</span>
                   </CCardTitle>            
                   <SenhaField
                     senha={senha} onChange={setSenha} desabilitado={loading} obrigatorio={true} incorreto={setSenhaIncorreta} limpar={limparValidacao}>

@@ -8,7 +8,7 @@ export const SenhaField = ({ senha, onChange, desabilitado, obrigatorio, incorre
 
   const [valido, setValido] = useState();
   const [invalido, setInvalido] = useState();
-  const [senhaVisivel, setSenhaVisivel] = useState(false);
+  const [senhaVisivel, setSenhaVisivel] = useState(true);
 
   const toggleSenhaVisivel = () => {
     setSenhaVisivel(!senhaVisivel);
