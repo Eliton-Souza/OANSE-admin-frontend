@@ -16,6 +16,7 @@ const Vendas= React.lazy(() => import('./views/VerVendas'));
 const FazerVenda= React.lazy(() => import('./views/FazerVenda'));
 const VerCaixa= React.lazy(() => import('./views/VerMovimentacoesCaixa'));
 const VerLideres= React.lazy(() => import('./views/VerLideres'));
+const CadastrarLider= React.lazy(() => import('./views/CadastrarLider'));
 
 const NaoAutorizado= React.lazy(() => import('./views/NaoAutorizado'));
 
@@ -41,6 +42,7 @@ const routes = [
   { path: '/venda', name: 'Venda', element: usuario.id_clube=='8'? FazerVenda : NaoAutorizado},
   { path: '/caixa', name: 'Caixa', element: usuario.id_clube=='8'? VerCaixa : NaoAutorizado},
   { path: '/lideres', name: 'Lideres', element: usuario.id_clube=='8'? VerLideres : NaoAutorizado},
+  { path: '/lider', name: 'Lideres', element: usuario.id_clube=='8'? CadastrarLider : NaoAutorizado},
 
 
   

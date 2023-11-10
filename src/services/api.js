@@ -163,6 +163,14 @@ export const api = {
 
 
   //LIDERES
+
+  criarLider: async (nome, sobrenome, genero, nascimento, id_clube, login, senha) => {
+    const response = await http.post('/lider', {
+      nome, sobrenome, genero, nascimento, id_clube, login, senha
+    });
+    return response.data;
+  },
+
   listarLideres: async () => {
     const response = await http.get('/lideres', {});
     return response.data.lideres;

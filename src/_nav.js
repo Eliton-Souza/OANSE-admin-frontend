@@ -161,7 +161,7 @@ if(usuario.id_clube=='8'){
         {
           component: CNavItem,
           name: 'Cadastrar Líder',
-          to: '/',
+          to: '/lider',
         },
         {
           component: CNavItem,
