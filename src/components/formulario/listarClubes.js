@@ -35,7 +35,7 @@ export const ListarClubesFild = ({ clube, onChange, desabilitado, obrigatorio })
         required={obrigatorio}
         value={clubes.some((clubeItem) => clubeItem.id_clube === clube?.id_clube) ? clube.id_clube : ''}>
         
-        <option value={null}>Selecione um Clube</option>
+        <option value={null} disabled>Selecione um Clube</option>
         {clubes.map((clubeItem) => (
           <option
             key={clubeItem.id_clube}
