@@ -225,7 +225,7 @@ const VerResponsaveis = () => {
 
                   <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
                     <ContatoField
-                      contato={contato} onChange={setContato} desabilitado={!editar} incorreto={setContatoIncorreto} limpar={limparValidacao}>
+                      contato={contato} onChange={setContato} desabilitado={!editar} incorreto={setContatoIncorreto} limpar={limparValidacao} obrigatorio={false} label={'Telefone'}>
                     </ContatoField>
                   </CCol>
                 </CRow>

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { regexPhoneNumber } from './helper';
 import { IMaskMixin } from 'react-imask';
 
-export const ContatoField = ({ contato, onChange, desabilitado, incorreto, limpar }) => {
+export const ContatoField = ({ contato, onChange, desabilitado, incorreto, limpar, obrigatorio, label }) => {
   
   const [valido, setValido] = useState();
   const [invalido, setInvalido] = useState();
@@ -41,7 +41,7 @@ export const ContatoField = ({ contato, onChange, desabilitado, incorreto, limpa
         placeholder="(XX) XXXXX-XXXX"
         type="text"
         id="contato"
-        label="Telefone"
+        label= {label}
         defaultValue={contato}
         onAccept={(value) => handleContatoChange({ target: { value } })}
         disabled={desabilitado}
@@ -49,6 +49,7 @@ export const ContatoField = ({ contato, onChange, desabilitado, incorreto, limpa
         invalid={invalido}
         feedbackInvalid="Digite 11 números"
         feedbackValid="OK"
+        required= {obrigatorio}
       />
     </>
   );
