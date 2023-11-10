@@ -114,8 +114,8 @@ const Dashboard = () => {
               <CTableHead color="dark">
                 <CTableRow>
                   <CTableHeaderCell className="text-center col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">Pos.</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">Foto</CTableHeaderCell>
-                  <CTableHeaderCell className="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">Aluno</CTableHeaderCell>
+                  {/*<CTableHeaderCell className="text-center col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1">Foto</CTableHeaderCell>*/}
+                  <CTableHeaderCell className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">Aluno</CTableHeaderCell>
                   <CTableHeaderCell className="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">Clube</CTableHeaderCell>
                   <CTableHeaderCell className="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">Saldo</CTableHeaderCell>
                 </CTableRow>
@@ -128,12 +128,12 @@ const Dashboard = () => {
                     ) : (
                       <CTableDataCell className="text-center">{' '}</CTableDataCell>
                     )}
-                    <CTableDataCell className="text-center">
+                    {/*<CTableDataCell className="text-center">
                       <CAvatar
                         size="md"
                         src={'https://w7.pngwing.com/pngs/31/457/png-transparent-computer-icons-user-profile-avatar-user-heroes-business-user.png'}
                       />
-                    </CTableDataCell>
+                    </CTableDataCell>*/}
                     <CTableDataCell>{`${aluno.nome} ${aluno.sobrenome}`}</CTableDataCell>
                     <CTableDataCell className="text-center">{aluno.clube}</CTableDataCell>
                     <CTableDataCell className="text-center">{numeral(aluno.saldo).format('0,0').split(',').join('.')}</CTableDataCell>
