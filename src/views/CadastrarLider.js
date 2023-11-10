@@ -100,13 +100,13 @@ const CadastrarLider = () => {
           <CCardBody>
             <CForm className="row g-3">
               <CRow className="row g-2">
-                <CCol xs={5}>
+                <CCol xs={6}>
                   <NomeField
                     nome={nome} onChange={setNome} desabilitado={loading} obrigatorio={true} incorreto={setNomeIncorreto} limpar={limparValidacao} regexName={regexNamePessoa}>
                   </NomeField>
                 </CCol>
 
-                <CCol xs={7}>
+                <CCol xs={6}>
                   <SobrenomeField
                     sobrenome={sobrenome} onChange={setSobrenome} desabilitado={loading} obrigatorio={true} incorreto={setSobrenomeIncorreto} limpar={limparValidacao}>
                   </SobrenomeField>
@@ -114,19 +114,19 @@ const CadastrarLider = () => {
               </CRow>
 
               <CRow className="row g-3">
-                <CCol xs={5}>
+                <CCol xs={12} sm={12} md={5} lg={6} xl={6}>
                   <Data
                     data={nascimento} onChange={setNascimento} desabilitado={loading} obrigatorio={false} incorreto={setNascimentoIncorreto} label={'Nascimento'} limpar={limparValidacao}>
                   </Data>
                 </CCol> 
 
-                <CCol xs={4}>
+                <CCol xs={12} sm={12} md={4} lg={4} xl={4}>
                   <ListarClubesFild
                     clube={clube} onChange={setClube} desabilitado={loading} obrigatorio={true}>
                   </ListarClubesFild>
                 </CCol>
 
-                <CCol xs={3}>
+                <CCol xs={12} sm={12} md={3} lg={2} xl={2}>
                   <GeneroField
                     genero={genero} onChange={setGenero} desabilitado={loading} obrigatorio={true}>
                   </GeneroField>
@@ -135,7 +135,7 @@ const CadastrarLider = () => {
               
              
               <CRow className="row g-3">           
-                <CCol xs={5}>
+                <CCol xs={12} sm={12} md={6} lg={6} xl={6}>
                   <CCardTitle component="h6">Login
                     <span style={{ color: 'red' }}> *</span>
                   </CCardTitle>
@@ -144,7 +144,7 @@ const CadastrarLider = () => {
                   </ContatoField>
                 </CCol>                                          
                   
-                <CCol xs={7}>
+                <CCol xs={12} sm={12} md={6} lg={6} xl={6}>
                   <CCardTitle component="h6">Senha
                     <span style={{ color: 'red' }}> *</span>
                   </CCardTitle>            
@@ -155,13 +155,13 @@ const CadastrarLider = () => {
               </CRow>
 
               <CRow className="row g-3">
-                <CCol xs={5}>
+                <CCol xs={6}>
                   <IdadeField
                     nascimento={nascimento}>
                   </IdadeField>
                 </CCol>
 
-                <CCol xs={7}>
+                <CCol xs={6}>
                   <ClubeField
                     clube={clube.nome}>
                   </ClubeField>
