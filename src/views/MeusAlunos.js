@@ -63,8 +63,9 @@ const MeusAlunos = () => {
     if (result.error || resultClubes.error) {
       alert("Ocoreu um erro");
     } else {
+      const clubesFiltrados = resultClubes.clubes.filter(clube => clube.id_clube <= 6);
       setAlunos(result.alunos);
-      setClubes(resultClubes.clubes);
+      setClubes(clubesFiltrados);
     }
   };
 

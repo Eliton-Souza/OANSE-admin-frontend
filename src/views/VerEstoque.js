@@ -49,8 +49,9 @@ const VerEstoque = () => {
     if (result.error || resultClubes.error) {
       alert("Ocorreu um erro ao buscar dados");
     } else {
+      const clubesFiltrados = resultClubes.clubes.filter(clube => clube.id_clube != 7);
       setMateriais(result);
-      setClubes(resultClubes.clubes);
+      setClubes(clubesFiltrados);
     }
   };
 

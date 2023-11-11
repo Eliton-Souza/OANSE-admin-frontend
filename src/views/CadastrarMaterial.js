@@ -92,7 +92,7 @@ const CadastrarMaterial = () => {
 
               <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
                 <ListarClubesFild
-                  clube={clube} onChange={setClube} desabilitado={loading} obrigatorio={true}>
+                  clube={clube} onChange={setClube} desabilitado={loading} obrigatorio={true} todos={false}>
                 </ListarClubesFild>
               </CCol>
             </CRow>

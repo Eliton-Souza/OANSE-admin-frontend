@@ -122,7 +122,7 @@ const CadastrarLider = () => {
 
                 <CCol xs={12} sm={12} md={4} lg={4} xl={4}>
                   <ListarClubesFild
-                    clube={clube} onChange={setClube} desabilitado={loading} obrigatorio={true}>
+                    clube={clube} onChange={setClube} desabilitado={loading} obrigatorio={true} todos={true}>
                   </ListarClubesFild>
                 </CCol>
 

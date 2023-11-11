@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 import { Data } from 'src/components/formulario/data';
 import { ValorField } from 'src/components/formulario/valor';
 import numeral from 'numeral';
-import { EscolherClube } from 'src/components/formulario/selectClube';
+import { ListarClubesFild } from 'src/components/formulario/listarClubes';
 
 
 const FazerVenda = () => {
@@ -40,6 +40,7 @@ const FazerVenda = () => {
   const [dataIncorreta, setDataIncorreta] = useState(false);
   const [valorIncorreto, setValorIncorreto] = useState(false);
   const [id_clube, setIdClube] = useState(null);
+  const [clube, setClube] = useState( {id_clube: null, nome: ''});
 
 
   const getMateriais = async () => {
@@ -60,8 +61,8 @@ const FazerVenda = () => {
 
 
   useEffect(() => { 
-    setMateriaisClube(materiais.filter(material => material.id_clube == id_clube));
-  }, [id_clube]);
+    setMateriaisClube(materiais.filter(material => material.id_clube == clube.id_clube));
+  }, [clube]);
   
 
 
@@ -148,17 +149,20 @@ const FazerVenda = () => {
               <CCard className="mt-2">
               <CCardHeader component="h5">Responsável</CCardHeader>
                 <CCardBody>
+
                   <CCol>
                   <CFormLabel>Responsável *</CFormLabel>                  
                     <SelectOansistas
                       pessoa={pessoa} onChange={setPessoa} desabilitado={loading} obrigatorio={true}>                      
                     </SelectOansistas>
                   </CCol>
+
                   <CCol className='mt-4'>
-                    <EscolherClube
-                      onChange={setIdClube} clube={id_clube}>                    
-                    </EscolherClube>
+                    <ListarClubesFild
+                      clube={clube} onChange={setClube} desabilitado={loading} obrigatorio={true} todos={false}>
+                    </ListarClubesFild>
                   </CCol>
+
                 </CCardBody>
               </CCard>
             </CCol>

@@ -2,14 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { CFormSelect, CFormLabel } from '@coreui/react';
 import { api } from 'src/services/api';
 
-export const ListarClubesFild = ({ clube, onChange, desabilitado, obrigatorio }) => {
+export const ListarClubesFild = ({ clube, onChange, desabilitado, obrigatorio, todos }) => {
   const [clubes, setClubes] = useState([]);
 
   useEffect(() => {
     const fetchClubes = async () => {
       try {
         const response = await api.listarClubes();
-        setClubes(response.clubes);
+        if(todos){
+          setClubes(response.clubes);
+        }
+        else{
+          const clubesFiltrados = response.clubes.filter(clube => clube.id_clube != 7);
+          setClubes(clubesFiltrados);
+        }
+        
       } catch (error) {
         alert(error);
       }
