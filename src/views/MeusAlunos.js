@@ -221,13 +221,13 @@ const MeusAlunos = () => {
             <>
               <CForm className="row g-3">
                 <CRow className="row g-1">
-                  <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
+                  <CCol xs={6}>
                     <NomeField
                       nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={false} incorreto={setNomeIncorreto} limpar={limparValidacao} regexName={regexNamePessoa}>
                     </NomeField>
                   </CCol>
 
-                  <CCol xs={7} sm={7} md={7} lg={7} xl={7}>
+                  <CCol xs={6}>
                     <SobrenomeField
                       sobrenome={sobrenome} onChange={setSobrenome} desabilitado={!editar} obrigatorio={false} incorreto={setSobrenomeIncorreto} limpar={limparValidacao}>
                     </SobrenomeField>
@@ -235,13 +235,13 @@ const MeusAlunos = () => {
                 </CRow>
 
                 <CRow className="row g-3">
-                  <CCol xs={6} sm={5} md={5} lg={5} xl={5}>
+                  <CCol xs={6}>
                     <Data
                       data={nascimento} onChange={setNascimento} desabilitado={!editar} obrigatorio={false} incorreto={setNascimentoIncorreto} label={'Nascimento'} limpar={limparValidacao}>
                     </Data>
                   </CCol> 
 
-                  <CCol xs={6} sm={7} md={7} lg={7} xl={7}>
+                  <CCol xs={6}>
                     <GeneroField
                       genero={genero} onChange={setGenero} desabilitado={!editar} obrigatorio={false}>
                     </GeneroField>
@@ -249,13 +249,13 @@ const MeusAlunos = () => {
                 </CRow>
 
                 <CRow className="row g-3">
-                  <CCol xs={12} sm={6} md={6} lg={6} xl={6}>
+                  <CCol xs={12} md={6}>
                     <ManualField
                       manual={manual} onChange={setManual} desabilitado={!editar} obrigatorio={false}>
                     </ManualField>
                   </CCol>
              
-                  <CCol xs={12} sm={5} md={5} lg={5} xl={6}>
+                  <CCol xs={12} md={6}>
                     <ResponsavelField
                       responsavel={responsavel} onChange={setResponsavel} desabilitado={!editar} obrigatorio={false}>
                     </ResponsavelField>
@@ -263,19 +263,13 @@ const MeusAlunos = () => {
                 </CRow>
 
                 <CRow className="row g-3"> 
-                  <CCol xs={4} sm={4} md={4} lg={4} xl={4}>
+                  <CCol xs={6}>
                     <SaldoField
                       saldo={selectedAluno.saldo} id_carteira={selectedAluno.id_carteira} modalSaldo={setModalSaldo}>
                     </SaldoField>
                   </CCol>
 
-                  <CCol xs={5} sm={5} md={4} lg={4} xl={4}>
-                    <ClubeField
-                      clube={manual.clube}>
-                    </ClubeField>
-                  </CCol>
-
-                  <CCol xs={3} sm={3} md={4} lg={4} xl={4}>
+                  <CCol xs={6}>
                     <IdadeField
                       nascimento={nascimento}>
                     </IdadeField>
