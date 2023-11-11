@@ -31,7 +31,6 @@ export const SelectOansistas = ({ pessoa, onChange, desabilitado, obrigatorio })
 
   return (
     <>
-      <CFormLabel>Responsável</CFormLabel>
       <br />
       <CFormSelect
         onChange={(event) => {

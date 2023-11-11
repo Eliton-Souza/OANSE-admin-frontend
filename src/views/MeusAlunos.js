@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CIcon from '@coreui/icons-react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardHeader, CCardBody, CAlert, CSpinner } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardHeader, CCardBody, CAlert, CSpinner, CFormLabel } from '@coreui/react';
 
 import { api, dadosUsuário } from 'src/services/api';
 
@@ -11,14 +11,13 @@ import { GeneroField } from '../components/formulario/genero';
 
 import { ManualField } from '../components/formulario/manual';
 import { SaldoField } from '../components/widget/saldo';
-import { ResponsavelField } from '../components/formulario/responsavel';
-import { ClubeField } from '../components/widget/clube';
 import { IdadeField } from 'src/components/widget/idade';
 
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { ModalSaldoField } from 'src/components/modalSaldo';
 
 import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/helper';
+import { SelectOansistas } from 'src/components/formulario/selectOansistas';
 
 
 const MeusAlunos = () => {
@@ -40,7 +39,7 @@ const MeusAlunos = () => {
   const [nascimento, setNascimento] = useState(null);
   const [genero, setGenero] = useState('');
   const [manual, setManual] = useState({ id_manual: null, nome: '', clube: '' });
-  const [responsavel, setResponsavel] = useState({ id_responsavel: null, nome: '' });
+  const [responsavel, setResponsavel] = useState({ id_pessoa: null, nome: '' });
 
   const [id_aluno, setId_Aluno] = useState('');
   const [id_carteira, setId_Carteira] = useState('');
@@ -92,7 +91,7 @@ const MeusAlunos = () => {
     setGenero(dado.genero);
     setNascimento(dado.nascimento);
     setManual({ id_manual: dado.id_manual, nome: dado.manual, clube: dado.clube });
-    setResponsavel({ id_responsavel: dado.id_responsavel? dado.id_responsavel: null, nome: dado.nome_responsavel? `${dado.nome_responsavel} ${dado.sobrenome_responsavel}` : '' });
+    setResponsavel({ id_pessoa: dado.id_responsavel? dado.id_responsavel: null, nome: dado.nome_responsavel? `${dado.nome_responsavel} ${dado.sobrenome_responsavel}` : '' });
     
     setId_Aluno(dado.id_aluno);
     setId_Carteira(dado.id_carteira);
@@ -109,7 +108,7 @@ const MeusAlunos = () => {
 
   const salvarAlteracoes= async () => {
     setLoading(true);
-    const result = await api.atualizarAluno(selectedAluno.id_aluno, nome, sobrenome, genero, nascimento, responsavel.id_responsavel, manual.id_manual );
+    const result = await api.atualizarAluno(selectedAluno.id_aluno, nome, sobrenome, genero, nascimento, responsavel.id_pessoa, manual.id_manual );
     setLoading(false);
 
     if (result.error) {
@@ -256,9 +255,10 @@ const MeusAlunos = () => {
                   </CCol>
              
                   <CCol xs={12} md={6}>
-                    <ResponsavelField
-                      responsavel={responsavel} onChange={setResponsavel} desabilitado={!editar} obrigatorio={false}>
-                    </ResponsavelField>
+                    <CFormLabel>Responsável</CFormLabel>
+                    <SelectOansistas
+                      pessoa={responsavel} onChange={setResponsavel} desabilitado={!editar} obrigatorio={false}>                      
+                    </SelectOansistas>                  
                   </CCol>
                 </CRow>
 
@@ -293,7 +293,6 @@ const MeusAlunos = () => {
             <CCol xs={4}>
               <CButton color="success" onClick={salvarAlteracoes} type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto])}>{loading ? 'Carregando' : 'Salvar'}</CButton>
             </CCol>
-
           </CRow>
         </CModalFooter>
 

@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { CButton, CForm, CCol, CRow, CAlert, CSpinner, CCard, CCardBody } from '@coreui/react';
+import React, { useState } from 'react';
+import { CButton, CForm, CCol, CRow, CAlert, CSpinner, CCard, CCardBody, CFormLabel } from '@coreui/react';
 import { api } from 'src/services/api';
 
 import { NomeField } from '../components/formulario/nome';
@@ -10,11 +10,10 @@ import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/hel
 import { ManualField } from '../components/formulario/manual';
 
 import { SaldoField } from '../components/widget/saldo';
-import { ResponsavelField } from '../components/formulario/responsavel';
-import { ClubeField } from '../components/widget/clube';
 import { IdadeField } from 'src/components/widget/idade';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
+import { SelectOansistas } from 'src/components/formulario/selectOansistas';
 
 const CadastrarAluno = () => {
 
@@ -27,7 +26,7 @@ const CadastrarAluno = () => {
   const [nascimento, setNascimento] = useState(null);
   const [genero, setGenero] = useState('');
   const [manual, setManual] = useState({ id_manual: null, nome: '', clube: '' });
-  const [responsavel, setResponsavel] = useState({ id_responsavel: null, nome: '' });
+  const [responsavel, setResponsavel] = useState({ id_pessoa: null, nome: ''});
 
 
   //verificar se os campos estão corretos:
@@ -45,7 +44,7 @@ const CadastrarAluno = () => {
     setGenero('');
     setNascimento(null);
     setManual({ id_manual: null, nome: '', clube: ''});
-    setResponsavel({ id_responsavel: null, nome: '' });
+    setResponsavel({ id_pessoa: null, nome: '' });
 
     setLimparValidacao(true);
     setTimeout(() => {
@@ -56,7 +55,7 @@ const CadastrarAluno = () => {
   const salvarAlteracoes= async () => {
 
     setLoading(true);
-    const result= await api.criarAluno( nome, sobrenome, genero, nascimento, responsavel.id_responsavel, manual.id_manual );
+    const result= await api.criarAluno( nome, sobrenome, genero, nascimento, responsavel.id_pessoa, manual.id_manual );
     setLoading(false);
 
     if(result.error){
@@ -126,9 +125,10 @@ const CadastrarAluno = () => {
               </CCol>
           
               <CCol xxs={12} sm={12} md={4} lg={4} xl={4}>
-                <ResponsavelField
-                  responsavel={responsavel} onChange={setResponsavel} desabilitado={loading} obrigatorio={false}>
-                </ResponsavelField>
+                <CFormLabel>Responsável</CFormLabel>
+                  <SelectOansistas
+                    pessoa={responsavel} onChange={setResponsavel} desabilitado={loading} obrigatorio={false}>                      
+                  </SelectOansistas>            
               </CCol>
             </CRow>
 

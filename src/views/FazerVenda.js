@@ -28,7 +28,7 @@ const FazerVenda = () => {
 
   //dados
   const [id_venda, setIdVenda] = useState();
-  const [pessoa, setPessoa] = useState({ id_pessoa: null, nome: '', id_clube: '' });
+  const [pessoa, setPessoa] = useState({ id_pessoa: null, nome: ''});
   const [materiaisSelecionados, setMateriaisSelecionados] = useState([]);
 
   const [descricao, setDescricao]= useState(null);
@@ -148,9 +148,10 @@ const FazerVenda = () => {
               <CCard className="mt-2">
               <CCardHeader component="h5">Responsável</CCardHeader>
                 <CCardBody>
-                  <CCol>                  
+                  <CCol>
+                  <CFormLabel>Responsável *</CFormLabel>                  
                     <SelectOansistas
-                      pessoa={pessoa} onChange={setPessoa} desabilitado={false} obrigatorio={true}>                      
+                      pessoa={pessoa} onChange={setPessoa} desabilitado={loading} obrigatorio={true}>                      
                     </SelectOansistas>
                   </CCol>
                   <CCol className='mt-4'>
