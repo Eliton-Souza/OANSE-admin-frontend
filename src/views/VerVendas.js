@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CCol, CSpinner, CCollapse, CListGroup, CListGroupItem, CBadge, CCardBody, CCardFooter, CFormSelect, CRow, CCardHeader, CCardTitle, CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CCol, CSpinner, CListGroup, CListGroupItem, CBadge, CCardBody, CCardFooter, CRow, CCardTitle, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui/react';
 import { api } from 'src/services/api';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
+import { cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
 import Paginacao from 'src/components/paginacao';
 import { ModalPagamento } from 'src/components/modalPagamento';
 import numeral from 'numeral';
@@ -70,10 +70,13 @@ const HistoricoVendas = () => {
 
     setInfos(result.venda.info);
     setIdVenda(result.venda.info.id_venda);
-    setDescricao(result.venda.info.descricao);
 
     setMateriais(result.venda.materiais);
     setPagamentos(result.venda.pagamentos);
+
+    if(result.venda.info.descricao){
+      setDescricao(result.venda.info.descricao);
+    }
    
     setModalVenda(true);
   }
