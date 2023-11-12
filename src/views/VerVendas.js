@@ -64,8 +64,6 @@ const HistoricoVendas = () => {
 
   const openModal= async (id) => {
 
-    setSucesso({tipo: '', menssagem: ''});
-
     setLoading(true);
     const result = await api.pegarVenda(id);
     setLoading(false);
@@ -86,7 +84,6 @@ const HistoricoVendas = () => {
     setMateriais([]);
 
     setModalVenda(false);
-    setSucesso({tipo: '', menssagem: ''});
   };
 
   const closeModalPag = (estadoModal) => {
@@ -312,20 +309,7 @@ const HistoricoVendas = () => {
                     onChange={setDescricao} descricao={descricao}>
                   </DescricaoField>
 
-                  <CRow>
-                    <CCol>
-                      <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
-                    </CCol>
-                    <CCol>
-                      {sucesso.tipo != '' && (
-                        <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-                          <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-                          <div>{sucesso.menssagem}</div>
-                        </CAlert>
-                      )}                                
-                    </CCol>
-                  </CRow>                          
-
+                  <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>                        
                 </CCol>
               </CRow>
             </>
