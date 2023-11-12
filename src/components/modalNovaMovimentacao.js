@@ -1,6 +1,4 @@
-import { cilCheckCircle, cilReportSlash } from "@coreui/icons";
-import CIcon from "@coreui/icons-react";
-import { CAlert, CButton, CCol, CForm, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow, CSpinner, CWidgetStatsC } from "@coreui/react";
+import { CButton, CCol, CForm, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow, CSpinner } from "@coreui/react";
 import { useState } from "react";
 import { api } from "src/services/api";
 import { ValorField } from "./formulario/valor";
@@ -12,11 +10,9 @@ import { SelectMotivo } from "./formulario/selectMotivo";
 import { format } from "date-fns";
 
 
-export const ModalMovimentacao = ({ modalCaixa, onChange, recarregar }) => {
+export const ModalMovimentacao = ({ modalCaixa, onChange, recarregar, setSucesso }) => {
  
   const [loading, setLoading] = useState(false);
-  const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
-
 
   const [valor, setValor]= useState(0);
   const [tipo, setTipo]= useState('entrada');
@@ -36,29 +32,21 @@ export const ModalMovimentacao = ({ modalCaixa, onChange, recarregar }) => {
 
   const salvarAlteracoes= async () => {
 
+    setSucesso({tipo: '', menssagem: ''});
+
     setLoading(true);
     const result = await api.criarMovimentacao(valor, tipo, tipo_pag, descricao, data, motivo);
     setLoading(false);
 
     if (result.error) {
       setSucesso({tipo: 'danger', menssagem: result.error});
-
-      setTimeout(() => {
-        setSucesso({tipo: '', menssagem: ''});
-      }, 3000); // 3 segundos
-
     } else {
       setSucesso({tipo: 'success', menssagem: "Movimentação inserida com sucesso"});
       recarregar(true);
       setBlock(true);
 
-      setTimeout(() => {
-        closeModal();
-        setSucesso({tipo: '', menssagem: ''});
-      }, 1500); // 1.5 segundos
-    }
-
-    
+      closeModal();
+    }    
   };
      
 
@@ -70,15 +58,8 @@ export const ModalMovimentacao = ({ modalCaixa, onChange, recarregar }) => {
 
       <CModal alignment="top" visible={modalCaixa} onClose={closeModal} backdrop="static">
         <CModalHeader closeButton>
-          <CModalTitle>Nova Movimentação
-
-          {sucesso.tipo != '' && (
-            <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-              <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-              <div>{sucesso.menssagem}</div>
-            </CAlert>
-          )}
-
+          <CModalTitle>
+            Nova Movimentação
           </CModalTitle>
         </CModalHeader>
 

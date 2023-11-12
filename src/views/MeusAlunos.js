@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import CIcon from '@coreui/icons-react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardHeader, CCardBody, CAlert, CSpinner, CFormLabel } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardHeader, CCardBody, CSpinner, CFormLabel } from '@coreui/react';
 
 import { api, dadosUsuário } from 'src/services/api';
 
@@ -13,11 +12,11 @@ import { ManualField } from '../components/formulario/manual';
 import { SaldoField } from '../components/widget/saldo';
 import { IdadeField } from 'src/components/widget/idade';
 
-import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { ModalSaldoField } from 'src/components/modalSaldo';
 
 import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/helper';
 import { SelectOansistas } from 'src/components/formulario/selectOansistas';
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 
 
 const MeusAlunos = () => {
@@ -54,17 +53,17 @@ const MeusAlunos = () => {
   const [limparValidacao, setLimparValidacao] = useState(false);
 
 
-  const getAlunos = async () => {
+  const getAlunosClubes = async () => {
     setLoading(true);
-    const result = await api.listarTodosAlunos();
-    const resultClubes= await api.listarClubes();
+    const listaAlunos = await api.listarTodosAlunos();
+    const listaClubes= await api.listarClubes();
     setLoading(false);
 
-    if (result.error || resultClubes.error) {
+    if (listaAlunos.error || listaClubes.error) {
       alert("Ocoreu um erro");
     } else {
-      const clubesFiltrados = resultClubes.clubes.filter(clube => clube.id_clube <= 6);
-      setAlunos(result.alunos);
+      const clubesFiltrados = listaClubes.clubes.filter(clube => clube.id_clube <= 6);
+      setAlunos(listaAlunos.alunos);
       setClubes(clubesFiltrados);
     }
   };
@@ -72,7 +71,7 @@ const MeusAlunos = () => {
   useEffect(() => {
     const usuario= dadosUsuário();
     setUsuario(usuario.id_clube);
-    getAlunos();
+    getAlunosClubes();
   }, []);
 
   const openModal= async (id) => {
@@ -98,31 +97,30 @@ const MeusAlunos = () => {
     setId_Carteira(dado.id_carteira);
     setSaldo(dado.saldo);
   }
-   
+  
 
   const closeModal = () => {
     setSelectedAluno(null);
     setModalAluno(false);
     setEditar(false);
-    setSucesso({tipo: '', menssagem: ''});
   };
 
   const salvarAlteracoes= async () => {
+
+    setSucesso({tipo: '', menssagem: ''});
+
     setLoading(true);
     const result = await api.atualizarAluno(selectedAluno.id_aluno, nome, sobrenome, genero, nascimento, responsavel.id_pessoa, manual.id_manual );
     setLoading(false);
+
 
     if (result.error) {
       setSucesso({tipo: 'danger', menssagem: result.error});
     } else {
       setSucesso({tipo: 'success', menssagem: "Aluno atualizado com sucesso"});
-      getAlunos();
+      getAlunosClubes();
 
       setEditar(false);
-
-      setTimeout(() => {
-        setSucesso({tipo: '', menssagem: ''});
-      }, 1500); // 1.5 segundos
     }
 
     setLimparValidacao(true);
@@ -136,6 +134,14 @@ const MeusAlunos = () => {
 
   return (
     <>
+      {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
+      )}
+
       <CCardHeader component="h1">Meus Alunos
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
@@ -205,14 +211,8 @@ const MeusAlunos = () => {
 
       <CModal alignment="center" scrollable visible={modalAluno && !modalSaldo} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
-          <CModalTitle>{selectedAluno && `${selectedAluno.nome} - ${selectedAluno.id_aluno}`}
-          
-          {sucesso.tipo != '' && (
-            <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-              <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-              <div>{sucesso.menssagem}</div>
-            </CAlert>
-          )}
+          <CModalTitle>
+            {selectedAluno && `${selectedAluno.nome} - ${selectedAluno.id_aluno}`}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
@@ -292,7 +292,7 @@ const MeusAlunos = () => {
             </CCol>
 
             <CCol xs={4}>
-              <CButton color="success" onClick={salvarAlteracoes} type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto])}>{loading ? 'Carregando' : 'Salvar'}</CButton>
+              <CButton color="success" onClick={salvarAlteracoes} type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto])}>{loading ? 'Salvando' : 'Salvar'}</CButton>
             </CCol>
           </CRow>
         </CModalFooter>
@@ -301,7 +301,7 @@ const MeusAlunos = () => {
 
       {modalSaldo && (
           <ModalSaldoField
-          id_carteira={id_carteira} id_aluno={id_aluno} modalSaldo={modalSaldo} onChange={setModalSaldo} saldo={saldo} nome={`${nome} ${sobrenome}`}>
+          id_carteira={id_carteira} id_aluno={id_aluno} modalSaldo={modalSaldo} onChange={setModalSaldo} saldo={saldo} nome={`${nome} ${sobrenome}`} setSucesso={setSucesso}>
           </ModalSaldoField>
       )}
     </>

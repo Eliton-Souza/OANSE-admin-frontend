@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CCol, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CAlert, CSpinner, CCardFooter, CFormLabel } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CCol, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CSpinner, CCardFooter, CFormLabel } from '@coreui/react';
 import { api } from 'src/services/api';
-import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { SelectOansistas } from 'src/components/formulario/selectOansistas';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import { ModalPagamento } from 'src/components/modalPagamento';
@@ -11,7 +9,7 @@ import { Data } from 'src/components/formulario/data';
 import { ValorField } from 'src/components/formulario/valor';
 import numeral from 'numeral';
 import { ListarClubesFild } from 'src/components/formulario/listarClubes';
-
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 
 const FazerVenda = () => {
 
@@ -39,7 +37,6 @@ const FazerVenda = () => {
   const [data, setData] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [dataIncorreta, setDataIncorreta] = useState(false);
   const [valorIncorreto, setValorIncorreto] = useState(false);
-  const [id_clube, setIdClube] = useState(null);
   const [clube, setClube] = useState( {id_clube: null, nome: ''});
 
 
@@ -73,6 +70,9 @@ const FazerVenda = () => {
 
 
   const salvarAlteracoes= async () => {
+    
+    setSucesso({tipo: '', menssagem: ''});
+
     setLoading(true);
     const result = await api.criarVenda(pessoa.id_pessoa, valor_total-desconto, descricao, data, materiaisSelecionados);   
     setLoading(false);
@@ -83,7 +83,7 @@ const FazerVenda = () => {
       setSucesso({tipo: 'success', menssagem: "Venda registrada com sucesso"});
 
       setIdVenda(result.Venda);
-      setValorRestante(valor_total);
+      setValorRestante(valor_total-desconto);
 
       setTimeout(() => {
         setModalResumo(false);
@@ -93,7 +93,6 @@ const FazerVenda = () => {
         }
 
         setDesconto(0);
-        setSucesso({tipo: '', menssagem: ''});
         setMateriaisSelecionados([]);
       }, 1000); // 1 segundo
     }
@@ -136,6 +135,14 @@ const FazerVenda = () => {
   
   return (
     <>
+      {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
+      )}
+
       <h1>Fazer Venda
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
@@ -246,13 +253,8 @@ const FazerVenda = () => {
 
       <CModal alignment="center" scrollable visible={modalResumo==1} onClose={() => setModalResumo(false)} backdrop="static" size="lg" >
         <CModalHeader>
-          <CModalTitle>Resumo de Pedido
-          {sucesso.tipo != '' && (
-            <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-              <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-              <div>{sucesso.menssagem}</div>
-            </CAlert>
-          )}
+          <CModalTitle>
+            Resumo de Pedido       
           </CModalTitle>
         </CModalHeader>
         <CModalBody>          
@@ -336,7 +338,7 @@ const FazerVenda = () => {
 
       {modalPag &&(
           <ModalPagamento
-            id_venda={id_venda} valor_restante={valor_restante} modalPag={modalPag} onChange={setModalPag}>
+            id_venda={id_venda} valor_restante={valor_restante} modalPag={modalPag} onChange={setModalPag} sucesso={sucesso} setSucesso={setSucesso}>
           </ModalPagamento>
       )}
       

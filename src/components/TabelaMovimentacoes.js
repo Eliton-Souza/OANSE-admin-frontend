@@ -1,5 +1,5 @@
 import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from "@coreui/icons";
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CSpinner, CCollapse, CListGroup, CListGroupItem, CCardBody, CCardFooter, CCardTitle, CTableFoot, CPopover } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CSpinner, CCollapse, CListGroup, CListGroupItem, CCardBody, CCardFooter, CCardTitle, CTableFoot, CPopover, CRow, CCol } from '@coreui/react';
 import React, { useState } from 'react';
 import { api } from "src/services/api";
 import { DescricaoField } from 'src/components/formulario/descricao';
@@ -128,18 +128,25 @@ export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) =>
                             {loadingSalvar && (
                               <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
                             )}
-
+                        
                             <DescricaoField
-                            onChange={setDescricao} descricao={descricao}
+                              onChange={setDescricao} descricao={descricao}
                             />
-                            <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
-                              
-                            {sucesso.tipo != '' && (
-                              <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-                                <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-                                <div>{sucesso.menssagem}</div>
-                              </CAlert>
-                            )}
+                            
+                            <CRow>
+                              <CCol>
+                                <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
+                              </CCol>
+                              <CCol>
+                                {sucesso.tipo != '' && (
+                                  <CAlert color={sucesso.tipo} className="d-flex align-items-center">
+                                    <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
+                                    <div>{sucesso.menssagem}</div>
+                                  </CAlert>
+                                )}                                
+                              </CCol>
+                            </CRow>
+                                                                             
                           </CListGroupItem>
                         </CListGroup>
                       </CCard>

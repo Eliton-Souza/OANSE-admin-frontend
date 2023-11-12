@@ -1,6 +1,4 @@
-import { cilCheckCircle, cilReportSlash } from "@coreui/icons";
-import CIcon from "@coreui/icons-react";
-import { CAlert, CButton, CCol, CForm, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow, CSpinner } from "@coreui/react";
+import { CButton, CCol, CForm, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow, CSpinner } from "@coreui/react";
 import { useEffect, useState } from "react";
 import { api } from "src/services/api";
 import numeral from "numeral";
@@ -8,12 +6,12 @@ import { TipoPagamento } from "./formulario/tipoPagamento";
 import { ValorField } from "./formulario/valor";
 import { format } from "date-fns";
 import { Data } from "./formulario/data";
+import { ToastPersonalizado } from "./formulario/toast";
 
 
-export const ModalPagamento = ({ id_venda, valor_restante, modalPag, onChange}) => {
+export const ModalPagamento = ({ id_venda, valor_restante, modalPag, onChange, sucesso, setSucesso}) => {
  
   const [loading, setLoading] = useState(false);
-  const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
   const [block, setBlock] = useState(false);
 
   const [valorIncorreto, setValorIncorreto] = useState(false);
@@ -42,46 +40,41 @@ export const ModalPagamento = ({ id_venda, valor_restante, modalPag, onChange}) 
 
   const salvarAlteracoes= async () => {
 
+    setSucesso({tipo: '', menssagem: ''});
+
     setLoading(true);
     const result = await api.criarPagamento(id_venda, valor_pago, tipo, data);
     setLoading(false);
 
     if (result.error) {
       setSucesso({tipo: 'danger', menssagem: result.error});
-
-      setTimeout(() => {
-        setSucesso({tipo: '', menssagem: ''});
-      }, 3000); // 3 segundos
-
     } else {
       setSucesso({tipo: 'success', menssagem: "Pagamento realizado com sucesso"});
       setBlock(true);
-
-      setTimeout(() => {
-        closeModal();
-        setSucesso({tipo: '', menssagem: ''});
-      }, 1500); // 1.5 segundos
+     
+      closeModal();
     }
     
   };
 
   return (
     <>
+      {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
+      )}
+
       {loading && (
         <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
       )}
 
       <CModal alignment="top" visible={modalPag} onClose={closeModal} backdrop="static">
         <CModalHeader closeButton>
-          <CModalTitle>Pagamento
-
-          {sucesso.tipo != '' && (
-            <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-              <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-              <div>{sucesso.menssagem}</div>
-            </CAlert>
-          )}
-
+          <CModalTitle>
+            Pagamento      
           </CModalTitle>
         </CModalHeader>
 

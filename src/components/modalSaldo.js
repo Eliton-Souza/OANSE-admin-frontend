@@ -1,6 +1,4 @@
-import { cilCheckCircle, cilReportSlash } from "@coreui/icons";
-import CIcon from "@coreui/icons-react";
-import { CAlert, CButton, CCol, CForm, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow, CSpinner, CWidgetStatsC } from "@coreui/react";
+import { CButton, CCol, CForm, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow, CSpinner } from "@coreui/react";
 import { useState } from "react";
 import { api } from "src/services/api";
 import { ValorField } from "./formulario/valor";
@@ -9,11 +7,9 @@ import numeral from "numeral";
 import { DescricaoField } from "./formulario/descricao";
 
 
-export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, saldo, nome}) => {
+export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, saldo, nome, setSucesso}) => {
  
   const [loading, setLoading] = useState(false);
-  const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
-  const [block, setBlock] = useState(false);
 
   const [valorIncorreto, setValorIncorreto] = useState(false);
 
@@ -28,6 +24,8 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
 
   const salvarAlteracoes= async () => {
 
+    setSucesso({tipo: '', menssagem: ''});
+
     setLoading(true);
     const result = await api.alterarSaldo(id_carteira, valor, tipo, id_aluno, descricao);
     setLoading(false);
@@ -35,21 +33,10 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
     if (result.error) {
       setSucesso({tipo: 'danger', menssagem: result.error});
 
-      setTimeout(() => {
-        setSucesso({tipo: '', menssagem: ''});
-      }, 3000); // 3 segundos
-
     } else {
       setSucesso({tipo: 'success', menssagem: "Saldo alterado com sucesso"});
-      setBlock(true);
-
-      setTimeout(() => {
-        closeModal();
-        setSucesso({tipo: '', menssagem: ''});
-      }, 1500); // 1.5 segundos
-    }
-
-    
+      closeModal();
+    }    
   };
    
   const handleSaldo = () => {
@@ -75,15 +62,8 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
 
       <CModal alignment="top" visible={modalSaldo} onClose={closeModal} backdrop="static">
         <CModalHeader closeButton>
-          <CModalTitle>{nome} - Saldo Atual: {numeral(saldo).format('0,0.00')}
-
-          {sucesso.tipo != '' && (
-            <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-              <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-              <div>{sucesso.menssagem}</div>
-            </CAlert>
-          )}
-
+          <CModalTitle>
+            {nome} - Saldo Atual: {numeral(saldo).format('0,0.00')}
           </CModalTitle>
         </CModalHeader>
 
@@ -124,22 +104,22 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
           <CRow className="d-flex align-items-center justify-content-end">
             <CCol xs={5} sm={5} md={5} lg={5} xl={5} className="me-3"> 
               <CButton
-              color="secondary"
-              onClick={closeModal}
-              shape="rounded-pill"
+                color="secondary"
+                onClick={closeModal}
+                shape="rounded-pill"
               >
                 Fechar
               </CButton>
             </CCol>
             <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
               <CButton
-                disabled={valorIncorreto || !valor || block}
+                disabled={valorIncorreto || !valor || loading}
                 color="success"
                 onClick={salvarAlteracoes}
                 type="submit"
                 shape="rounded-pill"
               >
-                {loading ? 'Carregando' : 'Salvar'}
+                {loading ? 'Salvando' : 'Salvar'}
               </CButton>
             </CCol>
           </CRow>

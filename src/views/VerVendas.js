@@ -8,6 +8,7 @@ import Paginacao from 'src/components/paginacao';
 import { ModalPagamento } from 'src/components/modalPagamento';
 import numeral from 'numeral';
 import { ordena } from './helper';
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 
 const HistoricoVendas = () => {
   const [loading, setLoading] = useState();
@@ -63,6 +64,8 @@ const HistoricoVendas = () => {
 
   const openModal= async (id) => {
 
+    setSucesso({tipo: '', menssagem: ''});
+
     setLoading(true);
     const result = await api.pegarVenda(id);
     setLoading(false);
@@ -94,6 +97,8 @@ const HistoricoVendas = () => {
 
 
   const salvarDescricao= async () => {
+
+    setSucesso({tipo: '', menssagem: ''});
 
     setLoadingSalvar(true);
     const result = await api.atualizarDescricaoVenda(id_venda, descricao);
@@ -127,6 +132,16 @@ const HistoricoVendas = () => {
 
   return (
     <>
+
+      {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
+      )}
+
+
      <h1>Histórico de Vendas
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
@@ -189,13 +204,9 @@ const HistoricoVendas = () => {
 
       <CModal alignment="center" scrollable visible={modalVenda && !modalPag} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
-        <CCardTitle component="h5"> Número da Venda: {id_venda}</CCardTitle>
-          {sucesso.tipo != '' && (
-            <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-              <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-              <div>{sucesso.menssagem}</div>
-            </CAlert>
-          )}
+        <CCardTitle component="h5">
+          Número da Venda: {id_venda}
+        </CCardTitle>
         </CModalHeader>
         <CModalBody>
         
@@ -256,24 +267,27 @@ const HistoricoVendas = () => {
                   {pagamentos.length === 0 ? (
                     <p>Nenhum pagamento realizado</p>
                   ) : (
-                    <CRow className="row g-2">
+                    <CRow className="row g-2 my-2">
                       {pagamentos.map((pagamento) => (
                         <React.Fragment key={pagamento.id_pagamento}>
-                          <CCol xs={6}>
-                            <CListGroup>
-                              <CListGroupItem>Secretário(a): {`${pagamento.nome_lider} ${pagamento.sobrenome_lider}`}</CListGroupItem>
-                              <CListGroupItem>Data: {pagamento.data.split('-').reverse().join('/')}</CListGroupItem>
-                            </CListGroup>
-                            <hr style={{ height: '4px', backgroundColor: 'black' }} />
-                          </CCol>
-                      
-                          <CCol xs={6}>
-                            <CListGroup>
-                              <CListGroupItem>Valor Pago: {pagamento.valor_pago}</CListGroupItem>
-                              <CListGroupItem>Tipo: {pagamento.tipo}</CListGroupItem>
-                            </CListGroup>
-                            <hr style={{ height: '4px', backgroundColor: 'black' }} />
-                          </CCol>    
+                          <CRow>                      
+                            <CCol xs={6}>
+                              <CListGroup>
+                                <CListGroupItem>Secretário(a): {`${pagamento.nome_lider} ${pagamento.sobrenome_lider}`}</CListGroupItem>
+                                <CListGroupItem>Data: {pagamento.data.split('-').reverse().join('/')}</CListGroupItem>
+                              </CListGroup>
+                              
+                            </CCol>
+                        
+                            <CCol xs={6}>
+                              <CListGroup>
+                                <CListGroupItem>Valor Pago: {pagamento.valor_pago}</CListGroupItem>
+                                <CListGroupItem>Tipo: {pagamento.tipo}</CListGroupItem>
+                              </CListGroup>
+                              
+                            </CCol>    
+                          </CRow>
+                          <hr style={{ height: '4px', backgroundColor: 'black' }} />
                         </React.Fragment>                       
                       ))}          
                     </CRow>
@@ -286,7 +300,7 @@ const HistoricoVendas = () => {
                         </CCol>
 
                         <CCol xs={6}>
-                          <CButton color="info" onClick={() => setModalPag(true)}>Novo Pagamento</CButton>
+                          <CButton color="info" onClick={() => { setSucesso({ tipo: '', menssagem: '' }); setModalPag(true); }}>Novo Pagamento</CButton>
                         </CCol>
                       </CRow>
                     </>
@@ -304,14 +318,20 @@ const HistoricoVendas = () => {
                     onChange={setDescricao} descricao={descricao}>
                   </DescricaoField>
 
-                  <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
-                    
-                  {sucesso.tipo != '' && (
-                    <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-                      <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-                      <div>{sucesso.menssagem}</div>
-                    </CAlert>
-                  )}
+                  <CRow>
+                    <CCol>
+                      <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
+                    </CCol>
+                    <CCol>
+                      {sucesso.tipo != '' && (
+                        <CAlert color={sucesso.tipo} className="d-flex align-items-center">
+                          <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
+                          <div>{sucesso.menssagem}</div>
+                        </CAlert>
+                      )}                                
+                    </CCol>
+                  </CRow>                          
+
                 </CCol>
               </CRow>
             </>
@@ -327,9 +347,9 @@ const HistoricoVendas = () => {
       </CModal>
 
       {modalPag && (
-          <ModalPagamento
-            id_venda={id_venda} valor_restante={valor_restante} modalPag={modalPag} onChange={closeModalPag}>
-          </ModalPagamento>
+        <ModalPagamento
+          id_venda={id_venda} valor_restante={valor_restante} modalPag={modalPag} onChange={closeModalPag} sucesso={sucesso} setSucesso={setSucesso}>
+        </ModalPagamento>
       )}
     </>
   );

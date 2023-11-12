@@ -1,9 +1,10 @@
-import { cilCash, cilChartPie, cilHandPointUp } from '@coreui/icons';
+import { cilCash, cilHandPointUp } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { CButton, CCardHeader, CCol, CRow, CSpinner, CWidgetStatsF } from '@coreui/react';
+import { CCardHeader, CCol, CRow, CSpinner, CWidgetStatsF } from '@coreui/react';
 import numeral from 'numeral';
 import React, { useState, useEffect } from 'react';
 import { TabelaMovimentacoes } from 'src/components/TabelaMovimentacoes';
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 import { ModalMovimentacao } from 'src/components/modalNovaMovimentacao';
 import { api } from 'src/services/api';
 
@@ -19,6 +20,7 @@ const HistoricoMovimentacao = () => {
   const [recarregar, setRecarregar] = useState(false);
 
   const [loading, setLoading] = useState();
+  const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
 
   const getMovimentacoes = async () => {
     setLoading(true);
@@ -73,7 +75,15 @@ const HistoricoMovimentacao = () => {
   
 
   return (
-    <>    
+    <>
+      {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
+      )}
+
       <CRow className="justify-content-center">
         <CCol xs={12} sm={12} md={12} lg={6} xl={6}>
           <CCardHeader component="h1">Movimentações do Caixa
@@ -113,7 +123,7 @@ const HistoricoMovimentacao = () => {
 
       {modalCaixa && (
           <ModalMovimentacao
-            modalCaixa={modalCaixa}  onChange={setModalCaixa} recarregar={setRecarregar}>
+            modalCaixa={modalCaixa}  onChange={setModalCaixa} recarregar={setRecarregar} setSucesso={setSucesso}>
           </ModalMovimentacao>
       )}    
     </>
