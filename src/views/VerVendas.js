@@ -292,18 +292,12 @@ const HistoricoVendas = () => {
                       ))}          
                     </CRow>
                   )}
-                  {infos.status == 'Pendente' ? (
-                    <>
-                      <CRow className="row mt-4">
-                        <CCol xs={6}>
-                          <CCardTitle component="h5">Valor Restante: {numeral(valor_restante).format('0,0.00')}</CCardTitle>
-                        </CCol>
-
-                        <CCol xs={6}>
-                          <CButton color="info" onClick={() => { setSucesso({ tipo: '', menssagem: '' }); setModalPag(true); }}>Novo Pagamento</CButton>
-                        </CCol>
-                      </CRow>
-                    </>
+                  {infos.status == 'Pendente' ? (                 
+                    <CRow className="row mt-4">
+                      <CCol xs={12}>
+                        <CCardTitle component="h5">Valor Restante: {numeral(valor_restante).format('0,0.00')}</CCardTitle>
+                      </CCol>                
+                    </CRow>                  
                   ) : (null)}
                 </CCard>                
               </CRow>
@@ -339,6 +333,9 @@ const HistoricoVendas = () => {
         </CModalBody>
         <CModalFooter>
           <CRow>
+            <CCol xs={8}>
+              <CButton color="info" onClick={() => { setSucesso({ tipo: '', menssagem: '' }); setModalPag(true); }}>Novo Pagamento</CButton>
+            </CCol>
             <CCol xs={4}>
               <CButton color="secondary" onClick={closeModal}>Fechar</CButton>
             </CCol>      
