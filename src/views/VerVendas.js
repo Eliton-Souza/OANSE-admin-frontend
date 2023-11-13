@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CCol, CSpinner, CListGroup, CListGroupItem, CBadge, CCardBody, CCardFooter, CRow, CCardTitle, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CCol, CSpinner, CListGroup, CListGroupItem, CBadge, CCardBody, CCardFooter, CRow, CCardTitle, CModal, CModalHeader, CModalBody, CModalFooter, CCardHeader } from '@coreui/react';
 import { api } from 'src/services/api';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import CIcon from '@coreui/icons-react';
@@ -132,7 +132,6 @@ const HistoricoVendas = () => {
 
   return (
     <>
-
       {sucesso.tipo != '' && (           
         <ToastPersonalizado
           titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
@@ -141,12 +140,11 @@ const HistoricoVendas = () => {
         </ToastPersonalizado>
       )}
 
-
-     <h1>Histórico de Vendas
+     <CCardHeader component="h1">Histórico de Vendas
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
-     </h1>
+      </CCardHeader>
   
 
      <CCol xs={12} sm={12} md={12} lg={12} xl={12}>

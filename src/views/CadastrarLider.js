@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { CButton, CForm, CCol, CRow, CAlert, CSpinner, CCard, CCardBody, CCardTitle } from '@coreui/react';
+import { CButton, CForm, CCol, CRow, CSpinner, CCard, CCardBody, CCardTitle, CCardHeader } from '@coreui/react';
 import { api } from 'src/services/api';
 
 import { NomeField } from '../components/formulario/nome';
@@ -9,16 +9,13 @@ import { GeneroField } from '../components/formulario/genero';
 import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/helper';
 import { IdadeField } from 'src/components/widget/idade';
 
-import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { ContatoField } from 'src/components/formulario/contato';
 import { ListarClubesFild } from 'src/components/formulario/listarClubes';
 import { ClubeField } from 'src/components/widget/clube';
 import { SenhaField } from 'src/components/formulario/senha';
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 
 const CadastrarLider = () => {
-
-  const formRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
@@ -62,6 +59,7 @@ const CadastrarLider = () => {
   const salvarAlteracoes= async () => {
 
     const login= contato.replace(/\D/g, '');
+    setSucesso({tipo: '', menssagem: ''});
 
     setLoading(true);
     const result= await api.criarLider(nome, sobrenome, genero, nascimento, clube.id_clube, login, senha);
@@ -70,31 +68,27 @@ const CadastrarLider = () => {
     if(result.error){
       setSucesso({tipo: 'danger', menssagem: result.error});
     }else{
-      setSucesso({tipo: 'success', menssagem: "Líder cadastrado com sucesso"});
+      setSucesso({ tipo: 'success', menssagem: `${nome} foi ${genero == 'M'? 'cadastrado' : 'cadastrada'} com sucesso`});
       Limpar();
     }
-
-
-    setTimeout(() => {
-      setSucesso({tipo: '', menssagem: ''});
-    }, 5000); // 5 segundos
   }
  
 
   return (
     <>
-      <h1>Novo Líder
-          {loading && (
-            <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
-          )}
-      </h1>
-
-      {sucesso.tipo != '' && (
-        <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-          <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-          <div>{sucesso.menssagem}</div>
-        </CAlert>
+      {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
       )}
+
+      <CCardHeader component="h1">Novo Líder
+        {loading && (
+          <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+        )}
+      </CCardHeader>
 
         <CCard className='mt-4'>
           <CCardBody>

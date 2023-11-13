@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CButton, CForm, CCol, CRow, CAlert, CSpinner, CCard, CCardBody, CFormLabel } from '@coreui/react';
+import { CButton, CForm, CCol, CRow, CSpinner, CCard, CCardBody, CFormLabel, CCardHeader } from '@coreui/react';
 import { api } from 'src/services/api';
 
 import { NomeField } from '../components/formulario/nome';
@@ -11,9 +11,8 @@ import { ManualField } from '../components/formulario/manual';
 
 import { SaldoField } from '../components/widget/saldo';
 import { IdadeField } from 'src/components/widget/idade';
-import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { SelectOansistas } from 'src/components/formulario/selectOansistas';
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 
 const CadastrarAluno = () => {
 
@@ -54,6 +53,8 @@ const CadastrarAluno = () => {
 
   const salvarAlteracoes= async () => {
 
+    setSucesso({tipo: '', menssagem: ''});
+
     setLoading(true);
     const result= await api.criarAluno( nome, sobrenome, genero, nascimento, responsavel.id_pessoa, manual.id_manual );
     setLoading(false);
@@ -61,31 +62,28 @@ const CadastrarAluno = () => {
     if(result.error){
       setSucesso({tipo: 'danger', menssagem: result.error});
     }else{
-      setSucesso({tipo: 'success', menssagem: "Aluno cadastrado com sucesso"});
-    }
-
-    Limpar();
-
-    setTimeout(() => {
-      setSucesso({tipo: '', menssagem: ''});
-    }, 3000); // 3 segundos
+      setSucesso({tipo: 'success', menssagem: `${nome} foi ${genero == 'M'? 'cadastrado' : 'cadastrada'} com sucesso`});
+      Limpar();
+    }   
   }
  
 
   return (
     <>
-      <h1>Novo Aluno
-          {loading && (
-            <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
-          )}
-      </h1>
-
-      {sucesso.tipo != '' && (
-        <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-          <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-          <div>{sucesso.menssagem}</div>
-        </CAlert>
+      {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
       )}
+
+      <CCardHeader component="h1">Novo Aluno
+        {loading && (
+          <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+        )}
+      </CCardHeader>
+
 
       <CCard className='mt-4'>
         <CCardBody>

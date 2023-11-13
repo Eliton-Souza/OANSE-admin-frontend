@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CCol, CSpinner, CCollapse, CListGroup, CListGroupItem, CBadge, CCardBody, CCardFooter } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CCol, CSpinner, CCollapse, CListGroup, CListGroupItem, CBadge, CCardBody, CCardFooter, CCardHeader } from '@coreui/react';
 import { api } from 'src/services/api';
 import { DescricaoField } from 'src/components/formulario/descricao';
 import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
+import { cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
 import Paginacao from 'src/components/paginacao';
 import { ordena } from './helper';
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 
 const HistoricoTransacao = () => {
   const [loading, setLoading] = useState();
@@ -80,12 +81,18 @@ const HistoricoTransacao = () => {
     setNovoSaldo(dado.novo_saldo);
 
     setData(dado.data.split('-').reverse().join('/'));
-    setDescricao(dado.descricao);
+    
+    if(dado.descricao){
+      setDescricao(dado.descricao);
+    }
+
     setTipo(dado.tipo);
   }
    
 
   const salvarDescricao= async () => {
+
+    setSucesso({tipo: '', menssagem: ''});
 
     setLoadingSalvar(true);
     const result = await api.atualizarDescricaoTransacao( id_transacao, descricao );
@@ -95,10 +102,6 @@ const HistoricoTransacao = () => {
       setSucesso({tipo: 'danger', menssagem: result.error});
     } else {
       setSucesso({tipo: 'success', menssagem: "Anotação atualizada com sucesso"});
-     
-      setTimeout(() => {
-        setSucesso({tipo: '', menssagem: ''});
-      }, 3000); // 3 segundos
     }
   };
 
@@ -118,11 +121,19 @@ const HistoricoTransacao = () => {
 
   return (
     <>
-     <h1>Histórico de Transações
+      {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
+      )}
+
+     <CCardHeader component="h1">Histórico de Transações
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
-     </h1>
+      </CCardHeader>
 
      <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
         <CCard className="mt-2">
@@ -173,22 +184,15 @@ const HistoricoTransacao = () => {
                             <CListGroupItem>Valor da {tipo}: {valor_transacao}</CListGroupItem>
                             <CListGroupItem>Novo Saldo: {novo_saldo}</CListGroupItem>
                             <CListGroupItem> 
-
                               {loadingSalvar && (
                                 <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
                               )}
 
                               <DescricaoField
-                              onChange={setDescricao} descricao={descricao}
-                              />
-                              <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
-                                
-                              {sucesso.tipo != '' && (
-                                <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-                                  <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-                                  <div>{sucesso.menssagem}</div>
-                                </CAlert>
-                              )}
+                                onChange={setDescricao} descricao={descricao}>
+                              </DescricaoField>
+
+                              <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>                            
                             </CListGroupItem>
                           </CListGroup>
                         </CCard>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage, CAlert, CSpinner } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardHeader, CCardBody, CSpinner } from '@coreui/react';
 import { api } from 'src/services/api';
 import { NomeField } from '../components/formulario/nome';
 import { SobrenomeField } from '../components/formulario/sobrenome';
@@ -9,11 +9,11 @@ import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/hel
 
 import { IdadeField } from 'src/components/widget/idade';
 import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
+import { cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
 import { ContatoField } from 'src/components/formulario/contato';
 import { differenceInYears } from 'date-fns';
 import { ordena } from './helper';
-
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 
 const VerResponsaveis = () => {
   const [loading, setLoading] = useState();
@@ -34,8 +34,6 @@ const VerResponsaveis = () => {
   const [genero, setGenero] = useState('');
   const [contato, setContato] = useState(null);
  
-
-
   //verificar se os campos estão corretos:
   const [nomeIncorreto, setNomeIncorreto] = useState(false);
   const [sobrenomeIncorreto, setSobrenomeIncorreto] = useState(false);
@@ -85,10 +83,12 @@ const VerResponsaveis = () => {
     setSelectedResponsavel(null);
     setModalOpen(false);
     setEditar(false);
-    setSucesso({tipo: '', menssagem: ''});
   };
 
   const salvarAlteracoes= async () => {
+
+    setSucesso({tipo: '', menssagem: ''});
+
     setLoading(true);
     const result = await api.atualizarResponsavel(selectedResponsavel.id_responsavel, nome, sobrenome, genero, nascimento, contato);
     setLoading(false);
@@ -100,10 +100,7 @@ const VerResponsaveis = () => {
       getResponsaveis();
 
       setEditar(false);
-
-      setTimeout(() => {
-        setSucesso({tipo: '', menssagem: ''});
-      }, 3000); // 3 segundos
+      closeModal();
     }
 
     setLimparValidacao(true);
@@ -133,11 +130,19 @@ const VerResponsaveis = () => {
 
   return (
     <>
-     <h1>Responsáveis
+     {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
+      )}
+
+     <CCardHeader component="h1">Responsáveis
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
-     </h1>
+      </CCardHeader>
 
      <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
         <CCard className="mt-2">
@@ -174,13 +179,8 @@ const VerResponsaveis = () => {
 
       <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
-          <CModalTitle>{selectedResponsavel && `${selectedResponsavel.nome} - ${selectedResponsavel.id_responsavel}`}
-          {sucesso.tipo != '' && (
-            <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-              <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-              <div>{sucesso.menssagem}</div>
-            </CAlert>
-          )}
+          <CModalTitle>
+            {selectedResponsavel && `${selectedResponsavel.nome} - ${selectedResponsavel.id_responsavel}`}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { CButton, CForm, CCol, CRow, CAlert, CSpinner, CCard, CCardBody } from '@coreui/react';
+import { CButton, CForm, CCol, CRow, CSpinner, CCard, CCardBody, CCardHeader } from '@coreui/react';
 import { api } from 'src/services/api';
 
 import { NomeField } from '../components/formulario/nome';
 import { hasCampoIncorreto, regexNameMaterial, regexNumero } from '../components/formulario/helper';
 
-import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { PrecoMaterial } from 'src/components/formulario/PrecoMaterial';
 import { QuantidadeFild } from 'src/components/formulario/quantidade';
 import { ListarClubesFild } from 'src/components/formulario/listarClubes';
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 
 const CadastrarMaterial = () => {
 
@@ -30,8 +29,7 @@ const CadastrarMaterial = () => {
 
   const [limparValidacao, setLimparValidacao] = useState(false);
  
-  const Limpar = () => {  //ver logica
-
+  const Limpar = () => { 
     setNome('');
     setQuantidade();
     setClube({ id_clube: null, nome: ''});
@@ -40,11 +38,13 @@ const CadastrarMaterial = () => {
     setLimparValidacao(true);
     setTimeout(() => {
       setLimparValidacao(false);
-    }, 1000); // 1 segundos
+    }, 1000); // 1 segundo
   };
 
 
   const salvarAlteracoes= async () => {
+
+    setSucesso({tipo: '', menssagem: ''});
 
     setLoading(true);
     const result= await api.criarMaterial(nome, clube.id_clube, quantidade, preco);
@@ -53,32 +53,27 @@ const CadastrarMaterial = () => {
     if(result.error){
       setSucesso({tipo: 'danger', menssagem: result.error});
     }else{
-      setSucesso({tipo: 'success', menssagem: "Material cadastrado com sucesso"});
+      setSucesso({tipo: 'success', menssagem: `${nome} foi cadastrado com sucesso`});
       Limpar();
     }
-
-   
-
-    setTimeout(() => {
-      setSucesso({tipo: '', menssagem: ''});
-    }, 2000); // 5 segundos
   }
  
 
   return (
     <>
-      <h1>Novo Material
-          {loading && (
-            <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
-          )}
-      </h1>
-
-      {sucesso.tipo != '' && (
-        <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-          <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-          <div>{sucesso.menssagem}</div>
-        </CAlert>
+     {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
       )}
+
+      <CCardHeader component="h1">Novo Material
+        {loading && (
+          <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+        )}
+      </CCardHeader>
 
       <CCard className='mt-4'>
         <CCardBody>

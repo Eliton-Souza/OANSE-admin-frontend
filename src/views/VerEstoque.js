@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardBody, CAlert, CSpinner, CCardHeader } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardBody, CSpinner, CCardHeader } from '@coreui/react';
 import { api } from 'src/services/api';
 import { NomeField } from '../components/formulario/nome';
 import { hasCampoIncorreto, regexNameMaterial, regexNumero } from '../components/formulario/helper';
 
 import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
+import { cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
 import { QuantidadeFild } from 'src/components/formulario/quantidade';
 import { ListarClubesFild } from 'src/components/formulario/listarClubes';
 import { PrecoMaterial } from 'src/components/formulario/PrecoMaterial';
 import { ordena } from './helper';
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 
 
 const VerEstoque = () => {
@@ -83,10 +84,11 @@ const VerEstoque = () => {
     setSelectdMaterial(null);
     setModalOpen(false);
     setEditar(false);
-    setSucesso({tipo: '', menssagem: ''});
   };
 
   const salvarAlteracoes= async () => {
+    setSucesso({tipo: '', menssagem: ''});
+
     setLoading(true);
     const result = await api.atualizarMaterial(selectedMaterial.id_material, nome, clube.id_clube, quantidade, preco);
     setLoading(false);
@@ -94,15 +96,11 @@ const VerEstoque = () => {
     if (result.error) {
       setSucesso({tipo: 'danger', menssagem: result.error});
     } else {
-      setSucesso({tipo: 'success', menssagem: "Material atualizado com sucesso"});
+      setSucesso({tipo: 'success', menssagem: `${nome} foi atualizado com sucesso`});
       getDados();   //melhorar no futuro
 
       setEditar(false);
-
-      setTimeout(() => {
-        closeModal();
-        setSucesso({tipo: '', menssagem: ''});
-      }, 1500); // 1.5 segundos
+      closeModal();
     }
 
     setLimparValidacao(true);
@@ -114,13 +112,20 @@ const VerEstoque = () => {
 
   return (
     <>
-     <h1>Estoque de Materiais
+     {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
+      )}
+
+     <CCardHeader component="h1">Estoque de Materiais
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
-     </h1>
-
-
+      </CCardHeader>
+  
       <CRow>
         {clubes.map(clubeMap => (
           <CCol xs={12} sm={12} md={12} lg={6} xl={6}>
@@ -167,13 +172,8 @@ const VerEstoque = () => {
 
       <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
-          <CModalTitle>{selectedMaterial && (selectedMaterial.nome)}
-          {sucesso.tipo != '' && (
-            <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-              <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-              <div>{sucesso.menssagem}</div>
-            </CAlert>
-          )}
+          <CModalTitle>
+            {selectedMaterial && (selectedMaterial.nome)}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>

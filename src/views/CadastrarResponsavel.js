@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { CButton, CForm, CCol, CRow, CAlert, CSpinner, CCard, CCardBody } from '@coreui/react';
+import React, { useState } from 'react';
+import { CButton, CForm, CCol, CRow, CSpinner, CCard, CCardBody, CCardHeader } from '@coreui/react';
 import { api } from 'src/services/api';
 
 import { NomeField } from '../components/formulario/nome';
@@ -9,13 +9,10 @@ import { GeneroField } from '../components/formulario/genero';
 import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/helper';
 import { IdadeField } from 'src/components/widget/idade';
 
-import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash } from '@coreui/icons';
 import { ContatoField } from 'src/components/formulario/contato';
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 
 const CadastrarResponsavel = () => {
-
-  const formRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
@@ -36,9 +33,7 @@ const CadastrarResponsavel = () => {
 
   const [limparValidacao, setLimparValidacao] = useState(false);
  
-  const Limpar = () => {  //ver logica
-
-    formRef.current.reset();
+  const Limpar = () => {
     
     setNome('');
     setSobrenome('');
@@ -49,11 +44,13 @@ const CadastrarResponsavel = () => {
     setLimparValidacao(true);
     setTimeout(() => {
       setLimparValidacao(false);
-    }, 1000); // 1 segundos
+    }, 1000); // 1 segundo
   };
 
-  //corrigir alteraçãos no banco, nao ta salvando
+
   const salvarAlteracoes= async () => {
+
+    setSucesso({tipo: '', menssagem: ''});
 
     setLoading(true);
     const result= await api.criarResponsavel( nome, sobrenome, genero, nascimento, contato );
@@ -62,96 +59,92 @@ const CadastrarResponsavel = () => {
     if(result.error){
       setSucesso({tipo: 'danger', menssagem: result.error});
     }else{
-      setSucesso({tipo: 'success', menssagem: "Responsável cadastrado com sucesso"});
-    }
-
-    Limpar();
-
-    setTimeout(() => {
-      setSucesso({tipo: '', menssagem: ''});
-    }, 5000); // 5 segundos
+      setSucesso({tipo: 'success', menssagem: `${nome} foi ${genero == 'M'? 'cadastrado' : 'cadastrada'} com sucesso`});
+      Limpar();
+    }  
   }
  
 
   return (
     <>
-      <h1>Novo Responsável
-          {loading && (
-            <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
-          )}
-      </h1>
-
-      {sucesso.tipo != '' && (
-        <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-          <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-          <div>{sucesso.menssagem}</div>
-        </CAlert>
+      {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
       )}
 
-        <CCard className='mt-4'>
-          <CCardBody>
-            <CForm className="row g-3">
-              <CRow className="row g-2">
-                <CCol xs={5}>
-                  <NomeField
-                    nome={nome} onChange={setNome} desabilitado={loading} obrigatorio={true} incorreto={setNomeIncorreto} limpar={limparValidacao} regexName={regexNamePessoa}>
-                  </NomeField>
-                </CCol>
+      <CCardHeader component="h1">Novo Responsável
+        {loading && (
+          <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
+        )}
+      </CCardHeader>
+      
+      <CCard className='mt-4'>
+        <CCardBody>
+          <CForm className="row g-3">
+            <CRow className="row g-2">
+              <CCol xs={5}>
+                <NomeField
+                  nome={nome} onChange={setNome} desabilitado={loading} obrigatorio={true} incorreto={setNomeIncorreto} limpar={limparValidacao} regexName={regexNamePessoa}>
+                </NomeField>
+              </CCol>
 
-                <CCol xs={7}>
-                  <SobrenomeField
-                    sobrenome={sobrenome} onChange={setSobrenome} desabilitado={loading} obrigatorio={true} incorreto={setSobrenomeIncorreto} limpar={limparValidacao}>
-                  </SobrenomeField>
-                </CCol>
-              </CRow>
+              <CCol xs={7}>
+                <SobrenomeField
+                  sobrenome={sobrenome} onChange={setSobrenome} desabilitado={loading} obrigatorio={true} incorreto={setSobrenomeIncorreto} limpar={limparValidacao}>
+                </SobrenomeField>
+              </CCol>
+            </CRow>
 
-              <CRow className="row g-3">
-                <CCol xs={5}>
-                  <Data
-                    data={nascimento} onChange={setNascimento} desabilitado={loading} obrigatorio={false} incorreto={setNascimentoIncorreto} label={'Nascimento'} limpar={limparValidacao}>
-                  </Data>
-                </CCol> 
+            <CRow className="row g-3">
+              <CCol xs={5}>
+                <Data
+                  data={nascimento} onChange={setNascimento} desabilitado={loading} obrigatorio={false} incorreto={setNascimentoIncorreto} label={'Nascimento'} limpar={limparValidacao}>
+                </Data>
+              </CCol> 
 
-                <CCol xs={7}>
-                  <GeneroField
-                    genero={genero} onChange={setGenero} desabilitado={loading} obrigatorio={true}>
-                  </GeneroField>
-                </CCol>
-              </CRow>
+              <CCol xs={7}>
+                <GeneroField
+                  genero={genero} onChange={setGenero} desabilitado={loading} obrigatorio={true}>
+                </GeneroField>
+              </CCol>
+            </CRow>
 
-              <CRow className="row g-3">
-                <CCol xs={5}>
-                  <IdadeField
-                    nascimento={nascimento}>
-                  </IdadeField>
-                </CCol>
+            <CRow className="row g-3">
+              <CCol xs={5}>
+                <IdadeField
+                  nascimento={nascimento}>
+                </IdadeField>
+              </CCol>
 
-                <CCol xs={7}>
-                  <CRow className="row g-3">
-                    <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
-                      <ContatoField
-                        contato={contato} onChange={setContato} desabilitado={loading} incorreto={setContatoIncorreto} limpar={limparValidacao} obrigatorio={false} label={'Telefone'}>
-                      </ContatoField>
-                    </CCol>
-                  </CRow>
+              <CCol xs={7}>
+                <CRow className="row g-3">
+                  <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
+                    <ContatoField
+                      contato={contato} onChange={setContato} desabilitado={loading} incorreto={setContatoIncorreto} limpar={limparValidacao} obrigatorio={false} label={'Telefone'}>
+                    </ContatoField>
+                  </CCol>
+                </CRow>
 
-                  <CRow className="mt-5 text-end">
-                    <CCol xs={12}>
-                      <CButton
-                        color="success"
-                        onClick={salvarAlteracoes}
-                        type="submit"
-                        disabled={loading || nome=='' || sobrenome=='' || genero=='' ||
-                        hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto, contatoIncorreto])}>
-                        {loading? 'Salvando' : 'Salvar'}
-                      </CButton>
-                    </CCol>
-                  </CRow>
-                </CCol>     
-              </CRow>
-            </CForm>
-          </CCardBody>
-        </CCard>
+                <CRow className="mt-5 text-end">
+                  <CCol xs={12}>
+                    <CButton
+                      color="success"
+                      onClick={salvarAlteracoes}
+                      type="submit"
+                      disabled={loading || nome=='' || sobrenome=='' || genero=='' ||
+                      hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto, contatoIncorreto])}>
+                      {loading? 'Salvando' : 'Salvar'}
+                    </CButton>
+                  </CCol>
+                </CRow>
+              </CCol>     
+            </CRow>
+          </CForm>
+        </CCardBody>
+      </CCard>
     </>
   );
 };

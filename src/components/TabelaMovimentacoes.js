@@ -1,5 +1,5 @@
-import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from "@coreui/icons";
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CAlert, CSpinner, CCollapse, CListGroup, CListGroupItem, CCardBody, CCardFooter, CCardTitle, CTableFoot, CPopover, CRow, CCol } from '@coreui/react';
+import { cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from "@coreui/icons";
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CButton, CCard, CSpinner, CCollapse, CListGroup, CListGroupItem, CCardBody, CCardFooter, CCardTitle, CPopover } from '@coreui/react';
 import React, { useState } from 'react';
 import { api } from "src/services/api";
 import { DescricaoField } from 'src/components/formulario/descricao';
@@ -7,6 +7,7 @@ import Paginacao from "./paginacao";
 import CIcon from "@coreui/icons-react";
 import numeral from "numeral";
 import { ordena } from "src/views/helper";
+import { ToastPersonalizado } from "./formulario/toast";
 
 
 export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) => {
@@ -22,11 +23,12 @@ export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) =>
 
   const onClickRow= async (id) => {
 
-    setSucesso({tipo: '', menssagem: ''});
-
     if (expandedRow === id) {
       setExpandedRow(null); // Fechar o collapse se a mesma linha for clicada novamente
     } else {
+
+      setSucesso({tipo: '', menssagem: ''});
+
       setLoading(true);
       const movimentacao = await api.pegarMovimentacao(id);
       setLoading(false);
@@ -41,6 +43,8 @@ export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) =>
 
   const salvarDescricao= async () => {
 
+    setSucesso({tipo: '', menssagem: ''});
+
     setLoadingSalvar(true);
     const result = await api.atualizarDescricaoMovimentacao( movimentacaoAtual.id_movimentacao, descricao );
     setLoadingSalvar(false);
@@ -49,10 +53,6 @@ export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) =>
       setSucesso({tipo: 'danger', menssagem: result.error});
     } else {
       setSucesso({tipo: 'success', menssagem: "Anotação atualizada com sucesso"});
-     
-      setTimeout(() => {
-        setSucesso({tipo: '', menssagem: ''});
-      }, 3000); // 3 segundos
     }
   };
 
@@ -74,8 +74,15 @@ export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) =>
 
   return (
     <>
-      <CCard className="mt-2">
+      {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
+      )}
 
+      <CCard className="mt-2">
         <CCardTitle style={{ paddingLeft: '20px', paddingTop: '20px' }} component="h3">
           {tipo} do Caixa
           {loading && (
@@ -132,21 +139,9 @@ export const TabelaMovimentacoes = ({ movimentacoes, onChange, tipo, total }) =>
                             <DescricaoField
                               onChange={setDescricao} descricao={descricao}
                             />
-                            
-                            <CRow>
-                              <CCol>
-                                <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>
-                              </CCol>
-                              <CCol>
-                                {sucesso.tipo != '' && (
-                                  <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-                                    <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-                                    <div>{sucesso.menssagem}</div>
-                                  </CAlert>
-                                )}                                
-                              </CCol>
-                            </CRow>
-                                                                             
+
+                            <CButton color="success" onClick={salvarDescricao}>{loadingSalvar ? 'Salvando' : 'Salvar Anotação'}</CButton>     
+
                           </CListGroupItem>
                         </CListGroup>
                       </CCard>
