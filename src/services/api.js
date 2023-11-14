@@ -186,9 +186,16 @@ export const api = {
     return response.data.lider;
   },
 
-  atualizarLider: async (id, nome, sobrenome, genero, nascimento) => {
-    const response = await http.put(`/lider/${id}`, {
+  atualizarPerfil: async (id, nome, sobrenome, genero, nascimento) => {
+    const response = await http.put(`/perfil/${id}`, {
       nome, sobrenome, genero, nascimento
+    });
+    return response.data;
+  },
+
+  alterarClubeLíder: async (id, id_clube) => {
+    const response = await http.put(`/lider/${id}`, {
+      id_clube
     });
     return response.data;
   },

@@ -65,7 +65,7 @@ const Perfil = () => {
     setSucesso({tipo: '', menssagem: ''});
 
     setLoading(true);
-    const result= await api.atualizarLider(id_lider, nome, sobrenome, genero, nascimento);
+    const result= await api.atualizarPerfil(id_lider, nome, sobrenome, genero, nascimento);
     setLoading(false);
 
     if(result.error){
