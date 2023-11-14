@@ -51,8 +51,10 @@ const VerResponsaveis = () => {
   };
 
   useEffect(() => {
-    getLideres();
-  }, []);
+    if(!modalEditar){
+      getLideres();
+    }
+  }, [modalEditar]);
 
   const openModal= async (id) => {
     setLoading(true);
