@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CFormInput, CFormLabel, CInputGroup, CInputGroupText, CFormFeedback, CFormSelect, CFormCheck, CRow, CCard, CCardHeader, CCardBody, CCardTitle, CCardText, CCardImage, CAlert, CSpinner } from '@coreui/react';
+import { CTable, CTableHead, CTableHeaderCell, CTableBody, CTableRow, CTableDataCell, CModal, CModalHeader, CModalBody, CModalFooter, CButton, CModalTitle, CForm, CCol, CRow, CCard, CCardHeader, CCardBody, CSpinner } from '@coreui/react';
 import { api } from 'src/services/api';
 import { NomeField } from '../components/formulario/nome';
 import { SobrenomeField } from '../components/formulario/sobrenome';
 import { Data } from '../components/formulario/data';
 import { GeneroField } from '../components/formulario/genero';
-import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/helper';
+import { regexNamePessoa } from '../components/formulario/helper';
 
 import { IdadeField } from 'src/components/widget/idade';
 import CIcon from '@coreui/icons-react';
-import { cilCheckCircle, cilReportSlash, cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
+import { cilSortAlphaDown, cilSortAlphaUp, cilSortNumericDown, cilSortNumericUp } from '@coreui/icons';
 import { differenceInYears } from 'date-fns';
 import { ordena } from './helper';
 import { ClubeField } from 'src/components/widget/clube';
+import { ModalEditaLider } from 'src/components/modalEditaLider';
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 
 
 const VerResponsaveis = () => {
@@ -25,24 +27,15 @@ const VerResponsaveis = () => {
   const [ordemCrescente, setOrdemCrescente] = useState(true);
 
   //formulario
-  const [editar, setEditar] = useState(false);
+  const [modalEditar, setModalEditar] = useState(false);
 
   //dados
+  const [id_lider, setIdLider] = useState('');
   const [nome, setNome] = useState('');
   const [sobrenome, setSobrenome] = useState('');
   const [nascimento, setNascimento] = useState(null);
   const [genero, setGenero] = useState('');
-  const [clube, setClube] = useState('');
- 
-
-
-  //verificar se os campos estão corretos:
-  const [nomeIncorreto, setNomeIncorreto] = useState(false);
-  const [sobrenomeIncorreto, setSobrenomeIncorreto] = useState(false);
-  const [nascimentoIncorreto, setNascimentoIncorreto] = useState(false);
-  const [contatoIncorreto, setContatoIncorreto] = useState(false);
-
-  const [limparValidacao, setLimparValidacao] = useState(false);
+  const [clube, setClube] = useState( {id_clube: null, nome: ''});
 
 
   const getLideres = async () => {
@@ -73,53 +66,35 @@ const VerResponsaveis = () => {
   }
 
   const setDados=(dado)=>{
+    setIdLider(dado.id_lider);
     setNome(dado.nome);
     setSobrenome(dado.sobrenome);
     setGenero(dado.genero);
     setNascimento(dado.nascimento);
-    setClube(dado.clube);
+    setClube({ id_clube: dado.id_clube, nome: dado.clube});
   }
    
 
   const closeModal = () => {
     setSelectedLider(null);
     setModalOpen(false);
-    setEditar(false);
-    setSucesso({tipo: '', menssagem: ''});
   };
-
-  /*const salvarAlteracoes= async () => {
-    setLoading(true);
-    const result = await api.atualizarResponsavel(selectedLider.id_responsavel, nome, sobrenome, genero, nascimento, contato);
-    setLoading(false);
-
-    if (result.error) {
-      setSucesso({tipo: 'danger', menssagem: result.error});
-    } else {
-      setSucesso({tipo: 'success', menssagem: "Responsável atualizado com sucesso"});
-      getLideres();
-
-      setEditar(false);
-
-      setTimeout(() => {
-        setSucesso({tipo: '', menssagem: ''});
-      }, 3000); // 3 segundos
-    }
-
-    setLimparValidacao(true);
-    
-    setTimeout(() => {
-      setLimparValidacao(false);
-    }, 1000); // 1 segundos
-  };*/
 
   return (
     <>
-     <h1>Líderes
+      {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
+      )}
+
+      <CCardHeader component="h1">Líderes
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
-     </h1>
+      </CCardHeader>
 
      <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
         <CCard className="mt-2">
@@ -158,15 +133,10 @@ const VerResponsaveis = () => {
         </CCard>
       </CCol>
 
-      <CModal alignment="center" scrollable visible={modalOpen} onClose={closeModal} backdrop="static" size="lg" >
+      <CModal alignment="center" scrollable visible={modalOpen && !modalEditar} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
-          <CModalTitle>{selectedLider && `${selectedLider.nome} ${selectedLider.sobrenome}- ${selectedLider.id_lider}`}
-          {sucesso.tipo != '' && (
-            <CAlert color={sucesso.tipo} className="d-flex align-items-center">
-              <CIcon icon={sucesso.tipo=='success'? cilCheckCircle : cilReportSlash} className="flex-shrink-0 me-2" width={24} height={24} />
-              <div>{sucesso.menssagem}</div>
-            </CAlert>
-          )}
+          <CModalTitle>
+            {selectedLider && `${selectedLider.nome} ${selectedLider.sobrenome}- ${selectedLider.id_lider}`}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
@@ -174,16 +144,16 @@ const VerResponsaveis = () => {
           {selectedLider && (
             <>
               <CForm className="row g-3">
-                <CRow className="row g-4">
+                <CRow className="row g-2">
                   <CCol sm={6}>
                     <NomeField
-                      nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={false} incorreto={setNomeIncorreto} limpar={limparValidacao} regexName={regexNamePessoa}>
+                      nome={nome} onChange={setNome} desabilitado={true} obrigatorio={false} regexName={regexNamePessoa}>
                     </NomeField>
                   </CCol>
 
                   <CCol sm={6}>
                     <SobrenomeField
-                      sobrenome={sobrenome} onChange={setSobrenome} desabilitado={!editar} obrigatorio={false} incorreto={setSobrenomeIncorreto} limpar={limparValidacao}>
+                      sobrenome={sobrenome} onChange={setSobrenome} desabilitado={true} obrigatorio={false}>
                     </SobrenomeField>
                   </CCol>
                 </CRow>
@@ -191,13 +161,13 @@ const VerResponsaveis = () => {
                 <CRow className="row g-3">
                   <CCol sm={6}>
                     <Data
-                       data={nascimento} onChange={setNascimento} desabilitado={!editar} obrigatorio={false} incorreto={setNascimentoIncorreto} label={'Nascimento'} limpar={limparValidacao}>
+                       data={nascimento} onChange={setNascimento} desabilitado={true} obrigatorio={false} label={'Nascimento'}>
                     </Data>
                   </CCol> 
 
                   <CCol sm={6}>
                     <GeneroField
-                      genero={genero} onChange={setGenero} desabilitado={!editar} obrigatorio={false}>
+                      genero={genero} onChange={setGenero} desabilitado={true} obrigatorio={false}>
                     </GeneroField>
                   </CCol>
                 </CRow>
@@ -211,7 +181,7 @@ const VerResponsaveis = () => {
 
                   <CCol sm={6}>
                     <ClubeField
-                      clube={clube}>
+                      clube={clube.nome}>
                     </ClubeField>                    
                   </CCol>
                 </CRow>
@@ -225,16 +195,19 @@ const VerResponsaveis = () => {
               <CButton color="secondary" onClick={closeModal}>Fechar</CButton>
             </CCol>
 
-             {/*<CCol xs={4}>
-             <CButton color="warning" onClick={() => setEditar(!editar)}>Editar</CButton>
-          </CCol>
-
-            <CCol xs={6}>
-              <CButton color="success" onClick={salvarAlteracoes} type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto, contatoIncorreto])}>{loading ? 'Carregando' : 'Salvar'}</CButton>
-            </CCol>*/}
+            <CCol xs={4}>
+              <CButton color="warning" onClick={() => { setModalEditar(true);}}>Editar</CButton>
+            </CCol>
           </CRow>
         </CModalFooter>
       </CModal>
+
+
+      {modalEditar && (
+        <ModalEditaLider
+          id_lider={id_lider} onChange={setModalEditar} clube={clube} setSucesso={setSucesso} nome={nome} genero={genero}>
+        </ModalEditaLider>
+      )}
 
     </>
   );
