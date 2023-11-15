@@ -29,8 +29,7 @@ const QRCode = () => {
       setAluno(aluno);
     } else {
       setSucesso({tipo: 'danger', menssagem: 'Aluno não encontrado'});      
-      Limpar();
-      //window.location.reload();      
+      Limpar();    
     }
   };
 
@@ -38,20 +37,16 @@ const QRCode = () => {
     setAluno(null);
     setQrData('');
     setLendo(true);
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000); // 2 segundos
   };
   
 
   const closeModal=(value)=>{
     setModalSaldo(value);
-   // window.location.reload();
-    //setAluno(null);
-    //setLendo(true);
     Limpar();
-  
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000); // 2 segundos
   }
 
   useEffect(() => {
@@ -62,7 +57,6 @@ const QRCode = () => {
       } else {
         setSucesso({tipo: 'danger', menssagem: 'QrCode lido não é uma carteira de aluno'});
         Limpar();
-        //window.location.reload();
       }
     }
   }, [qrData]);
