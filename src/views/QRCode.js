@@ -1,6 +1,7 @@
-import { CCard, CCardBody, CCol, CHeader, CRow, CSpinner } from '@coreui/react';
+import { CCard, CCardBody, CCardHeader, CCol, CHeader, CRow, CSpinner } from '@coreui/react';
 import React, { useState, useEffect } from 'react';
 import QRCodeReader from 'src/components/QRCodeReader';
+import { ToastPersonalizado } from 'src/components/formulario/toast';
 import { ModalSaldoField } from 'src/components/modalSaldo';
 import { api } from 'src/services/api';
 
@@ -10,6 +11,7 @@ const QRCode = () => {
 
   const [lendo, setLendo] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
 
   const [qrData, setQrData] = useState('');
   const [aluno, setAluno] = useState(null);
@@ -26,17 +28,25 @@ const QRCode = () => {
     if (aluno) {
       setAluno(aluno);
     } else {
-      alert('Aluno não encontrado');
-      window.location.reload();      
+      setSucesso({tipo: 'danger', menssagem: 'Aluno não encontrado'});      
+      Limpar();
+      //window.location.reload();      
     }
+  };
+
+  const Limpar = () => {
+    setAluno(null);
+    setQrData('');
+    setLendo(true);
   };
   
 
   const closeModal=(value)=>{
     setModalSaldo(value);
-    window.location.reload();
-    setAluno(null);
-    setLendo(true);
+   // window.location.reload();
+    //setAluno(null);
+    //setLendo(true);
+    Limpar();
   
     setLoading(true);
     setTimeout(() => {
@@ -50,8 +60,9 @@ const QRCode = () => {
       if (!isNaN(id)) {
         pegarAluno(id);
       } else {
-        alert('qrCode lido não é uma carteira');
-        window.location.reload();
+        setSucesso({tipo: 'danger', menssagem: 'QrCode lido não é uma carteira de aluno'});
+        Limpar();
+        //window.location.reload();
       }
     }
   }, [qrData]);
@@ -59,18 +70,26 @@ const QRCode = () => {
 
   return (
     <>
-     <h1>Ler QRCode
+     {sucesso.tipo != '' && (           
+        <ToastPersonalizado
+          titulo={sucesso.tipo=='success'? 'SUCESSO!' : 'ERRO!'}
+          menssagem={sucesso.menssagem}
+          cor={sucesso.tipo=='success'? 'success' : 'danger'}>
+        </ToastPersonalizado>
+      )}
+
+      <CCardHeader component="h1">Ler QRCode
         {loading && (
           <CSpinner color="success" size="sm" style={{ marginLeft: '15px' }}/>
         )}
-     </h1>
+      </CCardHeader>
 
     {lendo &&
       <CCard>
         <CHeader>Aponte a camera para o QRCode do aluno</CHeader>
         <CCardBody>
           <CRow>
-            <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
+            <CCol xs={6}>
               <QRCodeReader onChangeQR={setQrData} onChangeLendo={setLendo}></QRCodeReader>
             </CCol>
           </CRow>
@@ -79,9 +98,9 @@ const QRCode = () => {
     }
 
       {aluno &&
-        <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
+        <CCol xs={12}>
           <ModalSaldoField
-            id_carteira={aluno.id_carteira} id_aluno={aluno.id_aluno} modalSaldo={modalSaldo} onChange={closeModal} saldo={aluno.saldo} nome={`${aluno.nome} ${aluno.sobrenome}`}>
+            id_carteira={aluno.id_carteira} id_aluno={aluno.id_aluno} modalSaldo={modalSaldo} onChange={closeModal} saldo={aluno.saldo} nome={`${aluno.nome} ${aluno.sobrenome}`} setSucesso={setSucesso}>
           </ModalSaldoField>
         </CCol>
       }
