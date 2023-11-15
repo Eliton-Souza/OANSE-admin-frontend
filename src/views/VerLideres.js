@@ -147,13 +147,13 @@ const VerResponsaveis = () => {
             <>
               <CForm className="row g-3">
                 <CRow className="row g-2">
-                  <CCol sm={6}>
+                  <CCol xs={6}>
                     <NomeField
                       nome={nome} onChange={setNome} desabilitado={true} obrigatorio={false} regexName={regexNamePessoa}>
                     </NomeField>
                   </CCol>
 
-                  <CCol sm={6}>
+                  <CCol xs={6}>
                     <SobrenomeField
                       sobrenome={sobrenome} onChange={setSobrenome} desabilitado={true} obrigatorio={false}>
                     </SobrenomeField>
@@ -161,13 +161,13 @@ const VerResponsaveis = () => {
                 </CRow>
 
                 <CRow className="row g-3">
-                  <CCol sm={6}>
+                  <CCol xs={6}>
                     <Data
                        data={nascimento} onChange={setNascimento} desabilitado={true} obrigatorio={false} label={'Nascimento'}>
                     </Data>
                   </CCol> 
 
-                  <CCol sm={6}>
+                  <CCol xs={6}>
                     <GeneroField
                       genero={genero} onChange={setGenero} desabilitado={true} obrigatorio={false}>
                     </GeneroField>
@@ -175,13 +175,13 @@ const VerResponsaveis = () => {
                 </CRow>
 
                 <CRow className="row g-3">
-                  <CCol sm={6}>
+                  <CCol xs={6}>
                     <IdadeField
                      nascimento={nascimento}>
                     </IdadeField>
                   </CCol>
 
-                  <CCol sm={6}>
+                  <CCol xs={6}>
                     <ClubeField
                       clube={clube.nome}>
                     </ClubeField>                    
