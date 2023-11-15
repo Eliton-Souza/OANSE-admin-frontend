@@ -200,6 +200,13 @@ export const api = {
     return response.data;
   },
 
+  alterarSenha: async (login, senha, novoLogin, novaSenha) => {
+    const response = await http.put('/senha', {
+      login, senha, novoLogin, novaSenha
+    });
+    return response.data;
+  },
+
 
   //CLUBE
   listarClubes: async () => {

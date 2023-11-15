@@ -10,7 +10,6 @@ import {
 } from '@coreui/react'
 import {
   cilLockLocked,
-  cilSettings,
   cilUser,
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
@@ -28,11 +27,7 @@ const AppHeaderDropdown = () => {
         <CDropdownItem href="/perfil">
           <CIcon icon={cilUser} className="me-2" />
           Perfil
-        </CDropdownItem>           
-        <CDropdownItem href="#">
-          <CIcon icon={cilSettings} className="me-2" />
-          Senhas
-        </CDropdownItem>        
+        </CDropdownItem>                  
         <CDropdownDivider />
         <CDropdownItem href="/logout">
           <CIcon icon={cilLockLocked} className="me-2" />

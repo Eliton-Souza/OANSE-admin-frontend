@@ -11,6 +11,7 @@ import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/hel
 import { ClubeField } from '../components/widget/clube';
 import { IdadeField } from 'src/components/widget/idade';
 import { ToastPersonalizado } from 'src/components/formulario/toast';
+import { ModalEditarAcesso } from 'src/components/ModalEditarAcesso';
 
 const Perfil = () => {
 
@@ -20,6 +21,7 @@ const Perfil = () => {
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
 
   const [editar, setEditar] = useState(false);
+  const [modalSenha, setModalSenha] = useState(false);
 
   //dados
   const [id_lider, setId_Lider] = useState('');
@@ -148,9 +150,14 @@ const Perfil = () => {
 
             <CRow className="mt-4 ">
               <div className="d-flex justify-content-end">
+                <CButton color="info" onClick={() => setModalSenha(true)}>
+                  Alterar Acesso
+                </CButton>
+
                 <CButton color="warning" onClick={() => setEditar(!editar)} className="mx-4">
                   Editar
                 </CButton>
+
                 <CButton
                   color="success"
                   type="submit"
@@ -164,6 +171,12 @@ const Perfil = () => {
           </CForm>
         </CCardBody>
       </CCard>
+
+      {modalSenha && (
+        <ModalEditarAcesso
+         onChange={setModalSenha} setSucesso={setSucesso}>
+        </ModalEditarAcesso>
+      )}
     </>
   );
 };
