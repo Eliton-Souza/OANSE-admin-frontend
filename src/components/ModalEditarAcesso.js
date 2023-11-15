@@ -1,6 +1,6 @@
 import { CButton, CCard, CCardBody, CCardTitle, CCol, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CRow, CSpinner } from "@coreui/react";
 import { useState } from "react";
-import { api, removeToken } from "src/services/api";
+import { api } from "src/services/api";
 import { ContatoField } from "./formulario/contato";
 import { SenhaField } from "./formulario/senha";
 import { hasCampoIncorreto } from "./formulario/helper";
@@ -31,10 +31,6 @@ export const ModalEditarAcesso = ({onChange, setSucesso }) => {
     }, 1000); // 1 segundos
 
     onChange(false);
-
-    setTimeout(() => {
-      navigate('/logout');
-    }, 5000); // 5 segundos
   }
 
   const salvarAlteracoes= async () => {
@@ -44,7 +40,7 @@ export const ModalEditarAcesso = ({onChange, setSucesso }) => {
     setSucesso({tipo: '', menssagem: ''});
 
     setLoading(true);
-    const result = await api.alterarSenha(login, senha, novoNogin, novaSenha);
+    const result = await api.alterarAcesso(login, senha, novoNogin, novaSenha);
     setLoading(false);
 
     if (result.error) {
@@ -53,6 +49,10 @@ export const ModalEditarAcesso = ({onChange, setSucesso }) => {
     } else {
       setSucesso({tipo: 'success', menssagem: `Você será redirecionado para a tela de login em instantes...`});
       closeModal();
+
+      setTimeout(() => {
+        navigate('/logout');
+      }, 5000); // 5 segundos
     }    
   };
    
