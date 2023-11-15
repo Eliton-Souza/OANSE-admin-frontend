@@ -4,11 +4,11 @@ import { regexSenha } from './helper';
 import { cilTouchApp } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 
-export const SenhaField = ({ senha, onChange, desabilitado, obrigatorio, incorreto, limpar}) => {
+export const SenhaField = ({ senha, onChange, desabilitado, obrigatorio, incorreto, limpar, visivel}) => {
 
   const [valido, setValido] = useState();
   const [invalido, setInvalido] = useState();
-  const [senhaVisivel, setSenhaVisivel] = useState(true);
+  const [senhaVisivel, setSenhaVisivel] = useState(visivel);
 
   const toggleSenhaVisivel = () => {
     setSenhaVisivel(!senhaVisivel);
@@ -54,7 +54,7 @@ export const SenhaField = ({ senha, onChange, desabilitado, obrigatorio, incorre
         required={obrigatorio}
         valid={valido}
         invalid={invalido}
-        feedbackInvalid="Obrigatório: 6 caracteres | 1 letra | 1 número"
+        feedbackInvalid="Mínimo 6 caracteres | 1 letra | 1 número"
         feedbackValid="OK"
       />
     </CInputGroup>

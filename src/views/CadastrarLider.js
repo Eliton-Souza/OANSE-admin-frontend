@@ -143,7 +143,7 @@ const CadastrarLider = () => {
                     <span style={{ color: 'red' }}> *</span>
                   </CCardTitle>            
                   <SenhaField
-                    senha={senha} onChange={setSenha} desabilitado={loading} obrigatorio={true} incorreto={setSenhaIncorreta} limpar={limparValidacao}>
+                    senha={senha} onChange={setSenha} desabilitado={loading} obrigatorio={true} incorreto={setSenhaIncorreta} limpar={limparValidacao} visivel={true}>
                   </SenhaField>
                 </CCol>                                            
               </CRow>
