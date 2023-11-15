@@ -107,13 +107,13 @@ const Perfil = () => {
           <CForm className="row g-3" ref={formRef} onSubmit={(event) => { event.preventDefault(); salvarAlteracoes();}}>
             
             <CRow className="row g-2">
-              <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
+              <CCol xs={6}>
                 <NomeField
                   nome={nome} onChange={setNome} desabilitado={!editar} obrigatorio={true} incorreto={setNomeIncorreto} limpar={limparValidacao} regexName={regexNamePessoa}>
                 </NomeField>
               </CCol>
 
-              <CCol xs={7} sm={7} md={7} lg={7} xl={7}>
+              <CCol xs={6}>
                 <SobrenomeField
                   sobrenome={sobrenome} onChange={setSobrenome} desabilitado={!editar} obrigatorio={true} incorreto={setSobrenomeIncorreto} limpar={limparValidacao}>
                 </SobrenomeField>
@@ -121,13 +121,13 @@ const Perfil = () => {
             </CRow>
 
             <CRow className="row g-3">
-              <CCol xs={6} sm={5} md={5} lg={5} xl={5}>
+              <CCol xs={6}>
                 <Data
                   data={nascimento} onChange={setNascimento} desabilitado={!editar} obrigatorio={false} incorreto={setNascimentoIncorreto} label={'Nascimento'} limpar={limparValidacao}>
                 </Data>
               </CCol> 
 
-              <CCol xs={6} sm={7} md={7} lg={7} xl={7}>
+              <CCol xs={6}>
                 <GeneroField
                   genero={genero} onChange={setGenero} desabilitado={!editar} obrigatorio={true}>
                 </GeneroField>
@@ -135,13 +135,13 @@ const Perfil = () => {
             </CRow>
 
             <CRow className="row g-3"> 
-              <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
+              <CCol xs={6}>
                 <ClubeField
                   clube={clube}>
                 </ClubeField>
               </CCol>
 
-              <CCol xs={6} sm={6} md={6} lg={6} xl={6}>
+              <CCol xs={6}>
                 <IdadeField
                   nascimento={nascimento}>
                 </IdadeField>
