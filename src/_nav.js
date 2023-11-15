@@ -146,11 +146,11 @@ if(usuario.id_clube=='8'){
           name: 'Ver Estoque',
           to: '/estoque',
         },
-        {
+        /*{
           component: CNavItem,
           name: 'Histórico do Estoque',
           to: '/',
-        },
+        },*/
       ],
     },
     {
