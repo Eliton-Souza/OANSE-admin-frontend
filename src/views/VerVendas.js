@@ -319,7 +319,7 @@ const HistoricoVendas = () => {
         <CModalFooter>
           <CRow>
             <CCol xs={8}>
-              <CButton color="info" onClick={() => { setSucesso({ tipo: '', menssagem: '' }); setModalPag(true); }}>Novo Pagamento</CButton>
+              <CButton color="info" disabled={infos?.status == 'Pago'} onClick={() => { setSucesso({ tipo: '', menssagem: '' }); setModalPag(true); }}>Novo Pagamento</CButton>
             </CCol>
             <CCol xs={4}>
               <CButton color="secondary" onClick={closeModal}>Fechar</CButton>
