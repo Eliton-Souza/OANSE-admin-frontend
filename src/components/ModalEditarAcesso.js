@@ -70,7 +70,7 @@ export const ModalEditarAcesso = ({onChange, setSucesso }) => {
         </CModalHeader>
 
         <CModalBody>    
-          <CCardTitle component="h5">Acesso Atual</CCardTitle>  
+          <CCardTitle component="h5">Digite seu acesso atual</CCardTitle>  
           <CCard>          
             <CCardBody>
               <CRow className="row g-3">           
@@ -95,7 +95,7 @@ export const ModalEditarAcesso = ({onChange, setSucesso }) => {
             </CCardBody>
           </CCard>
 
-          <CCardTitle className="mt-4" component="h5">Novo Acesso</CCardTitle>
+          <CCardTitle className="mt-4" component="h5">Digite seu novo acesso</CCardTitle>
           <CCard>          
             <CCardBody>
               <CRow className="row g-3">           
