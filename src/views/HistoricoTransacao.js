@@ -177,7 +177,7 @@ const HistoricoTransacao = () => {
                         <CCard className="mt-3" style={{ width: '180%' }}>
                           <CListGroup>
                             <CListGroupItem>Aluno: {`${nome_aluno} ${sobrenome_aluno}`}</CListGroupItem>
-                            <CListGroupItem>Lider: {`${nome_lider} ${sobrenome_lider}`}</CListGroupItem>
+                            <CListGroupItem>Líder: {`${nome_lider} ${sobrenome_lider}`}</CListGroupItem>
                             <CListGroupItem>Data: {data}</CListGroupItem>
                             <CListGroupItem>Tipo de Transação: <CBadge color={tipo == 'entrada'? "success" : "danger"} shape="rounded-pill">{tipo}</CBadge></CListGroupItem>
                             <CListGroupItem>Saldo Anterior: {tipo === 'entrada' ? parseFloat(novo_saldo) - parseFloat(valor_transacao) : parseFloat(novo_saldo) + parseFloat(valor_transacao)}</CListGroupItem>
