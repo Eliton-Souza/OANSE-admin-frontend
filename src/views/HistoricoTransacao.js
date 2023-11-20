@@ -43,7 +43,7 @@ const HistoricoTransacao = () => {
     if (result.error) {
       alert(result.error);
     } else {
-      setTransacoes(result.transacoes);
+      setTransacoes(ordena(result.transacoes, 'data', false));
     }
   };
 

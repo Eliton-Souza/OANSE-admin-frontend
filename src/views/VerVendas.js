@@ -39,7 +39,7 @@ const HistoricoVendas = () => {
     if (result.error) {
       alert(result.error);
     } else {
-      setVendas(result.vendas);
+      setVendas(ordena(result.vendas, 'data', false));
     }
   };
 

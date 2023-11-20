@@ -7,6 +7,7 @@ import { TabelaMovimentacoes } from 'src/components/TabelaMovimentacoes';
 import { ToastPersonalizado } from 'src/components/formulario/toast';
 import { ModalMovimentacao } from 'src/components/modalNovaMovimentacao';
 import { api } from 'src/services/api';
+import { ordena } from './helper';
 
 const HistoricoMovimentacao = () => {
 
@@ -54,8 +55,8 @@ const HistoricoMovimentacao = () => {
         }
       }
 
-      setMovimentacoesEntrada(entradas);
-      setMovimentacoesSaida(saidas);
+      setMovimentacoesEntrada(ordena(entradas, 'data', false));
+      setMovimentacoesSaida(ordena(saidas, 'data', false));
       setTotalEntradas({ valor: valorTotalEntradas, quantidade: quantidadeEntradas});
       setTotalSaidas({valor: valorTotalSaidas, quantidade: quantidadeSaidas});
       setSaldoCaixa(valorTotalEntradas-valorTotalSaidas);
