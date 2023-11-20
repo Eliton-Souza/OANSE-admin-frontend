@@ -46,7 +46,7 @@ const VerResponsaveis = () => {
     if (result.error) {
       alert(result.error);
     } else {
-      setLideres(result);
+      setLideres(ordena(result, 'id_clube', true));
     }
   };
 
