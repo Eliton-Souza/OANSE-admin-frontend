@@ -33,8 +33,8 @@ export const TipoField = ({ onChange, tipo }) => {
             name="optionsT"
             id="dangerT"
             label="Saída"
-            value="saida"
-            checked={tipo === 'saida'}
+            value="saída"
+            checked={tipo === 'saída'}
             onChange={handleTipoChange}
             required= {true}
           />

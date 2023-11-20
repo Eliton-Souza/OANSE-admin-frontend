@@ -136,9 +136,9 @@ export const api = {
 
 
   //TRANSAÇÕES CARTEIRA ALUNO
-  alterarSaldo: async ( id, valor, tipo, id_aluno, descricao ) => {
+  alterarSaldo: async ( id, valor, tipo, id_aluno, data, descricao ) => {
     const response = await http.put(`/carteira/${id}`, {
-      valor, tipo, id_aluno, descricao
+      valor, tipo, id_aluno, data, descricao
     });
     return response.data;
   },

@@ -5,6 +5,8 @@ import { ValorField } from "./formulario/valor";
 import { TipoField } from "./formulario/tipoTransacao";
 import numeral from "numeral";
 import { DescricaoField } from "./formulario/descricao";
+import { Data } from "./formulario/data";
+import { format } from "date-fns";
 
 
 export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, saldo, nome, setSucesso}) => {
@@ -12,9 +14,11 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
   const [loading, setLoading] = useState(false);
 
   const [valorIncorreto, setValorIncorreto] = useState(false);
+  const [dataIncorreta, setDataIncorreta] = useState(false);
 
   const [valor, setValor]= useState(0);
-  const [tipo, setTipo]= useState('entrada');
+  const [tipo, setTipo]= useState('saída');
+  const [data, setData] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [descricao, setDescricao]= useState(null);
 
 
@@ -27,7 +31,7 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
     setSucesso({tipo: '', menssagem: ''});
 
     setLoading(true);
-    const result = await api.alterarSaldo(id_carteira, valor, tipo, id_aluno, descricao);
+    const result = await api.alterarSaldo(id_carteira, valor, tipo, id_aluno, data, descricao);
     setLoading(false);
 
     if (result.error) {
@@ -77,7 +81,7 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
                 </ValorField>
               </CCol>
 
-              <CCol className="col ms-5" xs={5} sm={5} md={5} lg={5} xl={5}>
+              <CCol className="col ms-5" xs={5}>
                 <TipoField
                   onChange={setTipo} tipo={tipo}>
                 </TipoField>
@@ -85,7 +89,15 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
             </CRow>
 
             <CRow className="row g-0 mt-4">
-              <CCol xs={12} sm={12} md={12} lg={12} xl={12}>
+              <CCol xs={12} sm={12} md={5} lg={5} xl={5}>
+                <Data
+                  data={data} onChange={setData} desabilitado={false} obrigatorio={true} incorreto={setDataIncorreta} label={'Data *'} limpar={null}>
+                </Data>
+              </CCol> 
+            </CRow>
+
+            <CRow className="row g-0 mt-4">
+              <CCol xs={12}>
                 <DescricaoField
                   onChange={setDescricao}>
                 </DescricaoField>
@@ -113,7 +125,7 @@ export const ModalSaldoField = ({ id_carteira, id_aluno, modalSaldo, onChange, s
             </CCol>
             <CCol xs={5} sm={5} md={5} lg={5} xl={5}>
               <CButton
-                disabled={valorIncorreto || !valor || loading}
+                disabled={valorIncorreto || dataIncorreta || !valor || loading}
                 color="success"
                 onClick={salvarAlteracoes}
                 type="submit"
