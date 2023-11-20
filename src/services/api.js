@@ -75,6 +75,11 @@ export const api = {
     return response.data;
   },
 
+  deletarAluno: async (id) => {
+    const response = await http.delete(`/aluno/${id}`, {});      
+    return response.data;
+  },
+
 
 
   //RESPONSÁVEIS

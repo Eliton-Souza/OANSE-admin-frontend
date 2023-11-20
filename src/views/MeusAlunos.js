@@ -17,6 +17,7 @@ import { ModalSaldoField } from 'src/components/modalSaldo';
 import { hasCampoIncorreto, regexNamePessoa } from '../components/formulario/helper';
 import { SelectOansistas } from 'src/components/formulario/selectOansistas';
 import { ToastPersonalizado } from 'src/components/formulario/toast';
+import { ModalDeletarAluno } from 'src/components/modalDeletarAluno';
 
 
 const MeusAlunos = () => {
@@ -26,7 +27,8 @@ const MeusAlunos = () => {
   const [clubes, setClubes] = useState([]);
   const [selectedAluno, setSelectedAluno] = useState(null);
   const [modalAluno, setModalAluno] = useState(false);
-  const [modalSaldo, setModalSaldo] = useState(false)
+  const [modalSaldo, setModalSaldo] = useState(false);
+  const [modalDelete, setModalDelete] = useState(false);
   const [sucesso, setSucesso] = useState({tipo: '', menssagem: ''});
 
   //formulario
@@ -72,7 +74,7 @@ const MeusAlunos = () => {
     const usuario= dadosUsuário();
     setUsuario(usuario.id_clube);
     getAlunosClubes();
-  }, []);
+  }, [modalDelete]);
 
   const openModal= async (id) => {
     setLoading(true);
@@ -127,7 +129,7 @@ const MeusAlunos = () => {
     
     setTimeout(() => {
       setLimparValidacao(false);
-    }, 1000); // 1 segundos
+    }, 1000); // 1 segundo
   };
 
 
@@ -209,7 +211,7 @@ const MeusAlunos = () => {
         }
       </CRow>
 
-      <CModal alignment="center" scrollable visible={modalAluno && !modalSaldo} onClose={closeModal} backdrop="static" size="lg" >
+      <CModal alignment="center" scrollable visible={modalAluno && !modalSaldo && !modalDelete} onClose={closeModal} backdrop="static" size="lg" >
         <CModalHeader>
           <CModalTitle>
             {selectedAluno && `${selectedAluno.nome} - ${selectedAluno.id_aluno}`}
@@ -282,28 +284,37 @@ const MeusAlunos = () => {
         </CModalBody>
 
         <CModalFooter>
-          <CRow>
-            <CCol xs={4}>
-              <CButton color="secondary" onClick={closeModal}>Fechar</CButton>
-            </CCol>
+          {usuario === 8 && (
+            <CButton color="danger" onClick={() => setModalDelete(true)} style={{ marginRight: '20px' }}>Deletar</CButton>
+          )}
+          
+          <CButton color="warning" onClick={() => setEditar(!editar)} style={{ marginRight: '20px' }}>Editar</CButton>
 
-            <CCol xs={4}>
-              <CButton color="warning" onClick={() => setEditar(!editar)}>Editar</CButton>
-            </CCol>
-
-            <CCol xs={4}>
-              <CButton color="success" onClick={salvarAlteracoes} type="submit" disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto])}>{loading ? 'Salvando' : 'Salvar'}</CButton>
-            </CCol>
-          </CRow>
+          <CButton
+            color="success"
+            onClick={salvarAlteracoes}
+            type="submit"
+            disabled={editar === false || hasCampoIncorreto([nomeIncorreto, sobrenomeIncorreto, nascimentoIncorreto])}
+            style={{ marginRight: '15px' }}
+          >
+            {loading ? 'Salvando' : 'Salvar'}
+          </CButton>
         </CModalFooter>
 
       </CModal>
 
       {modalSaldo && (
-          <ModalSaldoField
+        <ModalSaldoField
           id_carteira={id_carteira} id_aluno={id_aluno} modalSaldo={modalSaldo} onChange={setModalSaldo} saldo={saldo} nome={`${nome} ${sobrenome}`} setSucesso={setSucesso}>
-          </ModalSaldoField>
+        </ModalSaldoField>
       )}
+
+      {modalDelete && (
+        <ModalDeletarAluno
+          id_aluno={id_aluno} onChange={setModalDelete} nome={`${nome} ${sobrenome}`} setSucesso={setSucesso}>
+        </ModalDeletarAluno>
+      )}
+
     </>
   );
 };
